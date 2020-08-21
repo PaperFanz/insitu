@@ -1,4 +1,4 @@
-#include "../include/insitu_common/mode.hpp"
+#include "mode.hpp"
 
 namespace insitu_common {
 

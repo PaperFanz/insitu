@@ -17,6 +17,8 @@
 #include "addmodedialog.hpp"
 #include "addviewdialog.hpp"
 
+#include "DockManager.h"
+
 QT_BEGIN_NAMESPACE
 
 namespace ui {
@@ -49,6 +51,9 @@ public:
     // dialog boxes
     insitu::AddModeDialog * addmodedialog;
     insitu::AddViewDialog * addviewdialog;
+
+    // dock manager
+    ads::CDockManager * dockmanager;
 
     // tab / mode interface
     QTabWidget * tabmanager;

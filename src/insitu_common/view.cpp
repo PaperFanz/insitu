@@ -1,4 +1,4 @@
-#include "../include/insitu_common/view.hpp"
+#include "view.hpp"
 
 namespace insitu_common {
 

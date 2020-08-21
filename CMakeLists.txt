@@ -2,6 +2,8 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(insitu)
 
+add_subdirectory(lib)
+
 # CATKIN
 # qt_build provides the qt cmake glue, roscpp the comms for a default talker
 find_package(catkin REQUIRED COMPONENTS qt_build roscpp)
@@ -15,9 +17,10 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # QT ENVIRONMENT
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
-#set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # non-ROS:
 find_package(Qt5 COMPONENTS Core Gui Widgets)
@@ -27,11 +30,13 @@ file(GLOB QT_RESOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} res/*.qrc)
 QT5_ADD_RESOURCES(QT_RESOURCES_CPP ${QT_RESOURCES})
 
 catkin_package(
- INCLUDE_DIRS include
+    INCLUDE_DIRS inc
 )
 
 include_directories(
-    include
+    inc/insitu
+    inc/insitu_common
+    lib/advanceddockingsystem
     ${Qt5Core_INCLUDE_DIRS}
     ${Qt5Gui_INCLUDE_DIRS}
     ${Qt5Widgets_INCLUDE_DIRS}
@@ -73,6 +78,7 @@ target_link_libraries(insitu
     Qt5::Core
     Qt5::Widgets
     ${catkin_LIBRARIES}
+    qtadvanceddocking
 )
 
 # catkin install dirs

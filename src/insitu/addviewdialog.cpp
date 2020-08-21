@@ -1,4 +1,4 @@
-#include "include/insitu/addviewdialog.hpp"
+#include "addviewdialog.hpp"
 
 namespace insitu {
 

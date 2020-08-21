@@ -1,4 +1,4 @@
-#include "../include/insitu/addmodedialog.hpp"
+#include "addmodedialog.hpp"
 
 namespace insitu {
 

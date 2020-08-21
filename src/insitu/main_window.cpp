@@ -2,8 +2,8 @@
 #include <QtGui>
 #include <QMessageBox>
 #include <iostream>
-#include "../include/insitu/main_window.hpp"
-#include "../include/insitu/addmodedialog.hpp"
+#include "main_window.hpp"
+#include "addmodedialog.hpp"
 
 namespace insitu {
 

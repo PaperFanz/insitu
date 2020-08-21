@@ -1,4 +1,4 @@
-#include "include/insitu/mainwindowdesign.hpp"
+#include "mainwindowdesign.hpp"
 
 namespace ui {
 
@@ -55,6 +55,10 @@ void MainWindowDesign::setupUI(QMainWindow * mainwindow)
     body->setObjectName(QStringLiteral("body"));
     hbox = new QHBoxLayout(body);
     hbox->setObjectName(QStringLiteral("hbox"));
+
+    dockmanager = new ads::CDockManager(body);
+    dockmanager->setObjectName(QStringLiteral("dockmanager"));
+    hbox->addWidget(dockmanager);
 
     // main widget (modes represented in tabs)
     tabmanager = new QTabWidget(body);
