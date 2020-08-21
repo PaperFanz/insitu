@@ -23,7 +23,7 @@ set(CMAKE_AUTOMOC ON)
 find_package(Qt5 COMPONENTS Core Gui Widgets)
 
 # other resources
-file(GLOB QT_RESOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} resources/*.qrc)
+file(GLOB QT_RESOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} res/*.qrc)
 QT5_ADD_RESOURCES(QT_RESOURCES_CPP ${QT_RESOURCES})
 
 catkin_package(
@@ -44,13 +44,11 @@ set(INSITU_SRC
     src/insitu/mainwindowdesign.cpp
     src/insitu/addmodedialog.cpp
     src/insitu/addviewdialog.cpp
-    src/insitu/qnode.cpp
 
-    include/insitu/main_window.hpp
-    include/insitu/mainwindowdesign.hpp
-    include/insitu/addmodedialog.hpp
-    include/insitu/addviewdialog.hpp
-    include/insitu/qnode.hpp
+    inc/insitu/main_window.hpp
+    inc/insitu/mainwindowdesign.hpp
+    inc/insitu/addmodedialog.hpp
+    inc/insitu/addviewdialog.hpp
 )
 
 set(INSITU_COMMON_SRC
@@ -59,10 +57,10 @@ set(INSITU_COMMON_SRC
     src/insitu_common/model.cpp
     src/insitu_common/view.cpp
 
-    include/insitu_common/filter.hpp
-    include/insitu_common/mode.hpp
-    include/insitu_common/model.hpp
-    include/insitu_common/view.hpp
+    inc/insitu_common/filter.hpp
+    inc/insitu_common/mode.hpp
+    inc/insitu_common/model.hpp
+    inc/insitu_common/view.hpp
 )
 
 # Binaries

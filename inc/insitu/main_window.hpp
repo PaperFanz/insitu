@@ -5,7 +5,6 @@
 #include <QMainWindow>
 #include <QInputDialog>
 #include "mainwindowdesign.hpp"
-#include "qnode.hpp"
 
 namespace insitu {
 

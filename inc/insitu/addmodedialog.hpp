@@ -8,7 +8,7 @@
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QFormLayout>
 
-#include "../include/insitu_common/mode.hpp"
+#include "mode.hpp"
 
 namespace insitu {
 

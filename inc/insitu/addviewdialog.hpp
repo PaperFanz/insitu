@@ -8,7 +8,7 @@
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QFormLayout>
 
-#include "../include/insitu_common/view.hpp"
+#include "view.hpp"
 
 namespace insitu {
 
