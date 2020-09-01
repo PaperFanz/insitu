@@ -78,7 +78,6 @@ target_link_libraries(insitu
     Qt5::Core
     Qt5::Widgets
     ${catkin_LIBRARIES}
-    qtadvanceddocking
 )
 
 # catkin install dirs
