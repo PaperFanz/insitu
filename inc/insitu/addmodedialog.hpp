@@ -10,8 +10,6 @@
 
 #include "mode.hpp"
 
-#include "DockManager.h"
-
 namespace insitu {
 
 class AddModeDialog : public QDialog

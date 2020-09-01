@@ -17,8 +17,6 @@
 #include "addmodedialog.hpp"
 #include "addviewdialog.hpp"
 
-#include "DockManager.h"
-
 QT_BEGIN_NAMESPACE
 
 namespace ui {
