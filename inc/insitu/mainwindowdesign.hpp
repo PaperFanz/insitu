@@ -52,9 +52,6 @@ public:
     insitu::AddModeDialog * addmodedialog;
     insitu::AddViewDialog * addviewdialog;
 
-    // dock manager
-    ads::CDockManager * dockmanager;
-
     // tab / mode interface
     QTabWidget * tabmanager;
 

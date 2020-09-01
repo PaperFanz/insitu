@@ -5,6 +5,7 @@ namespace insitu {
 AddModeDialog::AddModeDialog(QWidget * parent) : QDialog(parent)
 {
     tabmanager = parent->findChild<QTabWidget *>("tabmanager");
+    
     // mode name text input
     nameEdit = new QLineEdit();
 
