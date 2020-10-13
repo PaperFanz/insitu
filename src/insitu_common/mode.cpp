@@ -12,4 +12,9 @@ Mode::~Mode()
 {
 }
 
+std::string Mode::getName()
+{
+    return name;
+}
+
 }

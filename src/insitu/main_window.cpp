@@ -30,13 +30,12 @@ void MainWindow::on_actionAbout_triggered()
 
 void MainWindow::on_actionNewMode_triggered()
 {
-	ui.addmodedialog->exec();
+	ui.addmodedialog->open();
 }
 
 void MainWindow::on_actionNewView_triggered()
 {
-	ui.addviewdialog->exec();
-	// TODO
+	ui.addviewdialog->open();
 }
 
 void MainWindow::ReadSettings()

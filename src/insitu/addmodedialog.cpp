@@ -35,7 +35,10 @@ AddModeDialog::AddModeDialog(QWidget * parent) : QDialog(parent)
 void AddModeDialog::AddMode()
 {
     // create new tab with entered name
-    tabmanager->addTab(new QWidget(), nameEdit->text());
+    QMdiArea * mdiarea = new QMdiArea();
+    mdiarea->setObjectName(nameEdit->text());
+    mdiarea->setViewMode(QMdiArea::SubWindowView);
+    tabmanager->addTab(mdiarea, nameEdit->text());
 
     // update model TODO
 

@@ -7,6 +7,7 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QFormLayout>
+#include <QtWidgets/QMdiArea>
 
 #include "mode.hpp"
 

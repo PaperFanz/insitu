@@ -20,6 +20,8 @@ private:
 public:
     Mode(std::string mode_name);
     ~Mode();
+
+    std::string getName();
 };
 
 }

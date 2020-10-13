@@ -12,9 +12,28 @@ Model::~Model()
 {
 }
 
-void Model::addMode(insitu_common::Mode newmode)
+bool Model::addMode(insitu_common::Mode newmode)
 {
-    
+    auto pos = modes.find(newmode.getName());
+    if (pos == modes.end()) {
+        modes.insert({newmode.getName(), newmode});
+        return true;
+    } else {
+        // mode of same name exists
+        return false;
+    }
+}
+
+bool Model::rmMode(std::string modename)
+{
+    auto pos = modes.find(modename);
+    if (pos == modes.end()) {
+        // no such mode
+        return false;
+    } else {
+        modes.erase(pos);
+        return true;
+    }
 }
 
 }

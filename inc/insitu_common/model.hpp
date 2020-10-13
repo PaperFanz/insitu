@@ -21,8 +21,8 @@ public:
     Model(std::string _filename);
     ~Model();
 
-    void addMode(insitu_common::Mode newmode);
-    void rmMode(std::string modename);
+    bool addMode(insitu_common::Mode newmode);
+    bool rmMode(std::string modename);
 };
 
 }
