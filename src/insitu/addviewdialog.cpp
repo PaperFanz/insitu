@@ -45,11 +45,12 @@ void AddViewDialog::AddView()
     if (modeBox->count() > 0) {
         QMdiArea * mdiarea = tabmanager->findChild<QMdiArea *>(modeBox->currentText());
 
-        QString topic = nameEdit->text();
+        QString name = nameEdit->text();
+        QString topic = topicBox->currentText();
 
         FilteredView * view = new FilteredView(topic);
-        view->setObjectName(topic);
-        view->setWindowTitle(topic);
+        view->setObjectName(name);
+        view->setWindowTitle(name);
         mdiarea->addSubWindow(view);
         view->show();
         mdiarea->tileSubWindows();

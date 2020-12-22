@@ -10,6 +10,11 @@
 #include <sensor_msgs/Image.h>
 #include <image_transport/image_transport.h>
 
+// OpenCV includes
+#include <cv_bridge/cv_bridge.h>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/core/core.hpp>
+
 // insitu includes
 #include "insitu_utils.hpp"
 
@@ -26,21 +31,20 @@ private:
     QLabel * imgLabel;
     QScrollArea *imgPan;
 
-    // Data
-    QString topic;
-    QImage img;
-    double scale = 1.0;
-
     // layout elements
     QHBoxLayout * menuBar;
     QVBoxLayout * vBox;
 
     // ROS
+    ros::NodeHandle nh;
     image_transport::Subscriber sub;
-    void onTopicChange(void);
     void callbackImg(const sensor_msgs::Image::ConstPtr& msg);
 
+    // OpenCV
+    cv::Mat imgMat;
+
 public Q_SLOTS:
+    void onTopicChange(QString topic_transport);
     void refreshTopics(void);
 
 public:

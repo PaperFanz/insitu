@@ -6,6 +6,8 @@ int main(int argc, char **argv)
 {
 	/* ROS INITIALIZATION */
 	ros::init(argc, argv, "insitu");
+    ros::AsyncSpinner spinner(0);
+    spinner.start();
 
     /* GUI INITIALIZATION */
     QApplication app(argc, argv);
@@ -15,6 +17,9 @@ int main(int argc, char **argv)
 
     app.connect(&app, SIGNAL(lastWindowClosed()), &app, SLOT(quit()));
     int result = app.exec();
+
+    spinner.stop();
+    ros::shutdown();
 
 	return result;
 }

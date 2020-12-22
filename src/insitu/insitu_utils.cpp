@@ -47,7 +47,7 @@ QList<QString> getTopicList()
 
             // add transport specific sub-topics
             for (auto jt = transports.begin(); jt != transports.end(); jt++) {
-                if (all_topics.contains(topic + "/" + *jt)) {
+                if (all_topics.contains(topic + " " + *jt)) {
                 QString sub = topic + " " + *jt;
                 topics.insert(sub);
                 //qDebug("ImageView::getTopics() transport specific sub-topic '%s'", sub.toStdString().c_str());
