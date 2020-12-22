@@ -49,6 +49,7 @@ public Q_SLOTS:
 
 public:
     FilteredView(QString _topic, QWidget * parent = nullptr);
+    ~FilteredView(void);
 
 };
 

@@ -8,15 +8,11 @@ FilteredView::FilteredView(QString _topic, QWidget * parent) : QWidget(parent)
     topicBox = new QComboBox();
     topicBox->addItems(getTopicList());
     int idx = topicBox->findText(_topic);
-    QObject::connect(topicBox, SIGNAL(currentIndexChanged(const QString&)),
-                     SLOT(onTopicChange(const QString&)));
     topicBox->setCurrentIndex(idx);
     onTopicChange(topicBox->currentText());
 
     // button to refresh topic list
     refreshTopicButton = new QPushButton(tr("Refresh"));
-    QObject::connect(refreshTopicButton, SIGNAL(clicked()),
-                     SLOT(refreshTopics()));
 
     // layout
     menuBar = new QHBoxLayout();
@@ -33,7 +29,6 @@ FilteredView::FilteredView(QString _topic, QWidget * parent) : QWidget(parent)
     imgPan = new QScrollArea();
     imgPan->setBackgroundRole(QPalette::Dark);
     imgPan->setWidget(imgLabel);
-    imgPan->setWidgetResizable(true);
     // imgPan->setVisible(false);
 
     vBox = new QVBoxLayout();
@@ -41,6 +36,16 @@ FilteredView::FilteredView(QString _topic, QWidget * parent) : QWidget(parent)
     vBox->addWidget(imgPan);
 
     setLayout(vBox);
+
+    QObject::connect(topicBox, SIGNAL(currentIndexChanged(const QString&)),
+                     SLOT(onTopicChange(const QString&)));
+    QObject::connect(refreshTopicButton, SIGNAL(clicked()),
+                     SLOT(refreshTopics()));
+}
+
+FilteredView::~FilteredView(void)
+{
+    sub.shutdown();
 }
 
 void FilteredView::refreshTopics(void)
@@ -64,11 +69,11 @@ void FilteredView::onTopicChange(QString topic_transport)
     std::string transport = l.length() == 2 ? l.last().toStdString() : "raw";
 
     if (!topic.empty()) {
-        image_transport::ImageTransport it(nh);
-        image_transport::TransportHints hints(transport);
-
         if (init) init = false;
         else sub.shutdown();
+        
+        image_transport::ImageTransport it(nh);
+        image_transport::TransportHints hints(transport);
 
         sub = it.subscribe(topic, 1, &FilteredView::callbackImg, this, hints);
     } else {
@@ -80,17 +85,20 @@ void FilteredView::onTopicChange(QString topic_transport)
 
 void FilteredView::callbackImg(const sensor_msgs::Image::ConstPtr& msg)
 {
-    cv_bridge::CvImageConstPtr cv_ptr = cv_bridge::toCvShare(msg, sensor_msgs::image_encodings::RGB8);
-    imgMat = cv_ptr->image;
-
-    QImage image(imgMat.data, imgMat.cols, imgMat.rows, imgMat.step[0], QImage::Format_RGB888);
-    QPixmap img = QPixmap();
-    if (img.convertFromImage(image)) {
-        imgLabel->resize(img.size());
-        imgLabel->setPixmap(img);
-    } else {
-        qWarning("Failed to load pixmap");
+    cv_bridge::CvImageConstPtr cv_ptr;
+    try {
+        cv_ptr = cv_bridge::toCvShare(msg, sensor_msgs::image_encodings::RGB8);
+    } catch (cv_bridge::Exception& e) {
+        qWarning("Failed to convert image: %s", e.what());
+        return;
     }
+
+    imgMat = cv_ptr->image;
+    QImage image(imgMat.data, imgMat.cols, imgMat.rows, imgMat.step[0], QImage::Format_RGB888);
+    QPixmap img = QPixmap::fromImage(image);
+    imgLabel->resize(img.size());
+    imgLabel->setPixmap(img);
+    qDebug("Callback on view %s", this->windowTitle().toStdString().c_str());
 }
 
 }
