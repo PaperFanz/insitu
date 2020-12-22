@@ -2,6 +2,7 @@
 #define insitu_ADD_VIEW_DIALOG_HPP
 
 // QT includes
+#include <QSet>
 #include <QDialog>
 #include <QStringList>
 #include <QtWidgets/QLineEdit>
@@ -15,9 +16,12 @@
 
 // ROS includes
 #include <ros/ros.h>
+#include <ros/master.h>
 #include <image_transport/image_transport.h>
 
 // insitu includes
+#include "insitu_utils.hpp"
+#include "filtered_view.hpp"
 #include "view.hpp"
 
 // C++ includes
@@ -28,29 +32,28 @@ namespace insitu {
 class AddViewDialog : public QDialog
 {
 
-    Q_OBJECT
-    private:
-        QLineEdit * nameEdit;
-        QComboBox * modeBox;
-        QComboBox * topicBox;
-        QPushButton * createButton;
-        QPushButton * cancelButton;
+Q_OBJECT
+private:
+    QLineEdit * nameEdit;
+    QComboBox * modeBox;
+    QComboBox * topicBox;
+    QPushButton * createButton;
+    QPushButton * cancelButton;
 
-        QFormLayout * form;
-        QHBoxLayout * buttonHBox;
+    QFormLayout * form;
+    QHBoxLayout * buttonHBox;
 
-        QTabWidget * tabmanager;
+    QTabWidget * tabmanager;
 
-        QStringList getModeList();
-        QStringList getTopicList();
+    QList<QString> getModeList();
     
-    public Q_SLOTS:
-        void AddView(void);
+public Q_SLOTS:
+    void AddView(void);
 
-    public:
-        AddViewDialog(QWidget * parent = nullptr);
+public:
+    AddViewDialog(QWidget * parent = nullptr);
 
-        void open();
+    void open();
 
 };
 

@@ -29,6 +29,14 @@ find_package(Qt5 COMPONENTS Core Gui Widgets)
 file(GLOB QT_RESOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} res/*.qrc)
 QT5_ADD_RESOURCES(QT_RESOURCES_CPP ${QT_RESOURCES})
 
+# ROS components
+find_package(catkin REQUIRED COMPONENTS
+    image_transport
+    sensor_msgs
+    geometry_msgs
+    cv_bridge
+)
+
 catkin_package(
     INCLUDE_DIRS inc
 )
@@ -48,11 +56,15 @@ set(INSITU_SRC
     src/insitu/mainwindowdesign.cpp
     src/insitu/addmodedialog.cpp
     src/insitu/addviewdialog.cpp
+    src/insitu/insitu_utils.cpp
+    src/insitu/filtered_view.cpp
 
     inc/insitu/main_window.hpp
     inc/insitu/mainwindowdesign.hpp
     inc/insitu/addmodedialog.hpp
     inc/insitu/addviewdialog.hpp
+    inc/insitu/insitu_utils.hpp
+    inc/insitu/filtered_view.hpp
 )
 
 set(INSITU_COMMON_SRC

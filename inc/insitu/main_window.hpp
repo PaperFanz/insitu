@@ -27,7 +27,6 @@ public Q_SLOTS:
 
 private:
 	ui::MainWindowDesign ui;
-
 };
 
 }  // namespace insitu

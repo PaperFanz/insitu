@@ -4,6 +4,10 @@
 
 int main(int argc, char **argv)
 {
+	/* ROS INITIALIZATION */
+	ros::init(argc, argv, "insitu");
+
+    /* GUI INITIALIZATION */
     QApplication app(argc, argv);
 
     insitu::MainWindow w(argc,argv);

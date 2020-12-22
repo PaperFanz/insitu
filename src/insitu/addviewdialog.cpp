@@ -1,7 +1,5 @@
 #include "addviewdialog.hpp"
 
-#include <iostream>
-
 namespace insitu {
 
 AddViewDialog::AddViewDialog(QWidget * parent) : QDialog(parent)
@@ -44,13 +42,20 @@ AddViewDialog::AddViewDialog(QWidget * parent) : QDialog(parent)
 
 void AddViewDialog::AddView()
 {
-    QMdiArea * mdiarea = tabmanager->findChild<QMdiArea *>(modeBox->currentText());
+    if (modeBox->count() > 0) {
+        QMdiArea * mdiarea = tabmanager->findChild<QMdiArea *>(modeBox->currentText());
 
-    QTextEdit * view = new QTextEdit();
-    view->setObjectName(nameEdit->text());
-    mdiarea->addSubWindow(view);
-    view->show();
-    mdiarea->tileSubWindows();
+        QString topic = nameEdit->text();
+
+        FilteredView * view = new FilteredView(topic);
+        view->setObjectName(topic);
+        view->setWindowTitle(topic);
+        mdiarea->addSubWindow(view);
+        view->show();
+        mdiarea->tileSubWindows();
+    } else {
+        // TODO, inform user mode box cannot be empty
+    }
     accept();
 }
 
@@ -66,9 +71,9 @@ void AddViewDialog::open()
     QDialog::open();
 }
 
-QStringList AddViewDialog::getModeList()
+QList<QString> AddViewDialog::getModeList()
 {
-    QStringList modes;
+    QList<QString> modes;
     int modenum = tabmanager->count();
     for (int i = 0; i < modenum; ++i) {
         modes.append(tabmanager->tabText(i));
@@ -76,11 +81,4 @@ QStringList AddViewDialog::getModeList()
     return modes;
 }
 
-QStringList AddViewDialog::getTopicList()
-{
-    QStringList topics = {"placeholder"};
-
-    return topics;
-}
-
-}
+} // END NAMESPACE INSITU
