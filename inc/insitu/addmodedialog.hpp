@@ -9,8 +9,6 @@
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QMdiArea>
 
-#include "mode.hpp"
-
 namespace insitu {
 
 class AddModeDialog : public QDialog

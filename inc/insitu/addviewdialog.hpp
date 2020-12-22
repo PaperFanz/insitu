@@ -22,7 +22,6 @@
 // insitu includes
 #include "insitu_utils.hpp"
 #include "filtered_view.hpp"
-#include "view.hpp"
 
 // C++ includes
 #include <vector>

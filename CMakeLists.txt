@@ -67,22 +67,11 @@ set(INSITU_SRC
     inc/insitu/filtered_view.hpp
 )
 
-set(INSITU_COMMON_SRC
-    src/insitu_common/filter.cpp
-    src/insitu_common/mode.cpp
-    src/insitu_common/model.cpp
-    src/insitu_common/view.cpp
-
-    inc/insitu_common/filter.hpp
-    inc/insitu_common/mode.hpp
-    inc/insitu_common/model.hpp
-    inc/insitu_common/view.hpp
-)
-
 # Binaries
 add_executable(insitu
-    ${INSITU_SRC} ${INSITU_COMMON_SRC}
-    ${QT_RESOURCES_CPP} ${QT_MOC_HPP}
+    ${INSITU_SRC}
+    ${QT_RESOURCES_CPP}
+    ${QT_MOC_HPP}
 )
 
 target_link_libraries(insitu 
