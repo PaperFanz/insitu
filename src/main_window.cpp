@@ -38,6 +38,11 @@ void MainWindow::on_actionNewView_triggered()
 	ui.addviewdialog->open();
 }
 
+void MainWindow::on_actionNewFilter_triggered()
+{
+	ui.addfilterdialog->open();
+}
+
 void MainWindow::ReadSettings()
 {
     QSettings settings("Qt-Ros Package", "insitu");

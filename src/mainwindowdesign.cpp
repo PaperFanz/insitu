@@ -12,6 +12,8 @@ void MainWindowDesign::setupUI(QMainWindow * mainwindow)
     mainwindow->setLocale(QLocale(QLocale::English, QLocale::UnitedStates));
     mainwindow->resize(900, 600);
 
+    insitu::addNamedWidget("root", mainwindow);
+
     // declare menu actions
     actionQuit = new QAction(mainwindow);
     actionQuit->setObjectName(QStringLiteral("actionQuit"));
@@ -31,6 +33,9 @@ void MainWindowDesign::setupUI(QMainWindow * mainwindow)
     actionNewView = new QAction(mainwindow);
     actionNewView->setObjectName(QStringLiteral("actionNewView"));
     actionNewView->setText(QStringLiteral("New View"));
+    actionNewFilter = new QAction(mainwindow);
+    actionNewFilter->setObjectName(QStringLiteral("actionNewFilter"));
+    actionNewFilter->setText(QStringLiteral("New Filter"));
     actionPreferences = new QAction(mainwindow);
     actionPreferences->setObjectName(QStringLiteral("actionPreferences"));
     actionPreferences->setText(QStringLiteral("Preferences"));
@@ -69,6 +74,9 @@ void MainWindowDesign::setupUI(QMainWindow * mainwindow)
     addmodedialog->setObjectName(QStringLiteral("addmodedialog"));
     addviewdialog = new insitu::AddViewDialog(mainwindow);
     addviewdialog->setObjectName(QStringLiteral("addviewdialog"));
+    addfilterdialog = new insitu::AddFilterDialog(mainwindow);
+    addfilterdialog->setObjectName(QStringLiteral("addfilterdialog"));
+    insitu::addNamedWidget("addfilterdialog", addfilterdialog);
 
     mainwindow->setCentralWidget(body);
 
@@ -99,6 +107,7 @@ void MainWindowDesign::setupUI(QMainWindow * mainwindow)
     menuFile->addAction(actionQuit);
     menuEdit->addAction(actionNewMode);
     menuEdit->addAction(actionNewView);
+    menuEdit->addAction(actionNewFilter);
     menuEdit->addSeparator();
     menuEdit->addAction(actionPreferences);
     menuHelp->addAction(menuDocs->menuAction());
@@ -123,6 +132,7 @@ void MainWindowDesign::setupShortcuts(QMainWindow * mainwindow)
     actionLoad->setShortcutContext(Qt::ApplicationShortcut);
     actionNewMode->setShortcutContext(Qt::ApplicationShortcut);
     actionNewView->setShortcutContext(Qt::ApplicationShortcut);
+    actionNewFilter->setShortcutContext(Qt::ApplicationShortcut);
     actionPreferences->setShortcutContext(Qt::ApplicationShortcut);
 
     actionQuit->setShortcut(QApplication::translate("MainWindow", "Ctrl+Q", Q_NULLPTR));
@@ -130,6 +140,7 @@ void MainWindowDesign::setupShortcuts(QMainWindow * mainwindow)
     actionLoad->setShortcut(QApplication::translate("MainWindow", "Ctrl+L", Q_NULLPTR));
     actionNewMode->setShortcut(QApplication::translate("MainWindow", "Ctrl+Shift+M", Q_NULLPTR));
     actionNewView->setShortcut(QApplication::translate("MainWindow", "Ctrl+Shift+V", Q_NULLPTR));
+    actionNewFilter->setShortcut(QApplication::translate("MainWindow", "Ctrl+Shift+F", Q_NULLPTR));
     actionPreferences->setShortcut(QApplication::translate("MainWindow", "Ctrl+Shift+P", Q_NULLPTR));
     #endif
 }

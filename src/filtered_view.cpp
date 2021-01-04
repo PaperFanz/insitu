@@ -46,6 +46,8 @@ FilteredView::FilteredView(QString _topic, QWidget * parent) : QWidget(parent)
                      SLOT(onTopicChange(const QString&)));
     QObject::connect(refreshTopicButton, SIGNAL(clicked()),
                      SLOT(refreshTopics()));
+    QObject::connect(addFilterButton, SIGNAL(clicked()),
+                     SLOT(addFilter()));
 }
 
 FilteredView::~FilteredView(void)
@@ -61,6 +63,12 @@ void FilteredView::refreshTopics(void)
     int idx = topicBox->findText(save_topic);
     idx = idx == -1 ? 0 : idx;
     topicBox->setCurrentIndex(idx);
+}
+
+void FilteredView::addFilter(void)
+{
+    AddFilterDialog * afd = (AddFilterDialog *) getNamedWidget("addfilterdialog");
+    afd->open();
 }
 
 void FilteredView::onTopicChange(QString topic_transport)

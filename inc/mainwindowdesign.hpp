@@ -16,6 +16,9 @@
 
 #include "addmodedialog.hpp"
 #include "addviewdialog.hpp"
+#include "addfilterdialog.hpp"
+
+#include "insitu_utils.hpp"
 
 QT_BEGIN_NAMESPACE
 
@@ -39,6 +42,7 @@ public:
     QAction * actionRecent;
     QAction * actionNewMode;
     QAction * actionNewView;
+    QAction * actionNewFilter;
     QAction * actionPreferences;
     QAction * actionROSWiki;
     QAction * actionReadme;
@@ -49,6 +53,7 @@ public:
     // dialog boxes
     insitu::AddModeDialog * addmodedialog;
     insitu::AddViewDialog * addviewdialog;
+    insitu::AddFilterDialog * addfilterdialog;
 
     // tab / mode interface
     QTabWidget * tabmanager;

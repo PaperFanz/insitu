@@ -17,6 +17,7 @@
 
 // insitu includes
 #include "insitu_utils.hpp"
+#include "addfilterdialog.hpp"
 
 namespace insitu {
 
@@ -48,6 +49,7 @@ private:
 public Q_SLOTS:
     void onTopicChange(QString topic_transport);
     void refreshTopics(void);
+    void addFilter(void);
 
 public:
     FilteredView(QString _topic, QWidget * parent = nullptr);

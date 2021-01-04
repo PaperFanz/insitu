@@ -68,5 +68,22 @@ QList<QString> getTopicList()
     return topics.values();
 }
 
+static std::unordered_map<std::string, QWidget *> widgetMap;
+
+void addNamedWidget(std::string name, QWidget * widget)
+{
+    widgetMap[name] = widget;
+}
+
+QWidget * getNamedWidget(std::string name)
+{
+    auto search = widgetMap.find(name);
+    if (search != widgetMap.end()) {
+        return search->second;
+    } else {
+        return Q_NULLPTR;
+    }
+}
+
 } // END NAMESPACE INSITU
 

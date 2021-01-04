@@ -5,17 +5,9 @@ namespace insitu {
 AddViewDialog::AddViewDialog(QWidget * parent) : QDialog(parent)
 {
     tabmanager = parent->findChild<QTabWidget *>("tabmanager");
-
-    // View name text input
     nameEdit = new QLineEdit;
-
-    // Mode name selector
     modeBox = new QComboBox();
-
-    // Topic name selector
     topicBox = new QComboBox();
-
-    // cancel button
     cancelButton = new QPushButton(tr("Cancel"));
     createButton = new QPushButton(tr("Create"));
     createButton->setDefault(true);

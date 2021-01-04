@@ -23,6 +23,7 @@ public:
 public Q_SLOTS:
 	void on_actionNewMode_triggered();
 	void on_actionNewView_triggered();
+	void on_actionNewFilter_triggered();
 	void on_actionAbout_triggered();
 
 private:

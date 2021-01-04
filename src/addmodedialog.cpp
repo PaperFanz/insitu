@@ -40,8 +40,6 @@ void AddModeDialog::AddMode()
     mdiarea->setViewMode(QMdiArea::SubWindowView);
     tabmanager->addTab(mdiarea, nameEdit->text());
 
-    // update model TODO
-
     // accept and exit modal
     accept();
 }
