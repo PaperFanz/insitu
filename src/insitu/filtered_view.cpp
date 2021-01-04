@@ -11,13 +11,9 @@ FilteredView::FilteredView(QString _topic, QWidget * parent) : QWidget(parent)
     topicBox->setCurrentIndex(idx);
     onTopicChange(topicBox->currentText());
 
-    // button to refresh topic list
+    // buttons
     refreshTopicButton = new QPushButton(tr("Refresh"));
-
-    // layout
-    menuBar = new QHBoxLayout();
-    menuBar->addWidget(topicBox);
-    menuBar->addWidget(refreshTopicButton);
+    addFilterButton = new QPushButton(tr("Add Filter"));
 
     // label to hold image
     imgLabel = new QLabel();
@@ -25,17 +21,24 @@ FilteredView::FilteredView(QString _topic, QWidget * parent) : QWidget(parent)
     imgLabel->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
     imgLabel->setScaledContents(true);
 
-    // scroll area for panning zoomed image
-    imgPan = new QScrollArea();
-    imgPan->setBackgroundRole(QPalette::Dark);
-    imgPan->setWidget(imgLabel);
-    // imgPan->setVisible(false);
+    fpsLabel = new QLabel();
+    fpsLabel->setText(tr("FPS: "));
 
-    vBox = new QVBoxLayout();
-    vBox->addLayout(menuBar);
-    vBox->addWidget(imgPan);
+    // expandable panel for filters
+    filterList = new QListView();
 
-    setLayout(vBox);
+    // layout
+    layout = new QGridLayout();
+    layout->addWidget(topicBox, 0, 0);
+    layout->addWidget(refreshTopicButton, 0, 1);
+    layout->addWidget(addFilterButton, 0, 2);
+    layout->addWidget(imgLabel, 1, 0, 1, 2, Qt::AlignCenter);
+    layout->addWidget(filterList, 1, 2);
+    layout->addWidget(fpsLabel, 2, 0);
+
+    layout->setColumnStretch(0, 1);
+
+    setLayout(layout);
 
     QObject::connect(topicBox, SIGNAL(currentIndexChanged(const QString&)),
                      SLOT(onTopicChange(const QString&)));
@@ -80,7 +83,7 @@ void FilteredView::onTopicChange(QString topic_transport)
         // TODO error message
     }
 
-    qDebug("Subscribed to topic %s / %s", sub.getTopic().c_str(), sub.getTransport().c_str());
+    // qDebug("Subscribed to topic %s / %s", sub.getTopic().c_str(), sub.getTransport().c_str());
 }
 
 void FilteredView::callbackImg(const sensor_msgs::Image::ConstPtr& msg)
@@ -96,9 +99,9 @@ void FilteredView::callbackImg(const sensor_msgs::Image::ConstPtr& msg)
     imgMat = cv_ptr->image;
     QImage image(imgMat.data, imgMat.cols, imgMat.rows, imgMat.step[0], QImage::Format_RGB888);
     QPixmap img = QPixmap::fromImage(image);
-    imgLabel->resize(img.size());
+    // imgLabel->resize(img.size());
     imgLabel->setPixmap(img);
-    qDebug("Callback on view %s", this->windowTitle().toStdString().c_str());
+    // qDebug("Callback on view %s", this->windowTitle().toStdString().c_str());
 }
 
 }

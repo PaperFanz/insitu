@@ -28,12 +28,13 @@ private:
     // UI elements
     QComboBox * topicBox;
     QPushButton * refreshTopicButton;
+    QPushButton * addFilterButton;
+    QListView * filterList;
     QLabel * imgLabel;
-    QScrollArea *imgPan;
+    QLabel * fpsLabel;
 
-    // layout elements
-    QHBoxLayout * menuBar;
-    QVBoxLayout * vBox;
+    // layout element
+    QGridLayout * layout;
 
     // ROS
     ros::NodeHandle nh;
