@@ -25,7 +25,7 @@ FilteredView::FilteredView(QString _topic, QWidget * parent) : QWidget(parent)
     fpsLabel->setText(tr("FPS: "));
 
     // expandable panel for filters
-    filterList = new QListView();
+    filterList = new QListWidget();
 
     // layout
     layout = new QGridLayout();
@@ -37,6 +37,8 @@ FilteredView::FilteredView(QString _topic, QWidget * parent) : QWidget(parent)
     layout->addWidget(fpsLabel, 2, 0);
 
     layout->setColumnStretch(0, 1);
+
+    lastFrameTime = ros::Time::now();
 
     setLayout(layout);
 
@@ -88,6 +90,17 @@ void FilteredView::onTopicChange(QString topic_transport)
 
 void FilteredView::callbackImg(const sensor_msgs::Image::ConstPtr& msg)
 {
+    // track frames per second
+    static uint32_t frames;
+    ros::Time now = ros::Time::now();
+    ++frames;
+    if (now - lastFrameTime > ros::Duration(1)) {
+        fpsLabel->setText(QString("FPS: %1").arg(frames));
+        frames = 0;
+        lastFrameTime = now;
+    }
+
+    // display image
     cv_bridge::CvImageConstPtr cv_ptr;
     try {
         cv_ptr = cv_bridge::toCvShare(msg, sensor_msgs::image_encodings::RGB8);

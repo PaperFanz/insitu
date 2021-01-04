@@ -42,8 +42,7 @@ catkin_package(
 )
 
 include_directories(
-    inc/insitu
-    inc/insitu_common
+    inc
     ${Qt5Core_INCLUDE_DIRS}
     ${Qt5Gui_INCLUDE_DIRS}
     ${Qt5Widgets_INCLUDE_DIRS}
@@ -51,20 +50,20 @@ include_directories(
 
 # Sources
 set(INSITU_SRC
-    src/insitu/main.cpp
-    src/insitu/main_window.cpp
-    src/insitu/mainwindowdesign.cpp
-    src/insitu/addmodedialog.cpp
-    src/insitu/addviewdialog.cpp
-    src/insitu/insitu_utils.cpp
-    src/insitu/filtered_view.cpp
+    src/main.cpp
+    src/main_window.cpp
+    src/mainwindowdesign.cpp
+    src/addmodedialog.cpp
+    src/addviewdialog.cpp
+    src/insitu_utils.cpp
+    src/filtered_view.cpp
 
-    inc/insitu/main_window.hpp
-    inc/insitu/mainwindowdesign.hpp
-    inc/insitu/addmodedialog.hpp
-    inc/insitu/addviewdialog.hpp
-    inc/insitu/insitu_utils.hpp
-    inc/insitu/filtered_view.hpp
+    inc/main_window.hpp
+    inc/mainwindowdesign.hpp
+    inc/addmodedialog.hpp
+    inc/addviewdialog.hpp
+    inc/insitu_utils.hpp
+    inc/filtered_view.hpp
 )
 
 # Binaries
