@@ -57,6 +57,7 @@ set(INSITU_SRC
     src/addviewdialog.cpp
     src/addfilterdialog.cpp
     src/insitu_utils.cpp
+    src/mode_container.cpp
     src/filtered_view.cpp
 
     inc/main_window.hpp
@@ -65,6 +66,7 @@ set(INSITU_SRC
     inc/addviewdialog.hpp
     inc/addfilterdialog.hpp
     inc/insitu_utils.hpp
+    inc/mode_container.hpp
     inc/filtered_view.hpp
 )
 

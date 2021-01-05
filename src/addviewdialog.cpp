@@ -4,7 +4,7 @@ namespace insitu {
 
 AddViewDialog::AddViewDialog(QWidget * parent) : QDialog(parent)
 {
-    tabmanager = parent->findChild<QTabWidget *>("tabmanager");
+    tabmanager = (QTabWidget *)getNamedWidget("tabmanager");
     nameEdit = new QLineEdit;
     modeBox = new QComboBox();
     topicBox = new QComboBox();
@@ -35,17 +35,17 @@ AddViewDialog::AddViewDialog(QWidget * parent) : QDialog(parent)
 void AddViewDialog::AddView()
 {
     if (modeBox->count() > 0) {
-        QMdiArea * mdiarea = tabmanager->findChild<QMdiArea *>(modeBox->currentText());
+        ModeContainer * container = (ModeContainer *) getNamedWidget(
+            "mode_" + modeBox->currentText().toStdString()
+        );
 
         QString name = nameEdit->text();
-        QString topic = topicBox->currentText();
 
-        FilteredView * view = new FilteredView(topic);
-        view->setObjectName(name);
+        FilteredView * view = new FilteredView(topicBox->currentText());
         view->setWindowTitle(name);
-        mdiarea->addSubWindow(view);
-        view->show();
-        mdiarea->tileSubWindows();
+        
+        container->addView(view);
+        addNamedWidget("view_" + name.toStdString(), view);
     } else {
         // TODO, inform user mode box cannot be empty
     }

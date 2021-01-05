@@ -39,6 +39,7 @@ FilteredView::FilteredView(QString _topic, QWidget * parent) : QWidget(parent)
     layout->setColumnStretch(0, 1);
 
     lastFrameTime = ros::Time::now();
+    frames = 0;
 
     setLayout(layout);
 
@@ -99,7 +100,6 @@ void FilteredView::onTopicChange(QString topic_transport)
 void FilteredView::callbackImg(const sensor_msgs::Image::ConstPtr& msg)
 {
     // track frames per second
-    static uint32_t frames;
     ros::Time now = ros::Time::now();
     ++frames;
     if (now - lastFrameTime > ros::Duration(1)) {

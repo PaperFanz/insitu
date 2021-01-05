@@ -44,6 +44,7 @@ private:
     void callbackImg(const sensor_msgs::Image::ConstPtr& msg);
 
     // OpenCV
+    uint32_t frames;
     cv::Mat imgMat;
 
 public Q_SLOTS:

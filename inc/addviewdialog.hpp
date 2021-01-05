@@ -2,17 +2,7 @@
 #define insitu_ADD_VIEW_DIALOG_HPP
 
 // QT includes
-#include <QSet>
-#include <QDialog>
-#include <QStringList>
-#include <QtWidgets/QLineEdit>
-#include <QtWidgets/QComboBox>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QHBoxLayout>
-#include <QtWidgets/QFormLayout>
-#include <QtWidgets/QTabWidget>
-#include <QtWidgets/QMdiArea>
-#include <QtWidgets/QTextEdit>
+#include <QtWidgets>
 
 // ROS includes
 #include <ros/ros.h>
@@ -21,10 +11,8 @@
 
 // insitu includes
 #include "insitu_utils.hpp"
+#include "mode_container.hpp"
 #include "filtered_view.hpp"
-
-// C++ includes
-#include <vector>
 
 namespace insitu {
 

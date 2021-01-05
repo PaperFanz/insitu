@@ -4,7 +4,7 @@ namespace insitu {
 
 AddModeDialog::AddModeDialog(QWidget * parent) : QDialog(parent)
 {
-    tabmanager = parent->findChild<QTabWidget *>("tabmanager");
+    tabmanager = (QTabWidget *)getNamedWidget("tabmanager");
     
     // mode name text input
     nameEdit = new QLineEdit();
@@ -35,10 +35,10 @@ AddModeDialog::AddModeDialog(QWidget * parent) : QDialog(parent)
 void AddModeDialog::AddMode()
 {
     // create new tab with entered name
-    QMdiArea * mdiarea = new QMdiArea();
-    mdiarea->setObjectName(nameEdit->text());
-    mdiarea->setViewMode(QMdiArea::SubWindowView);
-    tabmanager->addTab(mdiarea, nameEdit->text());
+    ModeContainer * mode = new ModeContainer();
+    tabmanager->addTab(mode, nameEdit->text());
+
+    addNamedWidget("mode_" + nameEdit->text().toStdString(), mode);
 
     // accept and exit modal
     accept();
