@@ -15,16 +15,22 @@ FilteredView::FilteredView(QString _topic, QWidget * parent) : QWidget(parent)
     refreshTopicButton = new QPushButton(tr("Refresh"));
     addFilterButton = new QPushButton(tr("Add Filter"));
 
+    // frame to preserve image aspect ratio
+    imgFrame = new QFrame();
+    imgFrame->setFrameStyle(QFrame::Plain | QFrame::Box);
+    imgFrame->setBackgroundRole(QPalette::Base);
+
     // label to hold image
-    imgLabel = new QLabel();
+    imgLabel = new QLabel(imgFrame);
     imgLabel->setBackgroundRole(QPalette::Base);
     imgLabel->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
     imgLabel->setScaledContents(true);
 
+    // display statistics in lower status bar
     fpsLabel = new QLabel();
     fpsLabel->setText(tr("FPS: "));
 
-    // expandable panel for filters
+    // panel for filters
     filterList = new QListWidget();
 
     // layout
@@ -32,7 +38,7 @@ FilteredView::FilteredView(QString _topic, QWidget * parent) : QWidget(parent)
     layout->addWidget(topicBox, 0, 0);
     layout->addWidget(refreshTopicButton, 0, 1);
     layout->addWidget(addFilterButton, 0, 2);
-    layout->addWidget(imgLabel, 1, 0, 1, 2, Qt::AlignCenter);
+    layout->addWidget(imgFrame, 1, 0, 1, 2);
     layout->addWidget(filterList, 1, 2);
     layout->addWidget(fpsLabel, 2, 0);
 
@@ -97,6 +103,8 @@ void FilteredView::onTopicChange(QString topic_transport)
     // qDebug("Subscribed to topic %s / %s", sub.getTopic().c_str(), sub.getTransport().c_str());
 }
 
+const QSize hacky_shit(2,2);
+
 void FilteredView::callbackImg(const sensor_msgs::Image::ConstPtr& msg)
 {
     // track frames per second
@@ -120,9 +128,12 @@ void FilteredView::callbackImg(const sensor_msgs::Image::ConstPtr& msg)
     imgMat = cv_ptr->image;
     QImage image(imgMat.data, imgMat.cols, imgMat.rows, imgMat.step[0], QImage::Format_RGB888);
     QPixmap img = QPixmap::fromImage(image);
-    // imgLabel->resize(img.size());
+
+    // maximize while preserving aspect ratio
+    QSize s = img.size();
+    s.scale(imgFrame->size() - hacky_shit, Qt::KeepAspectRatio);
+    imgLabel->resize(s);
     imgLabel->setPixmap(img);
-    // qDebug("Callback on view %s", this->windowTitle().toStdString().c_str());
 }
 
 }

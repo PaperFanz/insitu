@@ -31,6 +31,7 @@ private:
     QPushButton * refreshTopicButton;
     QPushButton * addFilterButton;
     QListWidget * filterList;
+    QFrame * imgFrame;
     QLabel * imgLabel;
     QLabel * fpsLabel;
 
