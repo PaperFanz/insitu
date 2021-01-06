@@ -2,6 +2,18 @@
 
 namespace insitu {
 
+static ros::NodeHandle* NH_;
+
+void setNodeHandle(ros::NodeHandle& nh)
+{
+    NH_ = &nh;
+}
+
+const ros::NodeHandle& insituNodeHandle(void)
+{
+    return *NH_;
+}
+
 const QString IT_PREFIX = "image_transport/";
 
 QList<QString> getTopicList()

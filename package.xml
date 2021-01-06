@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
-<package>
+<package format="2">
   <name>insitu</name>
   <version>0.1.0</version>
   <description>
 
-     insitu
+    insitu
 
   </description>
   <maintainer email="sci@gmail.com">sci</maintainer>
@@ -14,15 +14,18 @@
   <!-- <url type="repository">https://github.com/stonier/qt_ros</url> -->
 
   <buildtool_depend>catkin</buildtool_depend>
+
   <build_depend>qt_build</build_depend>
   <build_depend>roscpp</build_depend>
-  <build_depend>libqt4-dev</build_depend>
+  <build_depend>qtbase5-dev</build_depend>
   <build_depend>image_transport</build_depend>
+  <exec_depend>qt_build</exec_depend>
+  <exec_depend>roscpp</exec_depend>
+  <exec_depend>image_transport</exec_depend>
 
-  <run_depend>image_transport</run_depend>
-  <run_depend>qt_build</run_depend>
-  <run_depend>roscpp</run_depend>
-  <run_depend>libqt4-dev</run_depend>
-
+  <build_depend>pluginlib</build_depend>
+  <build_depend>nodelet</build_depend>
+  <exec_depend>pluginlib</exec_depend>
+  <exec_depend>nodelet</exec_depend>
  
 </package>

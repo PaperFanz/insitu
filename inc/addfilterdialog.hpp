@@ -4,6 +4,10 @@
 // QT includes
 #include <QtWidgets>
 
+// plugin includes
+#include <pluginlib/class_loader.h>
+#include <insitu/filter.hpp>
+
 namespace insitu {
 
 class AddFilterDialog : public QDialog
@@ -18,6 +22,9 @@ private:
 
     // layout
     QGridLayout * layout;
+
+    // plugin loader
+    pluginlib::ClassLoader<insitu_iface::Filter> * filterLoader;
     
 public Q_SLOTS:
     void AddFilter(void);
@@ -26,6 +33,11 @@ public:
     AddFilterDialog(QWidget * parent = nullptr);
 
     void open();
+
+private:
+    void refreshFilters(void);
+
+    boost::shared_ptr<insitu_iface::Filter> getInstance(QString filter);
 
 };
 

@@ -40,7 +40,6 @@ private:
 
     // ROS
     ros::Time lastFrameTime;
-    ros::NodeHandle nh;
     image_transport::Subscriber sub;
     void callbackImg(const sensor_msgs::Image::ConstPtr& msg);
 

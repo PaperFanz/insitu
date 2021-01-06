@@ -7,9 +7,7 @@ FilteredView::FilteredView(QString _topic, QWidget * parent) : QWidget(parent)
     // Topic name selector
     topicBox = new QComboBox();
     topicBox->addItems(getTopicList());
-    int idx = topicBox->findText(_topic);
-    topicBox->setCurrentIndex(idx);
-    onTopicChange(topicBox->currentText());
+    topicBox->setCurrentIndex(topicBox->findText(_topic));
 
     // buttons
     refreshTopicButton = new QPushButton(tr("Refresh"));
@@ -55,6 +53,8 @@ FilteredView::FilteredView(QString _topic, QWidget * parent) : QWidget(parent)
                      SLOT(refreshTopics()));
     QObject::connect(addFilterButton, SIGNAL(clicked()),
                      SLOT(addFilter()));
+
+    onTopicChange(topicBox->currentText());
 }
 
 FilteredView::~FilteredView(void)
@@ -80,7 +80,7 @@ void FilteredView::addFilter(void)
 
 void FilteredView::onTopicChange(QString topic_transport)
 {
-    static bool init = true;
+    // qDebug("topic changed");
 
     // imgMat.release();
 
@@ -89,10 +89,9 @@ void FilteredView::onTopicChange(QString topic_transport)
     std::string transport = l.length() == 2 ? l.last().toStdString() : "raw";
 
     if (!topic.empty()) {
-        if (init) init = false;
-        else sub.shutdown();
+        if(sub.getNumPublishers()) sub.shutdown();
         
-        image_transport::ImageTransport it(nh);
+        image_transport::ImageTransport it(insituNodeHandle());
         image_transport::TransportHints hints(transport);
 
         sub = it.subscribe(topic, 1, &FilteredView::callbackImg, this, hints);
@@ -107,6 +106,7 @@ const QSize hacky_shit(2,2);
 
 void FilteredView::callbackImg(const sensor_msgs::Image::ConstPtr& msg)
 {
+    // qDebug("cb in");
     // track frames per second
     ros::Time now = ros::Time::now();
     ++frames;
@@ -134,6 +134,7 @@ void FilteredView::callbackImg(const sensor_msgs::Image::ConstPtr& msg)
     s.scale(imgFrame->size() - hacky_shit, Qt::KeepAspectRatio);
     imgLabel->resize(s);
     imgLabel->setPixmap(img);
+    // qDebug("cb out");
 }
 
 }

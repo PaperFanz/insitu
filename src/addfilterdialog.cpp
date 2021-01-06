@@ -4,6 +4,8 @@ namespace insitu {
 
 AddFilterDialog::AddFilterDialog(QWidget * parent) : QDialog(parent)
 {
+    filterLoader = new pluginlib::ClassLoader<insitu_iface::Filter>("insitu_plugins", "insitu_iface::Filter");
+
     addButton = new QPushButton(tr("Add"));
     addButton->setDefault(true);
     cancelButton = new QPushButton(tr("Cancel"));
@@ -30,7 +32,29 @@ void AddFilterDialog::AddFilter()
 
 void AddFilterDialog::open()
 {
+    refreshFilters();
     QDialog::open();
+}
+
+void AddFilterDialog::refreshFilters(void)
+{
+    filterList->clear();
+
+    std::vector<std::string> classes = filterLoader->getDeclaredClasses();
+    for (auto it = classes.begin(); it != classes.end(); ++it) {
+        filterList->addItem(tr(it->c_str()));
+        qDebug("%s", it->c_str());
+    }
+}
+
+boost::shared_ptr<insitu_iface::Filter> AddFilterDialog::getInstance(QString filter)
+{
+    auto instance = filterLoader->createInstance(filter.toStdString());
+
+    nodelet::M_string rmap;
+    nodelet::V_string argv;
+
+    return instance;
 }
 
 } // END NAMESPACE INSITU

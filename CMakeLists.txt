@@ -2,11 +2,13 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(insitu)
 
-add_subdirectory(lib)
-
 # CATKIN
 # qt_build provides the qt cmake glue, roscpp the comms for a default talker
-find_package(catkin REQUIRED COMPONENTS qt_build roscpp)
+find_package(catkin REQUIRED COMPONENTS 
+    qt_build 
+    roscpp
+)
+
 include_directories(${catkin_INCLUDE_DIRS})
 add_compile_options(-std=c++11 -fPIC)
 
@@ -35,14 +37,17 @@ find_package(catkin REQUIRED COMPONENTS
     sensor_msgs
     geometry_msgs
     cv_bridge
+    pluginlib
+    nodelet
 )
 
 catkin_package(
-    INCLUDE_DIRS inc
+    INCLUDE_DIRS inc lib
 )
 
 include_directories(
     inc
+    lib
     ${Qt5Core_INCLUDE_DIRS}
     ${Qt5Gui_INCLUDE_DIRS}
     ${Qt5Widgets_INCLUDE_DIRS}
@@ -68,23 +73,28 @@ set(INSITU_SRC
     inc/insitu_utils.hpp
     inc/mode_container.hpp
     inc/filtered_view.hpp
+
+    lib/insitu/filter.hpp
 )
 
 # Binaries
-add_executable(insitu
+add_executable(${PROJECT_NAME}
     ${INSITU_SRC}
     ${QT_RESOURCES_CPP}
     ${QT_MOC_HPP}
 )
 
-target_link_libraries(insitu 
+target_link_libraries(${PROJECT_NAME} 
     Qt5::Core
     Qt5::Widgets
     ${catkin_LIBRARIES}
 )
 
 # catkin install dirs
-install(TARGETS insitu
+install(TARGETS ${PROJECT_NAME}
     RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
 )
 
+install(DIRECTORY lib/${PROJECT_NAME}
+    DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+)

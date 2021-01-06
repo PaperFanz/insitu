@@ -1,6 +1,7 @@
 #include <QtGui>
 #include <QApplication>
 #include "main_window.hpp"
+#include "insitu_utils.hpp"
 
 int main(int argc, char **argv)
 {
@@ -8,6 +9,9 @@ int main(int argc, char **argv)
 	ros::init(argc, argv, "insitu");
     ros::AsyncSpinner spinner(1);
     spinner.start();
+
+    ros::NodeHandle nh;
+    insitu::setNodeHandle(nh);
 
     /* GUI INITIALIZATION */
     QApplication app(argc, argv);
