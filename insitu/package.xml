@@ -19,6 +19,7 @@
   <build_depend>roscpp</build_depend>
   <build_depend>qtbase5-dev</build_depend>
   <build_depend>image_transport</build_depend>
+  
   <exec_depend>qt_build</exec_depend>
   <exec_depend>roscpp</exec_depend>
   <exec_depend>image_transport</exec_depend>

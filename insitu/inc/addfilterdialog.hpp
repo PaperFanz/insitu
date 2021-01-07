@@ -5,8 +5,7 @@
 #include <QtWidgets>
 
 // plugin includes
-#include <pluginlib/class_loader.h>
-#include <insitu/filter.hpp>
+#include "filter_factory.hpp"
 
 namespace insitu {
 
@@ -23,8 +22,8 @@ private:
     // layout
     QGridLayout * layout;
 
-    // plugin loader
-    pluginlib::ClassLoader<insitu_iface::Filter> * filterLoader;
+    // loader
+    FilterFactory * filterLoader;
     
 public Q_SLOTS:
     void AddFilter(void);
@@ -36,8 +35,6 @@ public:
 
 private:
     void refreshFilters(void);
-
-    boost::shared_ptr<insitu_iface::Filter> getInstance(QString filter);
 
 };
 

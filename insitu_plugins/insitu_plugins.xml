@@ -1,0 +1,5 @@
+<library path="lib/libinsitu_plugins">
+  <class type="insitu_plugins::TextFilter" base_class_type="insitu::Filter">
+    <description>This is a text filter.</description>
+  </class>
+</library>
