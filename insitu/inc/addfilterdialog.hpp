@@ -6,6 +6,7 @@
 
 // plugin includes
 #include "filter_factory.hpp"
+#include "filtered_view.hpp"
 
 namespace insitu {
 
@@ -16,6 +17,8 @@ Q_OBJECT
 private:
     // ui elements
     QListWidget * filterList;
+    QLineEdit * nameEdit;
+    QLabel * nameLabel;
     QPushButton * addButton;
     QPushButton * cancelButton;
 
@@ -24,12 +27,16 @@ private:
 
     // loader
     FilterFactory * filterLoader;
+
+    FilteredView * activeView;
     
 public Q_SLOTS:
     void AddFilter(void);
 
 public:
     AddFilterDialog(QWidget * parent = nullptr);
+
+    void setActiveView(FilteredView * view);
 
     void open();
 

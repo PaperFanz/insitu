@@ -17,7 +17,7 @@
 
 // insitu includes
 #include "insitu_utils.hpp"
-#include "addfilterdialog.hpp"
+#include <insitu/filter.hpp>
 
 namespace insitu {
 
@@ -41,20 +41,34 @@ private:
     // ROS
     ros::Time lastFrameTime;
     image_transport::Subscriber sub;
-    void callbackImg(const sensor_msgs::Image::ConstPtr& msg);
 
     // OpenCV
     uint32_t frames;
     cv::Mat imgMat;
 
+    // Filter containers
+    std::vector<std::string> filterOrder;
+    std::unordered_map<std::string, boost::shared_ptr<insitu::Filter>> filters;
+
 public Q_SLOTS:
+
     void onTopicChange(QString topic_transport);
+
     void refreshTopics(void);
-    void addFilter(void);
+
+    void openFilterDialog(void);
 
 public:
+
     FilteredView(QString _topic, QWidget * parent = nullptr);
+
     ~FilteredView(void);
+
+    void addFilter(boost::shared_ptr<insitu::Filter> filter);
+
+private:
+
+    void callbackImg(const sensor_msgs::Image::ConstPtr& msg);
 
 };
 

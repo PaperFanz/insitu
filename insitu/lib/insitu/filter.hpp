@@ -23,11 +23,17 @@ class Filter : public nodelet::Nodelet
 {
 
 public:
+
     Filter(){};
+
     virtual void rmFilter(){};
+
     virtual cv::Mat apply(cv::Mat img){return img;};
 
+    const std::string& name(void){return getName();}
+
 private:
+
     virtual void onInit(){};
 
 };  // class Filter

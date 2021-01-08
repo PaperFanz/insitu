@@ -2,24 +2,59 @@
 
 namespace insitu {
 
-FilterFactory::FilterFactory(std::string pkg)
+FilterFactory::FilterFactory(const std::string& pkg)
 {
-    filterLoader = new pluginlib::ClassLoader<insitu::Filter>(pkg, "insitu::Filter");
+    nLoader = new nodelet::Loader(boost::bind(&FilterFactory::create_instance, this, _1));
+    pLoader = new pluginlib::ClassLoader<insitu::Filter>(pkg, "insitu::Filter");
 }
 
-std::vector<std::string> FilterFactory::getFilterList(void)
+FilterFactory::~FilterFactory(void)
 {
-    return filterLoader->getDeclaredClasses();
+    if (nLoader) delete nLoader;
+    if (pLoader) delete pLoader;
 }
 
-boost::shared_ptr<insitu::Filter> FilterFactory::getInstance(std:: string filter)
+std::vector<std::string>
+FilterFactory::getFilterList(void)
 {
-    auto instance = filterLoader->createInstance(filter);
+    return pLoader->getDeclaredClasses();
+}
 
-    nodelet::M_string rmap;
-    nodelet::V_string argv;
+boost::shared_ptr<insitu::Filter>
+FilterFactory::loadFilter(const std::string& filter, const std::string& name)
+{
+    nodelet::M_string rmap_;
+    nodelet::V_string argv_;
 
+    instance_.reset();
+
+    /* this will call create_instance and set instance_ */
+    bool loaded = nLoader->load(name, filter, rmap_, argv_);
+
+    if (loaded) {
+        // TODO track
+    } else {
+        // TODO error
+        throw std::runtime_error("Failed to load Filter: " + filter);
+    }
+
+    // pass ownership off to the caller
+    boost::shared_ptr<insitu::Filter> instance = instance_;
+    instance_.reset();
     return instance;
+}
+
+bool
+FilterFactory::unloadFilter(const std::string& name)
+{
+    return false;
+}
+
+boost::shared_ptr<nodelet::Nodelet>
+FilterFactory::create_instance(const std::string& lookup_name)
+{
+    instance_ = pLoader->createInstance(lookup_name);
+    return instance_;
 }
 
 }

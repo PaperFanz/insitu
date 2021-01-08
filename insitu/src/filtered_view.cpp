@@ -1,7 +1,11 @@
 #include "filtered_view.hpp"
+#include "addfilterdialog.hpp"
 
 namespace insitu {
 
+/*
+    Constructor / Destructor
+*/
 FilteredView::FilteredView(QString _topic, QWidget * parent) : QWidget(parent)
 {
     // Topic name selector
@@ -52,7 +56,7 @@ FilteredView::FilteredView(QString _topic, QWidget * parent) : QWidget(parent)
     QObject::connect(refreshTopicButton, SIGNAL(clicked()),
                      SLOT(refreshTopics()));
     QObject::connect(addFilterButton, SIGNAL(clicked()),
-                     SLOT(addFilter()));
+                     SLOT(openFilterDialog()));
 
     onTopicChange(topicBox->currentText());
 }
@@ -62,6 +66,9 @@ FilteredView::~FilteredView(void)
     sub.shutdown();
 }
 
+/*
+    Slots
+*/
 void FilteredView::refreshTopics(void)
 {
     QString save_topic = topicBox->currentText();
@@ -72,9 +79,10 @@ void FilteredView::refreshTopics(void)
     topicBox->setCurrentIndex(idx);
 }
 
-void FilteredView::addFilter(void)
+void FilteredView::openFilterDialog(void)
 {
     AddFilterDialog * afd = (AddFilterDialog *) getNamedWidget("addfilterdialog");
+    afd->setActiveView(this);
     afd->open();
 }
 
@@ -102,6 +110,24 @@ void FilteredView::onTopicChange(QString topic_transport)
     // qDebug("Subscribed to topic %s / %s", sub.getTopic().c_str(), sub.getTransport().c_str());
 }
 
+/*
+    Public Functions
+*/
+void FilteredView::addFilter(boost::shared_ptr<insitu::Filter> filter)
+{
+    std::string name = filter->name();
+
+    if (filters.find(name) == filters.end()) {
+        filterOrder.push_back(name);
+        filters[name] = filter;
+    } else {
+        // TODO err filter exists
+    }
+}
+
+/*
+    Private Functions
+*/
 const QSize hacky_shit(2,2);
 
 void FilteredView::callbackImg(const sensor_msgs::Image::ConstPtr& msg)
@@ -116,7 +142,7 @@ void FilteredView::callbackImg(const sensor_msgs::Image::ConstPtr& msg)
         lastFrameTime = now;
     }
 
-    // display image
+    // convert sensor_msgs::Image to cv matrix
     cv_bridge::CvImageConstPtr cv_ptr;
     try {
         cv_ptr = cv_bridge::toCvShare(msg, sensor_msgs::image_encodings::RGB8);
@@ -124,8 +150,14 @@ void FilteredView::callbackImg(const sensor_msgs::Image::ConstPtr& msg)
         qWarning("Failed to convert image: %s", e.what());
         return;
     }
-
     imgMat = cv_ptr->image;
+
+    // apply filters
+    for (auto it = filterOrder.begin(); it != filterOrder.end(); ++it) {
+        imgMat = filters[*it]->apply(imgMat);
+    }
+
+    // convert cv matrix to qpixmap
     QImage image(imgMat.data, imgMat.cols, imgMat.rows, imgMat.step[0], QImage::Format_RGB888);
     QPixmap img = QPixmap::fromImage(image);
 
