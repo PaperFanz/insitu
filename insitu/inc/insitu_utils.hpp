@@ -2,7 +2,7 @@
 #define insitu_INSITU_UTILS_HPP
 
 // QT includes
-#include <QWidget>
+#include <QtWidgets>
 #include <QSet>
 #include <QString>
 
@@ -28,6 +28,8 @@ QList<QString> getTopicList();
 void addNamedWidget(std::string name, QWidget * widget);
 
 QWidget * getNamedWidget(std::string name);
+
+void clearLayout(QLayout* layout);
 
 } // namespace insitu
 #endif

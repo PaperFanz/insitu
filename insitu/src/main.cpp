@@ -7,7 +7,7 @@ int main(int argc, char **argv)
 {
 	/* ROS INITIALIZATION */
 	ros::init(argc, argv, "insitu");
-    ros::AsyncSpinner spinner(1);
+    ros::AsyncSpinner spinner(0);
     spinner.start();
 
     ros::NodeHandle nh;
@@ -22,8 +22,7 @@ int main(int argc, char **argv)
     app.connect(&app, SIGNAL(lastWindowClosed()), &app, SLOT(quit()));
     int result = app.exec();
 
-    spinner.stop();
-    ros::shutdown();
+    ros::waitForShutdown();
 
 	return result;
 }

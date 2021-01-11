@@ -65,6 +65,7 @@ set(INSITU_SRC
     src/mode_container.cpp
     src/filtered_view.cpp
     src/filter_factory.cpp
+    src/filter_card.cpp
 
     inc/main_window.hpp
     inc/mainwindowdesign.hpp
@@ -75,6 +76,7 @@ set(INSITU_SRC
     inc/mode_container.hpp
     inc/filtered_view.hpp
     inc/filter_factory.hpp
+    inc/filter_card.hpp
 
     lib/insitu/filter.hpp
 )

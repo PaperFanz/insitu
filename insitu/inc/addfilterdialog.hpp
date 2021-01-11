@@ -7,6 +7,7 @@
 // plugin includes
 #include "filter_factory.hpp"
 #include "filtered_view.hpp"
+#include "filter_card.hpp"
 
 namespace insitu {
 
@@ -17,6 +18,7 @@ Q_OBJECT
 private:
     // ui elements
     QListWidget * filterList;
+    QScrollArea * listScroll;
     QLineEdit * nameEdit;
     QLabel * nameLabel;
     QPushButton * addButton;
@@ -28,6 +30,7 @@ private:
     // loader
     FilterFactory * filterLoader;
 
+    // load destination
     FilteredView * activeView;
     
 public Q_SLOTS:

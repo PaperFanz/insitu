@@ -45,6 +45,15 @@ public:
     bool
     unloadFilter(const std::string& name);
 
+    std::string
+    getClassDescription(const std::string& name);
+
+    std::string
+    getClassPackage(const std::string& name);
+
+    std::string
+    getName(const std::string& name);
+
 };
 
 } // namespace insitu

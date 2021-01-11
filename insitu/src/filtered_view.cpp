@@ -6,7 +6,7 @@ namespace insitu {
 /*
     Constructor / Destructor
 */
-FilteredView::FilteredView(QString _topic, QWidget * parent) : QWidget(parent)
+FilteredView::FilteredView(QString _name, QString _topic, QWidget * parent) : QWidget(parent)
 {
     // Topic name selector
     topicBox = new QComboBox();
@@ -57,6 +57,8 @@ FilteredView::FilteredView(QString _topic, QWidget * parent) : QWidget(parent)
                      SLOT(refreshTopics()));
     QObject::connect(addFilterButton, SIGNAL(clicked()),
                      SLOT(openFilterDialog()));
+
+    name = _name.toStdString();
 
     onTopicChange(topicBox->currentText());
 }
@@ -120,6 +122,11 @@ void FilteredView::addFilter(boost::shared_ptr<insitu::Filter> filter)
     if (filters.find(name) == filters.end()) {
         filterOrder.push_back(name);
         filters[name] = filter;
+
+        filterList->clear();
+        for (auto it = filterOrder.rbegin(); it != filterOrder.rend(); ++it) {
+            filterList->addItem(tr(it->c_str()));
+        }
     } else {
         // TODO err filter exists
     }
@@ -128,7 +135,7 @@ void FilteredView::addFilter(boost::shared_ptr<insitu::Filter> filter)
 /*
     Private Functions
 */
-const QSize hacky_shit(2,2);
+const QSize HACKY_SHIT(2,2); // DO NOT REMOVE, application crashes without it
 
 void FilteredView::callbackImg(const sensor_msgs::Image::ConstPtr& msg)
 {
@@ -154,6 +161,7 @@ void FilteredView::callbackImg(const sensor_msgs::Image::ConstPtr& msg)
 
     // apply filters
     for (auto it = filterOrder.begin(); it != filterOrder.end(); ++it) {
+        // qDebug("Filter %s for view %s", filters[*it]->name().c_str(), name.c_str());
         imgMat = filters[*it]->apply(imgMat);
     }
 
@@ -163,7 +171,7 @@ void FilteredView::callbackImg(const sensor_msgs::Image::ConstPtr& msg)
 
     // maximize while preserving aspect ratio
     QSize s = img.size();
-    s.scale(imgFrame->size() - hacky_shit, Qt::KeepAspectRatio);
+    s.scale(imgFrame->size() - HACKY_SHIT, Qt::KeepAspectRatio);
     imgLabel->resize(s);
     imgLabel->setPixmap(img);
     // qDebug("cb out");

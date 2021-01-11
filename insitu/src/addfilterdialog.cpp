@@ -21,6 +21,9 @@ AddFilterDialog::AddFilterDialog(QWidget * parent) : QDialog(parent)
 
     filterList = new QListWidget();
 
+    listScroll = new QScrollArea();
+    listScroll->setWidget(filterList);
+
     // callbacks
     QObject::connect(addButton, SIGNAL(clicked()), SLOT(AddFilter()));
     QObject::connect(cancelButton, SIGNAL(clicked()), SLOT(reject()));
@@ -43,8 +46,13 @@ AddFilterDialog::AddFilterDialog(QWidget * parent) : QDialog(parent)
 void AddFilterDialog::AddFilter()
 {
     if (activeView != nullptr) {
+        if (filterList->currentItem() == nullptr) {
+            // TODO err
+            reject();
+        }
+        FilterCard * fc = (FilterCard *) filterList->itemWidget(filterList->currentItem());
         boost::shared_ptr<insitu::Filter> fl = filterLoader->loadFilter(
-            filterList->currentItem()->text().toStdString(),
+            fc->getFilterName(),
             nameEdit->text().toStdString()
         );
 
@@ -64,6 +72,7 @@ void AddFilterDialog::AddFilter()
 void AddFilterDialog::open()
 {
     refreshFilters();
+    filterList->setCurrentRow(0);
     QDialog::open();
 }
 
@@ -79,10 +88,20 @@ void AddFilterDialog::refreshFilters(void)
 {
     filterList->clear();
 
-    std::vector<std::string> classes = filterLoader->getFilterList();
+    auto classes = filterLoader->getFilterList();
     for (auto it = classes.begin(); it != classes.end(); ++it) {
-        filterList->addItem(tr(it->c_str()));
-        qDebug("%s", it->c_str());
+        QListWidgetItem * item = new QListWidgetItem();
+        FilterCard * fc = new FilterCard(
+            *it,
+            filterLoader->getName(*it),
+            filterLoader->getClassPackage(*it),
+            filterLoader->getClassDescription(*it)
+        );
+        item->setSizeHint(fc->sizeHint());
+
+        filterList->addItem(item);
+        filterList->setItemWidget(item, fc);
+        //qDebug("%s", it->c_str());
     }
 }
 

@@ -44,17 +44,35 @@ FilterFactory::loadFilter(const std::string& filter, const std::string& name)
     return instance;
 }
 
-bool
-FilterFactory::unloadFilter(const std::string& name)
-{
-    return false;
-}
-
 boost::shared_ptr<nodelet::Nodelet>
 FilterFactory::create_instance(const std::string& lookup_name)
 {
     instance_ = pLoader->createInstance(lookup_name);
     return instance_;
+}
+
+bool
+FilterFactory::unloadFilter(const std::string& name)
+{
+    return nLoader->unload(name);
+}
+
+std::string
+FilterFactory::getClassDescription(const std::string& name)
+{
+    return pLoader->getClassDescription(name);
+}
+
+std::string
+FilterFactory::getClassPackage(const std::string& name)
+{
+    return pLoader->getClassPackage(name);
+}
+
+std::string
+FilterFactory::getName(const std::string& name)
+{
+    return pLoader->getName(name);
 }
 
 }

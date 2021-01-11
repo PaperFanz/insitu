@@ -9,15 +9,17 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/core/core.hpp>
 
+#include <unordered_map>
+
 namespace insitu {
 
-enum SettingType {
+typedef enum SettingType {
     BOOLEAN,
     FLOAT,
     INT,
     STRING,
     NUM_SETTING_TYPES
-};
+} setting_t;
 
 class Filter : public nodelet::Nodelet
 {
@@ -35,6 +37,8 @@ public:
 private:
 
     virtual void onInit(){};
+
+    std::unordered_map<std::string, std::pair<setting_t, std::string>> settings;
 
 };  // class Filter
 

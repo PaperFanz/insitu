@@ -50,6 +50,9 @@ private:
     std::vector<std::string> filterOrder;
     std::unordered_map<std::string, boost::shared_ptr<insitu::Filter>> filters;
 
+    // Housekeeping
+    std::string name;
+
 public Q_SLOTS:
 
     void onTopicChange(QString topic_transport);
@@ -60,7 +63,7 @@ public Q_SLOTS:
 
 public:
 
-    FilteredView(QString _topic, QWidget * parent = nullptr);
+    FilteredView(QString _name, QString _topic, QWidget * parent = nullptr);
 
     ~FilteredView(void);
 

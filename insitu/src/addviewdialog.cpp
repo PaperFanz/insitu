@@ -41,7 +41,7 @@ void AddViewDialog::AddView()
 
         QString name = nameEdit->text();
 
-        FilteredView * view = new FilteredView(topicBox->currentText());
+        FilteredView * view = new FilteredView(name, topicBox->currentText());
         view->setWindowTitle(name);
         
         container->addView(view);
