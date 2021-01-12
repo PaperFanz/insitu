@@ -6,7 +6,8 @@ namespace insitu {
 /*
     Constructor / Destructor
 */
-FilteredView::FilteredView(QString _name, QString _topic, QWidget * parent) : QWidget(parent)
+FilteredView::FilteredView(const ros::NodeHandle& parent_, QString _name, 
+    QString _topic, QWidget * parent) : QWidget(parent)
 {
     // Topic name selector
     topicBox = new QComboBox();
@@ -18,7 +19,7 @@ FilteredView::FilteredView(QString _name, QString _topic, QWidget * parent) : QW
     addFilterButton = new QPushButton(tr("Add Filter"));
 
     // frame to preserve image aspect ratio
-    imgFrame = new QFrame();
+    imgFrame = new RosImageFrame();
     imgFrame->setFrameStyle(QFrame::Plain | QFrame::Box);
     imgFrame->setBackgroundRole(QPalette::Base);
 
@@ -59,6 +60,10 @@ FilteredView::FilteredView(QString _name, QString _topic, QWidget * parent) : QW
                      SLOT(openFilterDialog()));
 
     name = _name.toStdString();
+    nh = new ros::NodeHandle(parent_, name);
+    nh->setCallbackQueue(&viewQueue);
+    spinner = new ros::AsyncSpinner(1, &viewQueue);
+    spinner->start();
 
     onTopicChange(topicBox->currentText());
 }
@@ -66,6 +71,9 @@ FilteredView::FilteredView(QString _name, QString _topic, QWidget * parent) : QW
 FilteredView::~FilteredView(void)
 {
     sub.shutdown();
+    spinner->stop();
+    delete spinner;
+    delete nh;
 }
 
 /*
@@ -101,7 +109,7 @@ void FilteredView::onTopicChange(QString topic_transport)
     if (!topic.empty()) {
         if(sub.getNumPublishers()) sub.shutdown();
         
-        image_transport::ImageTransport it(insituNodeHandle());
+        image_transport::ImageTransport it(*nh);
         image_transport::TransportHints hints(transport);
 
         sub = it.subscribe(topic, 1, &FilteredView::callbackImg, this, hints);
@@ -130,6 +138,11 @@ void FilteredView::addFilter(boost::shared_ptr<insitu::Filter> filter)
     } else {
         // TODO err filter exists
     }
+}
+
+const ros::NodeHandle& FilteredView::getNodeHandle(void)
+{
+    return *nh;
 }
 
 /*
@@ -166,14 +179,10 @@ void FilteredView::callbackImg(const sensor_msgs::Image::ConstPtr& msg)
     }
 
     // convert cv matrix to qpixmap
-    QImage image(imgMat.data, imgMat.cols, imgMat.rows, imgMat.step[0], QImage::Format_RGB888);
-    QPixmap img = QPixmap::fromImage(image);
-
-    // maximize while preserving aspect ratio
-    QSize s = img.size();
-    s.scale(imgFrame->size() - HACKY_SHIT, Qt::KeepAspectRatio);
-    imgLabel->resize(s);
-    imgLabel->setPixmap(img);
+    QImage image(imgMat.data, imgMat.cols, imgMat.rows, imgMat.step[0], 
+                 QImage::Format_RGB888);
+    
+    imgFrame->setImage(image);
     // qDebug("cb out");
 }
 

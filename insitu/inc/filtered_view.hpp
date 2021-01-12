@@ -7,6 +7,7 @@
 // ROS includes
 #include <ros/ros.h>
 #include <ros/master.h>
+#include <ros/callback_queue.h>
 #include <sensor_msgs/Image.h>
 #include <image_transport/image_transport.h>
 
@@ -18,6 +19,7 @@
 // insitu includes
 #include "insitu_utils.hpp"
 #include <insitu/filter.hpp>
+#include "ros_image_frame.hpp"
 
 namespace insitu {
 
@@ -31,7 +33,7 @@ private:
     QPushButton * refreshTopicButton;
     QPushButton * addFilterButton;
     QListWidget * filterList;
-    QFrame * imgFrame;
+    RosImageFrame * imgFrame;
     QLabel * imgLabel;
     QLabel * fpsLabel;
 
@@ -39,12 +41,16 @@ private:
     QGridLayout * layout;
 
     // ROS
+    ros::NodeHandle * nh;
+    ros::CallbackQueue viewQueue;
+    ros::AsyncSpinner * spinner;
     ros::Time lastFrameTime;
     image_transport::Subscriber sub;
 
     // OpenCV
     uint32_t frames;
     cv::Mat imgMat;
+    QImage imgbuf;
 
     // Filter containers
     std::vector<std::string> filterOrder;
@@ -63,11 +69,14 @@ public Q_SLOTS:
 
 public:
 
-    FilteredView(QString _name, QString _topic, QWidget * parent = nullptr);
+    FilteredView(const ros::NodeHandle& parent_, QString _name, QString _topic, 
+        QWidget * parent = nullptr);
 
     ~FilteredView(void);
 
     void addFilter(boost::shared_ptr<insitu::Filter> filter);
+
+    const ros::NodeHandle& getNodeHandle(void);
 
 private:
 

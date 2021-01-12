@@ -4,6 +4,9 @@
 // QT includes
 #include <QtWidgets>
 
+// ROS includes
+#include <ros/ros.h>
+
 // insitu includes
 #include "insitu_utils.hpp"
 #include "filtered_view.hpp"
@@ -24,16 +27,21 @@ private:
     // layout element
     QGridLayout * layout;
 
+    // ROS
+    ros::NodeHandle * nh;
+
 public Q_SLOTS:
     void tile(void);
     void cascade(void);
 
 public:
-    ModeContainer(QWidget * parent = nullptr);
+    ModeContainer(QString name, QWidget * parent = nullptr);
 
     ~ModeContainer(void);
 
     void addView(FilteredView * view);
+
+    const ros::NodeHandle& getNodeHandle(void);
 
 };
 

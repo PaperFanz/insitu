@@ -2,7 +2,10 @@
 
 namespace insitu {
 
-ModeContainer::ModeContainer(QWidget * parent) : QWidget(parent)
+/*
+    Constructor/Destructor
+*/
+ModeContainer::ModeContainer(QString name, QWidget * parent) : QWidget(parent)
 {
     // ui elements
     addViewButton = new QPushButton(tr("Add View"));
@@ -26,6 +29,8 @@ ModeContainer::ModeContainer(QWidget * parent) : QWidget(parent)
 
     layout->setColumnStretch(0, 1);
 
+    nh = new ros::NodeHandle(name.toStdString());
+
     setLayout(layout);
 }
 
@@ -41,7 +46,7 @@ void ModeContainer::cascade(void)
 
 ModeContainer::~ModeContainer(void)
 {
-
+    delete nh;
 }
 
 void ModeContainer::addView(FilteredView * view)
@@ -49,6 +54,11 @@ void ModeContainer::addView(FilteredView * view)
     container->addSubWindow(view);
     view->show();
     container->tileSubWindows();
+}
+
+const ros::NodeHandle& ModeContainer::getNodeHandle(void)
+{
+    return *nh;
 }
 
 }

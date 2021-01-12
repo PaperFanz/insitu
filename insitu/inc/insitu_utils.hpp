@@ -17,10 +17,6 @@
 
 namespace insitu {
 
-void setNodeHandle(ros::NodeHandle& nh);
-
-const ros::NodeHandle& insituNodeHandle(void);
-
 QList<QString> getModeList();
 
 QList<QString> getTopicList();

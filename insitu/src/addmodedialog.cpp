@@ -34,11 +34,13 @@ AddModeDialog::AddModeDialog(QWidget * parent) : QDialog(parent)
 
 void AddModeDialog::AddMode()
 {
+    QString name = nameEdit->text();
+    
     // create new tab with entered name
-    ModeContainer * mode = new ModeContainer();
-    tabmanager->addTab(mode, nameEdit->text());
+    ModeContainer * mode = new ModeContainer(name);
+    tabmanager->addTab(mode, name);
 
-    addNamedWidget("mode_" + nameEdit->text().toStdString(), mode);
+    addNamedWidget("mode_" + name.toStdString(), mode);
 
     // accept and exit modal
     accept();
