@@ -4,12 +4,7 @@ namespace insitu_plugins {
 
 TextFilter::TextFilter(void)
 {
-    text = "Hello World!";
-}
-
-void TextFilter::setText(std::string text_)
-{
-    text = text_;
+    settings["text"] = {insitu::STRING, "Hello World!"};
 }
 
 cv::Mat TextFilter::apply(cv::Mat img)
@@ -17,7 +12,7 @@ cv::Mat TextFilter::apply(cv::Mat img)
     NODELET_DEBUG("str: %s\n", text.c_str());
     cv::putText(
         img,
-        text,
+        getStringSetting("text"),
         cv::Point(50,50),
         cv::FONT_HERSHEY_DUPLEX,
         1,

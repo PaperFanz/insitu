@@ -126,6 +126,7 @@ void FilteredView::onTopicChange(QString topic_transport)
 void FilteredView::addFilter(boost::shared_ptr<insitu::Filter> filter)
 {
     std::string name = filter->name();
+    filter->set("text", name);
 
     if (filters.find(name) == filters.end()) {
         filterOrder.push_back(name);

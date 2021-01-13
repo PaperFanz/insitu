@@ -15,7 +15,6 @@ public:
     virtual cv::Mat apply(cv::Mat);
 
 private:
-    void setText(std::string);
 
     std::string text;
 

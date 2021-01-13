@@ -42,6 +42,8 @@ private:
 
     // ROS
     ros::NodeHandle * nh;
+    /* Give each view its own callback queue 
+       and spinner thread to speed things up */
     ros::CallbackQueue viewQueue;
     ros::AsyncSpinner * spinner;
     ros::Time lastFrameTime;
