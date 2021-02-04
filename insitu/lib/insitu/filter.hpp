@@ -28,8 +28,10 @@ class Filter : public nodelet::Nodelet
 
 protected:
 
+    // settings dictionary; load from ROS param server or configure through GUI
     std::unordered_map<std::string, std::pair<setting_t, std::string>> settings;
 
+    // BEGIN settings getters
     // not needed if filter doesn't also write to settings
     // std::mutex settings_mutex;
     
@@ -68,6 +70,7 @@ protected:
         // settings_mutex.unlock();
         return s;
     }
+    // END settings getters
 
 public:
 
@@ -75,6 +78,12 @@ public:
 
     virtual void
     rmFilter(){};
+
+    /*
+        @Filter implementors: reimplement this function to apply filter effects;
+        this function is called during every image subscriber callback for the
+        view it is applied to
+    */
 
     virtual cv::Mat
     apply(cv::Mat img)
@@ -88,12 +97,19 @@ public:
         return getName();
     }
 
+    /*
+        called by Insitu, can also be used to implement custom settings 
+        editing interface
+    */
     const std::unordered_map<std::string, std::pair<setting_t, std::string>>&
     getSettings(void)
     {
         return settings;
     }
 
+    /*
+        called by Insitu, do not reimplement
+    */
     bool
     set(std::string key, std::string val)
     {
@@ -108,6 +124,11 @@ public:
 
 private:
 
+    /*
+        @Filter implementors: reimplement this function with any initialization
+        required; the creating of data structures, global variables, etc. 
+        Called by Insitu upon filter load.
+    */
     virtual void
     onInit(){};
 
