@@ -5,25 +5,25 @@ namespace insitu {
 /*
     Constructor/Destructor
 */
-FilterCard::FilterCard(std::string name_, std::string type_, 
-                       std::string package_, std::string description_, 
-                       QWidget * parent) : QWidget(parent)
+FilterCard::FilterCard(std::string name_, QWidget * parent) : QWidget(parent)
 {
     name = name_;
 
     // ui elements
-    type = new QLabel(tr(type_.c_str()));
-    package = new QLabel(tr(package_.c_str()));
-    description = new QLabel(tr(description_.c_str()));
+    nameLabel = new QLabel(tr(name_.c_str()));
+
+    editButton = new QPushButton(tr("Edit"));
+    upButton = new QPushButton(tr("Up"));
+    downButton = new QPushButton(tr("Down"));
 
     // callbacks
 
     // layout
     layout = new QGridLayout();
-    layout->addWidget(type, 0, 0);
-    layout->addWidget(package, 0, 2);
-    layout->addWidget(description, 1, 0, 1, 3);
-    layout->setColumnStretch(1, 1);
+    layout->addWidget(nameLabel, 0, 0, 1, 2);
+    layout->addWidget(editButton, 1, 0);
+    layout->addWidget(upButton, 0, 2);
+    layout->addWidget(downButton, 1, 2);
     layout->setSizeConstraint(QLayout::SetFixedSize);
 
     setLayout(layout);

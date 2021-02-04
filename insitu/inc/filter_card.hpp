@@ -15,9 +15,11 @@ class FilterCard : public QWidget
 Q_OBJECT
 private:
     // ui elements
-    QLabel * type;
-    QLabel * package;
-    QLabel * description;
+    QLabel * nameLabel;
+
+    QPushButton * editButton;
+    QPushButton * upButton;
+    QPushButton * downButton;
 
     // layout element
     QGridLayout * layout;
@@ -28,8 +30,7 @@ private:
 public Q_SLOTS:
 
 public:
-    FilterCard(std::string name_, std::string type_, std::string package_, 
-               std::string description_, QWidget * parent = nullptr);
+    FilterCard(std::string name_, QWidget * parent = nullptr);
 
     ~FilterCard(void);
 

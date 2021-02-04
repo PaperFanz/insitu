@@ -1,5 +1,6 @@
 #include "filtered_view.hpp"
 #include "addfilterdialog.hpp"
+#include "filter_card.hpp"
 
 namespace insitu {
 
@@ -134,7 +135,12 @@ void FilteredView::addFilter(boost::shared_ptr<insitu::Filter> filter)
 
         filterList->clear();
         for (auto it = filterOrder.rbegin(); it != filterOrder.rend(); ++it) {
-            filterList->addItem(tr(it->c_str()));
+            QListWidgetItem * item = new QListWidgetItem();
+            FilterCard * fc = new FilterCard(*it);
+            item->setSizeHint(fc->sizeHint());
+
+            filterList->addItem(item);
+            filterList->setItemWidget(item, fc);
         }
     } else {
         // TODO err filter exists

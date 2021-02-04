@@ -7,7 +7,7 @@
 // plugin includes
 #include "filter_factory.hpp"
 #include "filtered_view.hpp"
-#include "filter_card.hpp"
+#include "filter_info.hpp"
 
 namespace insitu {
 

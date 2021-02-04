@@ -30,8 +30,9 @@ protected:
 
     std::unordered_map<std::string, std::pair<setting_t, std::string>> settings;
 
+    // not needed if filter doesn't also write to settings
     // std::mutex settings_mutex;
-
+    
     bool
     getBoolSetting(std::string key)
     {

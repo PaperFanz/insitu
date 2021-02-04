@@ -50,9 +50,9 @@ void AddFilterDialog::AddFilter()
             // TODO err
             reject();
         }
-        FilterCard * fc = (FilterCard *) filterList->itemWidget(filterList->currentItem());
+        FilterInfo * fi = (FilterInfo *) filterList->itemWidget(filterList->currentItem());
         boost::shared_ptr<insitu::Filter> fl = filterLoader->loadFilter(
-            fc->getFilterName(),
+            fi->getFilterName(),
             nameEdit->text().toStdString()
         );
 
@@ -91,16 +91,16 @@ void AddFilterDialog::refreshFilters(void)
     auto classes = filterLoader->getFilterList();
     for (auto it = classes.begin(); it != classes.end(); ++it) {
         QListWidgetItem * item = new QListWidgetItem();
-        FilterCard * fc = new FilterCard(
+        FilterInfo * fi = new FilterInfo(
             *it,
             filterLoader->getName(*it),
             filterLoader->getClassPackage(*it),
             filterLoader->getClassDescription(*it)
         );
-        item->setSizeHint(fc->sizeHint());
+        item->setSizeHint(fi->sizeHint());
 
         filterList->addItem(item);
-        filterList->setItemWidget(item, fc);
+        filterList->setItemWidget(item, fi);
         //qDebug("%s", it->c_str());
     }
 }

@@ -66,6 +66,7 @@ set(INSITU_SRC
     src/filtered_view.cpp
     src/filter_factory.cpp
     src/filter_card.cpp
+    src/filter_info.cpp
     src/ros_image_frame.cpp
 
     inc/main_window.hpp
@@ -78,6 +79,7 @@ set(INSITU_SRC
     inc/filtered_view.hpp
     inc/filter_factory.hpp
     inc/filter_card.hpp
+    inc/filter_info.hpp
     inc/ros_image_frame.hpp
 
     lib/insitu/filter.hpp
