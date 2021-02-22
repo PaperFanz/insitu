@@ -1,6 +1,9 @@
 #ifndef insitu_plugins_FILTER_HPP
 #define insitu_plugins_FILTER_HPP
 
+// QT includes
+#include <QtWidgets>
+
 // ros/pluginlib includes
 #include <pluginlib/class_list_macros.h>
 #include <nodelet/nodelet.h>
@@ -25,6 +28,11 @@ typedef enum SettingType {
 
 class Filter : public nodelet::Nodelet
 {
+
+private:
+
+    // dialog box for editing settings
+    QDialog * settingsDialog;
 
 protected:
 
@@ -122,6 +130,15 @@ public:
         }
     }
 
+    /*
+        called by Insitu, do not reimplement
+    */
+    QDialog *
+    getSettingEditor(void)
+    {
+        return settingsDialog;
+    }
+
 private:
 
     /*
@@ -130,7 +147,11 @@ private:
         Called by Insitu upon filter load.
     */
     virtual void
-    onInit(){};
+    onInit()
+    {
+        settingsDialog = new QDialog();
+        settingsDialog->setWindowTitle(QString::fromStdString(name()) + " Settings");
+    };
 
 };  // class Filter
 

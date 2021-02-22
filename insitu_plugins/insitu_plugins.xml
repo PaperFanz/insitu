@@ -2,4 +2,7 @@
   <class type="insitu_plugins::TextFilter" base_class_type="insitu::Filter">
     <description>This is a text filter.</description>
   </class>
+  <class type="insitu_plugins::Crosshair" base_class_type="insitu::Filter">
+    <description>This is a simple crosshair.</description>
+  </class>
 </library>

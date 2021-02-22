@@ -18,6 +18,7 @@ FilteredView::FilteredView(const ros::NodeHandle& parent_, QString _name,
     // buttons
     refreshTopicButton = new QPushButton(tr("Refresh"));
     addFilterButton = new QPushButton(tr("Add Filter"));
+    rmFilterButton = new QPushButton(tr("Delete Filter"));
 
     // frame to preserve image aspect ratio
     imgFrame = new RosImageFrame();
@@ -36,14 +37,17 @@ FilteredView::FilteredView(const ros::NodeHandle& parent_, QString _name,
 
     // panel for filters
     filterList = new QListWidget();
+    filterList->setDragDropMode(QAbstractItemView::DragDrop);
+    filterList->setDefaultDropAction(Qt::DropAction::MoveAction);
 
     // layout
     layout = new QGridLayout();
     layout->addWidget(topicBox, 0, 0);
     layout->addWidget(refreshTopicButton, 0, 1);
     layout->addWidget(addFilterButton, 0, 2);
+    layout->addWidget(rmFilterButton, 0, 3);
     layout->addWidget(imgFrame, 1, 0, 1, 2);
-    layout->addWidget(filterList, 1, 2);
+    layout->addWidget(filterList, 1, 2, 1, 2);
     layout->addWidget(fpsLabel, 2, 0);
 
     layout->setColumnStretch(0, 1);
@@ -59,6 +63,8 @@ FilteredView::FilteredView(const ros::NodeHandle& parent_, QString _name,
                      SLOT(refreshTopics()));
     QObject::connect(addFilterButton, SIGNAL(clicked()),
                      SLOT(openFilterDialog()));
+    QObject::connect(rmFilterButton, SIGNAL(clicked()),
+                     SLOT(rmFilter()));
 
     name = _name.toStdString();
     nh = new ros::NodeHandle(parent_, name);
@@ -121,27 +127,28 @@ void FilteredView::onTopicChange(QString topic_transport)
     // qDebug("Subscribed to topic %s / %s", sub.getTopic().c_str(), sub.getTransport().c_str());
 }
 
+void FilteredView::rmFilter(void)
+{
+    QListWidgetItem * it = filterList->takeItem(filterList->currentRow());
+    delete it;
+}
+
 /*
     Public Functions
 */
 void FilteredView::addFilter(boost::shared_ptr<insitu::Filter> filter)
 {
     std::string name = filter->name();
-    filter->set("text", name);
 
     if (filters.find(name) == filters.end()) {
-        filterOrder.push_back(name);
         filters[name] = filter;
 
-        filterList->clear();
-        for (auto it = filterOrder.rbegin(); it != filterOrder.rend(); ++it) {
-            QListWidgetItem * item = new QListWidgetItem();
-            FilterCard * fc = new FilterCard(*it);
-            item->setSizeHint(fc->sizeHint());
+        QListWidgetItem * item = new QListWidgetItem();
+        FilterCard * fc = new FilterCard(name, filter->getSettingEditor());
+        item->setSizeHint(fc->sizeHint());
 
-            filterList->addItem(item);
-            filterList->setItemWidget(item, fc);
-        }
+        filterList->addItem(item);
+        filterList->setItemWidget(item, fc);
     } else {
         // TODO err filter exists
     }
@@ -155,7 +162,6 @@ const ros::NodeHandle& FilteredView::getNodeHandle(void)
 /*
     Private Functions
 */
-const QSize HACKY_SHIT(2,2); // DO NOT REMOVE, application crashes without it
 
 void FilteredView::callbackImg(const sensor_msgs::Image::ConstPtr& msg)
 {
@@ -180,9 +186,12 @@ void FilteredView::callbackImg(const sensor_msgs::Image::ConstPtr& msg)
     imgMat = cv_ptr->image;
 
     // apply filters
-    for (auto it = filterOrder.begin(); it != filterOrder.end(); ++it) {
-        // qDebug("Filter %s for view %s", filters[*it]->name().c_str(), name.c_str());
-        imgMat = filters[*it]->apply(imgMat);
+    for (int i = 0; i < filterList->count(); ++i) {
+        // seems awfully verbose for what we're trying to do but at this point
+        // I've just accepted that this is just how QT is designed
+        QListWidgetItem * it = filterList->item(i);
+        FilterCard * fc = (FilterCard *) filterList->itemWidget(it);
+        imgMat = filters[fc->getFilterName()]->apply(imgMat);
     }
 
     // convert cv matrix to qpixmap

@@ -6,6 +6,7 @@
 
 // insitu includes
 #include "insitu_utils.hpp"
+#include <insitu/filter.hpp>
 
 namespace insitu {
 
@@ -18,8 +19,8 @@ private:
     QLabel * nameLabel;
 
     QPushButton * editButton;
-    QPushButton * upButton;
-    QPushButton * downButton;
+
+    QDialog * settingsDialog;
 
     // layout element
     QGridLayout * layout;
@@ -29,12 +30,19 @@ private:
 
 public Q_SLOTS:
 
+    void showSettingsEditor(void);
+
 public:
-    FilterCard(std::string name_, QWidget * parent = nullptr);
+
+    FilterCard(std::string name_, QDialog * settingsDialog_, 
+        QWidget * parent = nullptr);
 
     ~FilterCard(void);
 
     const std::string& getFilterName(void);
+
+private:
+
 
 };
 

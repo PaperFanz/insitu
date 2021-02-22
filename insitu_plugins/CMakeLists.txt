@@ -7,14 +7,15 @@ add_compile_options(-std=c++11)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  nodelet
-  pluginlib
-  roscpp
-  insitu
+    qt_build 
+    nodelet
+    pluginlib
+    roscpp
+    insitu
 )
 
 ## System dependencies are found with CMake's conventions
-# find_package(Boost REQUIRED COMPONENTS system)
+find_package(Qt5 COMPONENTS Core Gui Widgets)
 
 catkin_package(
 #  INCLUDE_DIRS include
@@ -30,20 +31,30 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-  inc
-  ${catkin_INCLUDE_DIRS}
+    inc
+    ${catkin_INCLUDE_DIRS}
+    ${Qt5Core_INCLUDE_DIRS}
+    ${Qt5Gui_INCLUDE_DIRS}
+    ${Qt5Widgets_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
 add_library(${PROJECT_NAME}
-  src/${PROJECT_NAME}/text_filter.cpp
+    src/${PROJECT_NAME}/text_filter.cpp
+    src/${PROJECT_NAME}/crosshair.cpp
+)
+
+target_link_libraries(${PROJECT_NAME} 
+    Qt5::Core
+    Qt5::Widgets
+    ${catkin_LIBRARIES}
 )
 
 ## Install plugins
 install(FILES insitu_plugins.xml
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 
 install(TARGETS ${PROJECT_NAME}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+    LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 )

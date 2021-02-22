@@ -32,6 +32,7 @@ private:
     QComboBox * topicBox;
     QPushButton * refreshTopicButton;
     QPushButton * addFilterButton;
+    QPushButton * rmFilterButton;
     QListWidget * filterList;
     RosImageFrame * imgFrame;
     QLabel * imgLabel;
@@ -54,8 +55,7 @@ private:
     cv::Mat imgMat;
     QImage imgbuf;
 
-    // Filter containers
-    std::vector<std::string> filterOrder;
+    // Filter container
     std::unordered_map<std::string, boost::shared_ptr<insitu::Filter>> filters;
 
     // Housekeeping
@@ -68,6 +68,8 @@ public Q_SLOTS:
     void refreshTopics(void);
 
     void openFilterDialog(void);
+
+    void rmFilter(void);
 
 public:
 
