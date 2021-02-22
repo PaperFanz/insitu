@@ -8,13 +8,18 @@ namespace insitu_plugins {
 
 class Crosshair : public insitu::Filter
 {
-
 public:
     Crosshair(void);
 
     virtual cv::Mat apply(cv::Mat);
 
+    virtual bool hasSettingEditor(void)
+    {
+        return true;
+    }
+
 private:
+    virtual void onInit(void);
 
 }; // class Text
 

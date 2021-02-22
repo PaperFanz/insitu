@@ -1,10 +1,19 @@
 #include <insitu_plugins/crosshair.hpp>
+#include <insitu_plugins/crosshair_dialog.hpp>
 
 namespace insitu_plugins {
 
+/*
+    Filter Implementation
+*/
 Crosshair::Crosshair(void)
 {
     settings["size"] = {insitu::INT, "5"};
+}
+
+void Crosshair::onInit(void)
+{
+    settingsDialog = new CrosshairDialog(this);
 }
 
 cv::Mat Crosshair::apply(cv::Mat img)

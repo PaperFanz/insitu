@@ -20,13 +20,13 @@ private:
 
     QPushButton * editButton;
 
-    QDialog * settingsDialog;
-
     // layout element
     QGridLayout * layout;
 
     // data
     std::string name;
+
+    boost::shared_ptr<insitu::Filter> filter;
 
 public Q_SLOTS:
 
@@ -34,7 +34,7 @@ public Q_SLOTS:
 
 public:
 
-    FilterCard(std::string name_, QDialog * settingsDialog_, 
+    FilterCard(std::string name_, boost::shared_ptr<insitu::Filter> filter_, 
         QWidget * parent = nullptr);
 
     ~FilterCard(void);

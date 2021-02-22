@@ -26,15 +26,31 @@ typedef enum SettingType {
     NUM_SETTING_TYPES
 } setting_t;
 
+class Filter;
+
+class FilterDialog : public QDialog
+{
+Q_OBJECT
+protected:
+
+    insitu::Filter * parent;
+
+public:
+
+    FilterDialog(insitu::Filter * parent_)
+    {
+        parent = parent_;
+    }
+
+}; // class FilterDialog
+
 class Filter : public nodelet::Nodelet
 {
 
-private:
+protected:
 
     // dialog box for editing settings
-    QDialog * settingsDialog;
-
-protected:
+    FilterDialog * settingsDialog;
 
     // settings dictionary; load from ROS param server or configure through GUI
     std::unordered_map<std::string, std::pair<setting_t, std::string>> settings;
@@ -116,7 +132,7 @@ public:
     }
 
     /*
-        called by Insitu, do not reimplement
+        called by Insitu, do not reimplement [debug function]
     */
     bool
     set(std::string key, std::string val)
@@ -131,12 +147,21 @@ public:
     }
 
     /*
+        reimplement if providing a custom settings dialog
+    */
+    virtual bool
+    hasSettingEditor(void)
+    {
+        return false;
+    }
+
+    /*
         called by Insitu, do not reimplement
     */
-    QDialog *
-    getSettingEditor(void)
+    virtual void
+    openSettingEditor(void)
     {
-        return settingsDialog;
+        settingsDialog->open();
     }
 
 private:
@@ -149,7 +174,7 @@ private:
     virtual void
     onInit()
     {
-        settingsDialog = new QDialog();
+        settingsDialog = new FilterDialog(this);
         settingsDialog->setWindowTitle(QString::fromStdString(name()) + " Settings");
     };
 

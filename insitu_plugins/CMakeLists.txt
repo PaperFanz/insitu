@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(insitu_plugins)
 
-add_compile_options(-std=c++11)
+add_compile_options(-std=c++11 -fPIC)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -38,10 +38,21 @@ include_directories(
     ${Qt5Widgets_INCLUDE_DIRS}
 )
 
+set(insitu_plugin_HDRS
+    inc/${PROJECT_NAME}/text_filter.hpp
+    inc/${PROJECT_NAME}/crosshair.hpp
+    inc/${PROJECT_NAME}/crosshair_dialog.hpp
+)
+
+qt5_wrap_cpp(insitu_plugin_MOCS ${insitu_plugin_HDRS})
+
 ## Declare a C++ library
 add_library(${PROJECT_NAME}
     src/${PROJECT_NAME}/text_filter.cpp
     src/${PROJECT_NAME}/crosshair.cpp
+    src/${PROJECT_NAME}/crosshair_dialog.cpp
+
+    ${insitu_plugin_MOCS}
 )
 
 target_link_libraries(${PROJECT_NAME} 
@@ -49,6 +60,9 @@ target_link_libraries(${PROJECT_NAME}
     Qt5::Widgets
     ${catkin_LIBRARIES}
 )
+
+find_package(class_loader)
+class_loader_hide_library_symbols(${PROJECT_NAME})
 
 ## Install plugins
 install(FILES insitu_plugins.xml

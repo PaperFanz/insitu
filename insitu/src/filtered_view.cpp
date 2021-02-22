@@ -144,7 +144,7 @@ void FilteredView::addFilter(boost::shared_ptr<insitu::Filter> filter)
         filters[name] = filter;
 
         QListWidgetItem * item = new QListWidgetItem();
-        FilterCard * fc = new FilterCard(name, filter->getSettingEditor());
+        FilterCard * fc = new FilterCard(name, filter);
         item->setSizeHint(fc->sizeHint());
 
         filterList->addItem(item);

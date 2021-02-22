@@ -6,17 +6,20 @@ namespace insitu {
     Constructor/Destructor
 */
 FilterCard::FilterCard(std::string name_, 
-    QDialog * settingsDialog_, 
+    boost::shared_ptr<insitu::Filter> filter_, 
     QWidget * parent) : QWidget(parent)
 {
     name = name_;
+
+    filter = filter_;
 
     // ui elements
     nameLabel = new QLabel(tr(name_.c_str()));
 
     editButton = new QPushButton(tr("Edit"));
-
-    settingsDialog = settingsDialog_;
+    if (!filter->hasSettingEditor()) {
+        editButton->setDisabled(true);
+    }
 
     // layout
     layout = new QGridLayout();
@@ -50,7 +53,7 @@ const std::string& FilterCard::getFilterName(void)
 
 void FilterCard::showSettingsEditor(void)
 {
-    settingsDialog->open();
+    filter->openSettingEditor();
 }
 
 }
