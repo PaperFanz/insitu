@@ -33,18 +33,21 @@ sudo rosdep init
 
 4. Update ROS dependencies
 
-    ```sudo rosdep update```
+```
+sudo rosdep update
+```
  
 4. Go to the top directory of your catkin workspace where the source code of inSitu package is install all dependencies required for inSitu (particularly QT)
 
-    ```rosdep install --from-paths src --ignore-src -r -y```
+```
+rosdep install --from-paths src --ignore-src -r -y
+```
     
 5. Install clang to compile C++ code for inSitu
-    
-    ```
-    sudo apt update
-    sudo apt-get install clang-10
-    ```
+```
+sudo apt update
+sudo apt-get install clang-10
+```
 
 6. Source the workspace
 ```
@@ -59,5 +62,7 @@ roscore
 
 8. Open a new terminal and run inSitu 
 
-```rosrun insitu insitu```
+```
+rosrun insitu insitu
+```
  
