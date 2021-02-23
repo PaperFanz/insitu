@@ -34,7 +34,7 @@ sudo rosdep init
 4. Update ROS dependencies
 
 ```
-sudo rosdep update
+rosdep update
 ```
  
 4. Go to the top directory of your catkin workspace where the source code of inSitu package is install all dependencies required for inSitu (particularly QT)
