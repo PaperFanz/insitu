@@ -36,6 +36,9 @@ public:
     const std::string& 
     getFilterName(void);
 
+    std::string
+    getFilterType(void);
+
 };
 
 } // end namespace insitu

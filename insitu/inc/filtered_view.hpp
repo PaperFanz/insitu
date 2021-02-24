@@ -80,7 +80,9 @@ public:
 
     void addFilter(boost::shared_ptr<insitu::Filter> filter);
 
-    const ros::NodeHandle& getNodeHandle(void);
+    const std::string & getViewName(void);
+
+    const ros::NodeHandle & getNodeHandle(void);
 
 private:
 

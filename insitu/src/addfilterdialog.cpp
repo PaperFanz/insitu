@@ -10,10 +10,9 @@ AddFilterDialog::AddFilterDialog(QWidget * parent) : QDialog(parent)
     filterLoader = new FilterFactory("insitu");
     activeView = nullptr;
 
-    addButton = new QPushButton(tr("Add"));
-    addButton->setDefault(true);
-
-    cancelButton = new QPushButton(tr("Cancel"));
+    addBtn = new QPushButton(tr("Add"));
+    addBtn->setDefault(true);
+    cancelBtn = new QPushButton(tr("Cancel"));
 
     nameEdit = new QLineEdit();
 
@@ -24,16 +23,20 @@ AddFilterDialog::AddFilterDialog(QWidget * parent) : QDialog(parent)
     listScroll = new QScrollArea();
     listScroll->setWidget(filterList);
 
+    errMsg = new QErrorMessage();
+
     // callbacks
-    QObject::connect(addButton, SIGNAL(clicked()), SLOT(AddFilter()));
-    QObject::connect(cancelButton, SIGNAL(clicked()), SLOT(reject()));
+    QObject::connect(addBtn, SIGNAL(clicked()), SLOT(AddFilter()));
+    QObject::connect(cancelBtn, SIGNAL(clicked()), SLOT(reject()));
+    QObject::connect(filterList, SIGNAL(itemSelectionChanged()), 
+                     SLOT(onFilterChanged()));
 
     layout = new QGridLayout();
     layout->addWidget(filterList, 0, 0, 1, 3);
     layout->addWidget(nameLabel, 1, 0);
     layout->addWidget(nameEdit, 1, 1, 1, 2);
-    layout->addWidget(addButton, 2, 0);
-    layout->addWidget(cancelButton, 2, 2);
+    layout->addWidget(addBtn, 2, 0);
+    layout->addWidget(cancelBtn, 2, 2);
 
     setLayout(layout);
 
@@ -50,20 +53,36 @@ void AddFilterDialog::AddFilter()
             // TODO err
             reject();
         }
-        FilterInfo * fi = (FilterInfo *) filterList->itemWidget(filterList->currentItem());
-        boost::shared_ptr<insitu::Filter> fl = filterLoader->loadFilter(
-            fi->getFilterName(),
-            nameEdit->text().toStdString()
-        );
 
-        activeView->addFilter(fl);
+        QListWidgetItem * item = filterList->currentItem();
+        FilterInfo * fi = (FilterInfo *) filterList->itemWidget(item);
 
-        activeView = nullptr; // reset so we don't segfault on a deleted view
-        accept();
+        try {
+            boost::shared_ptr<insitu::Filter> fl = filterLoader->loadFilter(
+                fi->getFilterName(),
+                nameEdit->text().toStdString()
+            );
+            activeView->addFilter(fl);
+            activeView = nullptr; // reset so we don't segfault on a deleted view
+            accept();
+        } catch (std::runtime_error e) {
+            errMsg->showMessage(QString::fromStdString(e.what()));
+            
+        }
     } else {
         // TODO err
         reject();
     }
+}
+
+void AddFilterDialog::onFilterChanged(void)
+{
+    QListWidgetItem * item = filterList->currentItem();
+    FilterInfo * fi = (FilterInfo *) filterList->itemWidget(item);
+    QString name = QString::fromStdString(
+        activeView->getViewName() + "_" + fi->getFilterType()
+    );
+    nameEdit->setText(name);
 }
 
 /*

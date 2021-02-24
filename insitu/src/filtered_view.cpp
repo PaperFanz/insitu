@@ -129,8 +129,12 @@ void FilteredView::onTopicChange(QString topic_transport)
 
 void FilteredView::rmFilter(void)
 {
-    QListWidgetItem * it = filterList->takeItem(filterList->currentRow());
-    delete it;
+    QListWidgetItem * item = filterList->takeItem(filterList->currentRow());
+    FilterCard * fc = (FilterCard *) filterList->itemWidget(item);
+    filters[fc->getFilterName()].reset();
+    filters.erase(fc->getFilterName());
+    delete fc;
+    delete item;
 }
 
 /*
@@ -140,18 +144,19 @@ void FilteredView::addFilter(boost::shared_ptr<insitu::Filter> filter)
 {
     std::string name = filter->name();
 
-    if (filters.find(name) == filters.end()) {
-        filters[name] = filter;
+    filters[name] = filter;
 
-        QListWidgetItem * item = new QListWidgetItem();
-        FilterCard * fc = new FilterCard(name, filter);
-        item->setSizeHint(fc->sizeHint());
+    QListWidgetItem * item = new QListWidgetItem();
+    FilterCard * fc = new FilterCard(name, filter);
+    item->setSizeHint(fc->sizeHint());
 
-        filterList->addItem(item);
-        filterList->setItemWidget(item, fc);
-    } else {
-        // TODO err filter exists
-    }
+    filterList->addItem(item);
+    filterList->setItemWidget(item, fc);
+}
+
+const std::string & FilteredView::getViewName(void)
+{
+    return name;
 }
 
 const ros::NodeHandle& FilteredView::getNodeHandle(void)
@@ -186,7 +191,7 @@ void FilteredView::callbackImg(const sensor_msgs::Image::ConstPtr& msg)
     imgMat = cv_ptr->image;
 
     // apply filters
-    for (int i = 0; i < filterList->count(); ++i) {
+    for (int i = filterList->count() - 1; i >= 0; --i) {
         // seems awfully verbose for what we're trying to do but at this point
         // I've just accepted that this is just how QT is designed
         QListWidgetItem * it = filterList->item(i);

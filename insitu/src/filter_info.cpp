@@ -42,4 +42,9 @@ const std::string& FilterInfo::getFilterName(void)
     return name;
 }
 
+std::string FilterInfo::getFilterType(void)
+{
+    return typeLabel->text().toStdString();
+}
+
 }

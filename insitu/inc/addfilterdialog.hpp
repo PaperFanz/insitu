@@ -21,8 +21,9 @@ private:
     QScrollArea * listScroll;
     QLineEdit * nameEdit;
     QLabel * nameLabel;
-    QPushButton * addButton;
-    QPushButton * cancelButton;
+    QPushButton * addBtn;
+    QPushButton * cancelBtn;
+    QErrorMessage * errMsg;
 
     // layout
     QGridLayout * layout;
@@ -35,6 +36,8 @@ private:
     
 public Q_SLOTS:
     void AddFilter(void);
+
+    void onFilterChanged(void);
 
 public:
     AddFilterDialog(QWidget * parent = nullptr);

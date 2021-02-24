@@ -44,7 +44,7 @@ FilterCard::~FilterCard(void)
 
 const std::string& FilterCard::getFilterName(void)
 {
-    return name;
+    return filter->name();
 }
 
 /*
