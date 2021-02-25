@@ -33,12 +33,16 @@ private:
     QPushButton * refreshTopicButton;
     QPushButton * addFilterButton;
     QPushButton * rmFilterButton;
+    QPushButton * toggleFilterPaneBtn;
     QListWidget * filterList;
     RosImageFrame * imgFrame;
     QLabel * imgLabel;
     QLabel * fpsLabel;
 
-    // layout element
+    // layout elements
+    QWidget * filterPaneWidget;
+    QGridLayout * filterPaneLayout;
+    QHBoxLayout * imagePane;
     QGridLayout * layout;
 
     // ROS
@@ -60,6 +64,7 @@ private:
 
     // Housekeeping
     std::string name;
+    bool filterPaneVisible = true;
 
 public Q_SLOTS:
 
@@ -70,6 +75,8 @@ public Q_SLOTS:
     void openFilterDialog(void);
 
     void rmFilter(void);
+
+    void onToggleFilterPane(void);
 
 public:
 

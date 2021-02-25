@@ -19,6 +19,7 @@ FilteredView::FilteredView(const ros::NodeHandle& parent_, QString _name,
     refreshTopicButton = new QPushButton(tr("Refresh"));
     addFilterButton = new QPushButton(tr("Add Filter"));
     rmFilterButton = new QPushButton(tr("Delete Filter"));
+    toggleFilterPaneBtn = new QPushButton(tr("Hide Filters"));
 
     // frame to preserve image aspect ratio
     imgFrame = new RosImageFrame();
@@ -41,16 +42,25 @@ FilteredView::FilteredView(const ros::NodeHandle& parent_, QString _name,
     filterList->setDefaultDropAction(Qt::DropAction::MoveAction);
 
     // layout
+    filterPaneLayout = new QGridLayout();
+    filterPaneLayout->addWidget(addFilterButton, 0, 0);
+    filterPaneLayout->addWidget(rmFilterButton, 0, 1);
+    filterPaneLayout->addWidget(filterList, 1, 0, 1, 2);
+    filterPaneWidget = new QWidget();
+    filterPaneWidget->setLayout(filterPaneLayout);
+
+    imagePane = new QHBoxLayout();
+    imagePane->addWidget(imgFrame, 1);
+    imagePane->addWidget(filterPaneWidget);
+
     layout = new QGridLayout();
     layout->addWidget(topicBox, 0, 0);
     layout->addWidget(refreshTopicButton, 0, 1);
-    layout->addWidget(addFilterButton, 0, 2);
-    layout->addWidget(rmFilterButton, 0, 3);
-    layout->addWidget(imgFrame, 1, 0, 1, 2);
-    layout->addWidget(filterList, 1, 2, 1, 2);
+    layout->addWidget(toggleFilterPaneBtn, 0, 2);
+    layout->addLayout(imagePane, 1, 0, 1, 3);
     layout->addWidget(fpsLabel, 2, 0);
-
     layout->setColumnStretch(0, 1);
+    layout->setRowStretch(1, 1);
 
     lastFrameTime = ros::Time::now();
     frames = 0;
@@ -63,8 +73,9 @@ FilteredView::FilteredView(const ros::NodeHandle& parent_, QString _name,
                      SLOT(refreshTopics()));
     QObject::connect(addFilterButton, SIGNAL(clicked()),
                      SLOT(openFilterDialog()));
-    QObject::connect(rmFilterButton, SIGNAL(clicked()),
-                     SLOT(rmFilter()));
+    QObject::connect(rmFilterButton, SIGNAL(clicked()), SLOT(rmFilter()));
+    QObject::connect(toggleFilterPaneBtn, SIGNAL(clicked()), 
+                     SLOT(onToggleFilterPane()));
 
     name = _name.toStdString();
     nh = new ros::NodeHandle(parent_, name);
@@ -135,6 +146,15 @@ void FilteredView::rmFilter(void)
     filters.erase(fc->getFilterName());
     delete fc;
     delete item;
+}
+
+void FilteredView::onToggleFilterPane(void)
+{
+    filterPaneVisible = !filterPaneVisible;
+    filterPaneWidget->setVisible(filterPaneVisible);
+    toggleFilterPaneBtn->setText(
+        filterPaneVisible ? tr("Hide Filters") : tr("Show Filters")
+    );
 }
 
 /*

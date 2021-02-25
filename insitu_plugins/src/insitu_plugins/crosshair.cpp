@@ -9,6 +9,8 @@ namespace insitu_plugins {
 Crosshair::Crosshair(void)
 {
     settings["size"] = {insitu::INT, "5"};
+    settings["x"] = {insitu::INT, "320"};
+    settings["y"] = {insitu::INT, "240"};
 }
 
 void Crosshair::onInit(void)
@@ -19,17 +21,19 @@ void Crosshair::onInit(void)
 cv::Mat Crosshair::apply(cv::Mat img)
 {
     int size = getIntSetting("size");
+    int x = getIntSetting("x");
+    int y = getIntSetting("y");
     cv::line(
         img,
-        cv::Point(img.cols/2, img.rows/2 + size),
-        cv::Point(img.cols/2, img.rows/2 - size),
-        cv::Scalar(0,255,0)
+        cv::Point(x, y + size),
+        cv::Point(x, y - size),
+        cv::Scalar(255,0,0)
     );
     cv::line(
         img,
-        cv::Point(img.cols/2 + size, img.rows/2),
-        cv::Point(img.cols/2 - size, img.rows/2),
-        cv::Scalar(0,255,0)
+        cv::Point(x + size, y),
+        cv::Point(x - size, y),
+        cv::Scalar(255,0,0)
     );
     return img;
 }
