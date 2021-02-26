@@ -7,8 +7,8 @@ int main(int argc, char **argv)
 {
 	/* ROS INITIALIZATION */
 	ros::init(argc, argv, "insitu");
-    // ros::AsyncSpinner spinner(1);
-    // spinner.start();
+    ros::AsyncSpinner spinner(0);
+    spinner.start();
 
     /* GUI INITIALIZATION */
     QApplication app(argc, argv);

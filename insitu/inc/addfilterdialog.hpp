@@ -44,6 +44,8 @@ public:
 
     void setActiveView(FilteredView * view);
 
+    bool unloadFilter(const std::string & name);
+
     void open();
 
 private:

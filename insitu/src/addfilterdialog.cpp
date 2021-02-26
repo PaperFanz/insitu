@@ -95,6 +95,11 @@ void AddFilterDialog::open()
     QDialog::open();
 }
 
+bool AddFilterDialog::unloadFilter(const std::string & name)
+{
+    return filterLoader->unloadFilter(name);
+}
+
 void AddFilterDialog::setActiveView(FilteredView * view)
 {
     activeView = view;

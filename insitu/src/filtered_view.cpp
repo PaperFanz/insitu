@@ -140,10 +140,14 @@ void FilteredView::onTopicChange(QString topic_transport)
 
 void FilteredView::rmFilter(void)
 {
-    QListWidgetItem * item = filterList->takeItem(filterList->currentRow());
+    QListWidgetItem * item = filterList->item(filterList->currentRow());
     FilterCard * fc = (FilterCard *) filterList->itemWidget(item);
     filters[fc->getFilterName()].reset();
     filters.erase(fc->getFilterName());
+
+    AddFilterDialog * afd = (AddFilterDialog *) getNamedWidget("addfilterdialog");
+    afd->unloadFilter(fc->getFilterName());
+
     delete fc;
     delete item;
 }
