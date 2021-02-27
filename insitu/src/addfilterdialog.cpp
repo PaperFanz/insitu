@@ -50,7 +50,7 @@ void AddFilterDialog::AddFilter()
 {
     if (activeView != nullptr) {
         if (filterList->currentItem() == nullptr) {
-            // TODO err
+            errMsg->showMessage(tr("No loadable filter!"));
             reject();
         }
 
@@ -70,7 +70,7 @@ void AddFilterDialog::AddFilter()
             
         }
     } else {
-        // TODO err
+        errMsg->showMessage(tr("No selected view!"));
         reject();
     }
 }

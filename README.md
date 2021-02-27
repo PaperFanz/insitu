@@ -12,9 +12,11 @@ Hardware agnostic situational awareness
 
 ## Description
 
+<!-- TODO add images -->
+
 Most ROS users are likely very familiar with RVIZ and RQT, and the plugin functionality that these two tools bring. Between RVIZ and RQT, most GUI requirements, 3D or 2D, can be satisfied with little effort other than selecting the appropriate plugins from the massive collection of GUI tools available.
 
-However, as robotics development advances, the complexity of the interfaces used in teleoperation and monitoring increases as well. Guy Zaidner's work in situational awareness at the University of Texas at Austin's Nuclear and Applied Robotics Group demonstrated the utility of HUD overlays in robotic teleoperation. The HUD composed multiple camera streams and ROS sensor data into a unified user interface, a marked improvement from referring to dials and charts in another window (or raw data from a terminal).
+However, as robotics development advances, the complexity of the interfaces used in teleoperation and monitoring increases as well. Guy Zaidner's work in situational awareness at the University of Texas at Austin's Nuclear and Applied Robotics Group demonstrated the utility of dynamic HUD overlays in robotic teleoperation. The HUD composed multiple camera streams and ROS sensor data into a unified user interface, a marked improvement over referring to dials and charts in another window (or raw data from a terminal).
 
 Insitu is a continuation of Guy's work in overlays and aims to provide the same plugin support for camera overlays as RQT and RVIZ did for 2D and 3D GUIs. In essence, Insitu provides a common interface for composing multiple filters on a ROS image stream. The filters are implemented as ROS nodelets and can range in complexity from static crosshairs to full computer vision applications, as long as they implement the Insitu filter interface.
 
