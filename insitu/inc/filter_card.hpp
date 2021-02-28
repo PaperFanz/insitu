@@ -10,40 +10,36 @@
 
 namespace insitu {
 
-class FilterCard : public QWidget
-{
+class FilterCard : public QWidget {
 
-Q_OBJECT
+  Q_OBJECT
 private:
-    // ui elements
-    QLabel * nameLabel;
+  // ui elements
+  QLabel *nameLabel;
 
-    QPushButton * editButton;
+  QPushButton *editButton;
 
-    // layout element
-    QGridLayout * layout;
+  // layout element
+  QGridLayout *layout;
 
-    // data
-    std::string name;
+  // data
+  std::string name;
 
-    boost::shared_ptr<insitu::Filter> filter;
+  boost::shared_ptr<insitu::Filter> filter;
 
 public Q_SLOTS:
 
-    void showSettingsEditor(void);
+  void showSettingsEditor(void);
 
 public:
+  FilterCard(std::string name_, boost::shared_ptr<insitu::Filter> filter_,
+             QWidget *parent = nullptr);
 
-    FilterCard(std::string name_, boost::shared_ptr<insitu::Filter> filter_, 
-        QWidget * parent = nullptr);
+  ~FilterCard(void);
 
-    ~FilterCard(void);
-
-    const std::string& getFilterName(void);
+  const std::string &getFilterName(void);
 
 private:
-
-
 };
 
 } // end namespace insitu

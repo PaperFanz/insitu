@@ -2,18 +2,18 @@
 #define insitu_INSITU_UTILS_HPP
 
 // QT includes
-#include <QtWidgets>
 #include <QSet>
 #include <QString>
+#include <QtWidgets>
 
 // ROS includes
-#include <ros/ros.h>
-#include <ros/master.h>
 #include <image_transport/image_transport.h>
+#include <ros/master.h>
+#include <ros/ros.h>
 
 // C++ includes
-#include <vector>
 #include <unordered_map>
+#include <vector>
 
 namespace insitu {
 
@@ -21,11 +21,11 @@ QList<QString> getModeList();
 
 QList<QString> getTopicList();
 
-void addNamedWidget(std::string name, QWidget * widget);
+void addNamedWidget(std::string name, QWidget *widget);
 
-QWidget * getNamedWidget(std::string name);
+QWidget *getNamedWidget(std::string name);
 
-void clearLayout(QLayout* layout);
+void clearLayout(QLayout *layout);
 
 } // namespace insitu
 #endif

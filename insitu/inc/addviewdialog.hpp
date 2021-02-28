@@ -5,43 +5,41 @@
 #include <QtWidgets>
 
 // ROS includes
-#include <ros/ros.h>
-#include <ros/master.h>
 #include <image_transport/image_transport.h>
+#include <ros/master.h>
+#include <ros/ros.h>
 
 // insitu includes
+#include "filtered_view.hpp"
 #include "insitu_utils.hpp"
 #include "mode_container.hpp"
-#include "filtered_view.hpp"
 
 namespace insitu {
 
-class AddViewDialog : public QDialog
-{
+class AddViewDialog : public QDialog {
 
-Q_OBJECT
+  Q_OBJECT
 private:
-    QLineEdit * nameEdit;
-    QComboBox * modeBox;
-    QComboBox * topicBox;
-    QPushButton * createButton;
-    QPushButton * cancelButton;
+  QLineEdit *nameEdit;
+  QComboBox *modeBox;
+  QComboBox *topicBox;
+  QPushButton *createButton;
+  QPushButton *cancelButton;
 
-    QFormLayout * form;
-    QHBoxLayout * buttonHBox;
+  QFormLayout *form;
+  QHBoxLayout *buttonHBox;
 
-    QTabWidget * tabmanager;
+  QTabWidget *tabmanager;
 
-    QList<QString> getModeList();
-    
+  QList<QString> getModeList();
+
 public Q_SLOTS:
-    void AddView(void);
+  void AddView(void);
 
 public:
-    AddViewDialog(QWidget * parent = nullptr);
+  AddViewDialog(QWidget *parent = nullptr);
 
-    void open();
-
+  void open();
 };
 
 } // namespace insitu

@@ -5,28 +5,26 @@
 
 namespace insitu_plugins {
 
-class CrosshairDialog : public insitu::FilterDialog
-{
-Q_OBJECT
+class CrosshairDialog : public insitu::FilterDialog {
+  Q_OBJECT
 private:
-    int x;
-    int y;
-    int size;
+  int x;
+  int y;
+  int size;
 
-    QLineEdit * textEdit;
+  QLineEdit *textEdit;
 
-    QPushButton * okButton;
-    QPushButton * cancelButton;
+  QPushButton *okButton;
+  QPushButton *cancelButton;
 
-    QGridLayout * layout;
+  QGridLayout *layout;
 
 public Q_SLOTS:
 
-    void onOK(void);
+  void onOK(void);
 
 public:
-    CrosshairDialog(insitu::Filter * parent_);
-
+  CrosshairDialog(insitu::Filter *parent_);
 };
 
 } // namespace insitu_plugins

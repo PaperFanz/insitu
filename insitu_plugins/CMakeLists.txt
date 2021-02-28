@@ -42,6 +42,8 @@ set(insitu_plugin_HDRS
     inc/${PROJECT_NAME}/text_filter.hpp
     inc/${PROJECT_NAME}/crosshair.hpp
     inc/${PROJECT_NAME}/crosshair_dialog.hpp
+    inc/${PROJECT_NAME}/navigation_filter_front.hpp
+    inc/${PROJECT_NAME}/navigation_filter_rear.hpp
 )
 
 qt5_wrap_cpp(insitu_plugin_MOCS ${insitu_plugin_HDRS})
@@ -51,7 +53,9 @@ add_library(${PROJECT_NAME}
     src/${PROJECT_NAME}/text_filter.cpp
     src/${PROJECT_NAME}/crosshair.cpp
     src/${PROJECT_NAME}/crosshair_dialog.cpp
-
+    src/${PROJECT_NAME}/nav_filter_front.cpp
+    src/${PROJECT_NAME}/nav_filter_rear.cpp
+    
     ${insitu_plugin_MOCS}
 )
 

@@ -6,46 +6,44 @@
 
 // plugin includes
 #include "filter_factory.hpp"
-#include "filtered_view.hpp"
 #include "filter_info.hpp"
+#include "filtered_view.hpp"
 
 namespace insitu {
 
-class AddFilterDialog : public QDialog
-{
+class AddFilterDialog : public QDialog {
 
-Q_OBJECT
+  Q_OBJECT
 private:
-    // ui elements
-    QListWidget * filterList;
-    QScrollArea * listScroll;
-    QLineEdit * nameEdit;
-    QLabel * nameLabel;
-    QPushButton * addButton;
-    QPushButton * cancelButton;
+  // ui elements
+  QListWidget *filterList;
+  QScrollArea *listScroll;
+  QLineEdit *nameEdit;
+  QLabel *nameLabel;
+  QPushButton *addButton;
+  QPushButton *cancelButton;
 
-    // layout
-    QGridLayout * layout;
+  // layout
+  QGridLayout *layout;
 
-    // loader
-    FilterFactory * filterLoader;
+  // loader
+  FilterFactory *filterLoader;
 
-    // load destination
-    FilteredView * activeView;
-    
+  // load destination
+  FilteredView *activeView;
+
 public Q_SLOTS:
-    void AddFilter(void);
+  void AddFilter(void);
 
 public:
-    AddFilterDialog(QWidget * parent = nullptr);
+  AddFilterDialog(QWidget *parent = nullptr);
 
-    void setActiveView(FilteredView * view);
+  void setActiveView(FilteredView *view);
 
-    void open();
+  void open();
 
 private:
-    void refreshFilters(void);
-
+  void refreshFilters(void);
 };
 
 } // namespace insitu

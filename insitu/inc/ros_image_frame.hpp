@@ -5,32 +5,28 @@
 
 namespace insitu {
 
-class RosImageFrame : public QFrame
-{
+class RosImageFrame : public QFrame {
 
-Q_OBJECT
+  Q_OBJECT
 private:
-    // data
-    QImage img;
+  // data
+  QImage img;
 
-    mutable QMutex img_mutex;
+  mutable QMutex img_mutex;
 
 Q_SIGNALS:
 
-    void delayedUpdate(void);
+  void delayedUpdate(void);
 
 public:
+  RosImageFrame(QWidget *parent = nullptr);
 
-    RosImageFrame(QWidget * parent = nullptr);
+  ~RosImageFrame(void);
 
-    ~RosImageFrame(void);
-
-    void setImage(const QImage & img_);
+  void setImage(const QImage &img_);
 
 protected:
-
-    void paintEvent(QPaintEvent* event);
-
+  void paintEvent(QPaintEvent *event);
 };
 
 } // namespace insitu

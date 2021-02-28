@@ -1,22 +1,20 @@
 #ifndef insitu_plugins_TEXT_FILTER_HPP
 #define insitu_plugins_TEXT_FILTER_HPP
 
-#include <pluginlib/class_list_macros.h>
 #include <insitu/filter.hpp>
+#include <pluginlib/class_list_macros.h>
 
 namespace insitu_plugins {
 
-class TextFilter : public insitu::Filter
-{
+class TextFilter : public insitu::Filter {
 
 public:
-    TextFilter(void);
+  TextFilter(void);
 
-    virtual cv::Mat apply(cv::Mat);
+  virtual cv::Mat apply(cv::Mat);
 
 private:
-
-    std::string text;
+  std::string text;
 
 }; // class Text
 

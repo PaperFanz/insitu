@@ -9,33 +9,30 @@
 
 namespace insitu {
 
-class FilterInfo : public QWidget
-{
+class FilterInfo : public QWidget {
 
-Q_OBJECT
+  Q_OBJECT
 private:
-    // ui elements
-    QLabel * typeLabel;
-    QLabel * package;
-    QLabel * description;
+  // ui elements
+  QLabel *typeLabel;
+  QLabel *package;
+  QLabel *description;
 
-    // layout element
-    QGridLayout * layout;
+  // layout element
+  QGridLayout *layout;
 
-    // data
-    std::string name;
+  // data
+  std::string name;
 
 public Q_SLOTS:
 
 public:
-    FilterInfo(std::string name_, std::string type_, std::string package_, 
-               std::string description_, QWidget * parent = nullptr);
+  FilterInfo(std::string name_, std::string type_, std::string package_,
+             std::string description_, QWidget *parent = nullptr);
 
-    ~FilterInfo(void);
+  ~FilterInfo(void);
 
-    const std::string& 
-    getFilterName(void);
-
+  const std::string &getFilterName(void);
 };
 
 } // end namespace insitu

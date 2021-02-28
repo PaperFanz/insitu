@@ -8,41 +8,39 @@
 #include <ros/ros.h>
 
 // insitu includes
-#include "insitu_utils.hpp"
 #include "filtered_view.hpp"
+#include "insitu_utils.hpp"
 
 namespace insitu {
 
-class ModeContainer : public QWidget
-{
+class ModeContainer : public QWidget {
 
-Q_OBJECT
+  Q_OBJECT
 private:
-    // UI elements
-    QPushButton * addViewButton;
-    QPushButton * tileButton;
-    QPushButton * cascadeButton;
-    QMdiArea * container;
+  // UI elements
+  QPushButton *addViewButton;
+  QPushButton *tileButton;
+  QPushButton *cascadeButton;
+  QMdiArea *container;
 
-    // layout element
-    QGridLayout * layout;
+  // layout element
+  QGridLayout *layout;
 
-    // ROS
-    ros::NodeHandle * nh;
+  // ROS
+  ros::NodeHandle *nh;
 
 public Q_SLOTS:
-    void tile(void);
-    void cascade(void);
+  void tile(void);
+  void cascade(void);
 
 public:
-    ModeContainer(QString name, QWidget * parent = nullptr);
+  ModeContainer(QString name, QWidget *parent = nullptr);
 
-    ~ModeContainer(void);
+  ~ModeContainer(void);
 
-    void addView(FilteredView * view);
+  void addView(FilteredView *view);
 
-    const ros::NodeHandle& getNodeHandle(void);
-
+  const ros::NodeHandle &getNodeHandle(void);
 };
 
 } // end namespace insitu
