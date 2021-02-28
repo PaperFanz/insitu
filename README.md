@@ -8,6 +8,8 @@ Hardware agnostic situational awareness
 
 [Creating a filter](FILTERS.md)
 
+[Testing an example filter in simulation](FILTER_SIM.md)
+
 [Contributing to Insitu](CONTRIBUTING.md)
 
 ## Description
