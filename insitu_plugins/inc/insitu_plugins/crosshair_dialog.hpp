@@ -12,7 +12,14 @@ private:
   int y;
   int size;
 
-  QLineEdit *textEdit;
+  QLabel *sizeLabel;
+  QLineEdit *sizeEdit;
+
+  QLabel *xLabel;
+  QLineEdit *xEdit;
+
+  QLabel *yLabel;
+  QLineEdit *yEdit;
 
   QPushButton *okButton;
   QPushButton *cancelButton;

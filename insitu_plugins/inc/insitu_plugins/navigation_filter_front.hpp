@@ -17,6 +17,8 @@ public:
 
   void updateTwistCB(const geometry_msgs::Twist &vel);
 
+  virtual bool hasSettingEditor(void) { return true; }
+
 private:
   ros::NodeHandle nh_;
 
@@ -25,6 +27,8 @@ private:
   std::string text;
 
   geometry_msgs::Twist cur_vel_;
+
+  virtual void onInit(void);
 };
 
 } // namespace insitu_plugins

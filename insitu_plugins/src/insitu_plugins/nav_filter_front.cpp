@@ -1,3 +1,5 @@
+#include <insitu_plugins/crosshair.hpp>
+#include <insitu_plugins/crosshair_dialog.hpp>
 #include <insitu_plugins/navigation_filter_front.hpp>
 
 using namespace cv;
@@ -12,10 +14,21 @@ NavFilterFront::NavFilterFront(void)
   vel_sub_ = nh_.subscribe("/husky_velocity_controller/cmd_vel", 1,
                            &NavFilterFront::updateTwistCB, this);
 
+  settings["size"] = {insitu::INT, "5"};
+  settings["x"] = {insitu::INT, "0"};
+  settings["y"] = {insitu::INT, "0"};
+
   // ROS_INFO("CONSTRUCTED_Front!");
 }
 
+void NavFilterFront::onInit(void) {
+  settingsDialog = new CrosshairDialog(this);
+}
 cv::Mat NavFilterFront::apply(cv::Mat img) {
+
+  int size = getIntSetting("size");
+  int x = getIntSetting("x");
+  int y = getIntSetting("y");
 
   // declare colors: RGB from husky_cam
   cv::Scalar colorRed = cv::Scalar(255, 0, 0);
@@ -30,36 +43,50 @@ cv::Mat NavFilterFront::apply(cv::Mat img) {
   double scale_x = img.rows / 1440;
 
   // option to use perspective eqn to generate points later
-  line(img, Point(562, 1185), Point(591, 1086), colorRed, line_thickness);
-  line(img, Point(893, 1185), Point(859, 1086), colorRed, line_thickness);
-  line(img, Point(593, 1089), Point(619, 1089), colorRed, line_thickness);
-  line(img, Point(831, 1089), Point(862, 1089), colorRed, line_thickness);
+  line(img, Point(562 - x, 1185 - y), Point(591 - x, 1086 - y), colorRed,
+       line_thickness);
+  line(img, Point(893 + x, 1185 - y), Point(859 + x, 1086 - y), colorRed,
+       line_thickness);
+  line(img, Point(593 - x, 1089 - y), Point(619 - x, 1089 - y), colorRed,
+       line_thickness);
+  line(img, Point(831 + x, 1089 - y), Point(862 + x, 1089 - y), colorRed,
+       line_thickness);
 
-  line(img, Point(591, 1086), Point(617, 1015), colorYellow, line_thickness);
-  line(img, Point(859, 1086), Point(838, 1015), colorYellow, line_thickness);
-  line(img, Point(618, 1017), Point(646, 1017), colorYellow, line_thickness);
-  line(img, Point(839, 1017), Point(807, 1017), colorYellow, line_thickness);
+  line(img, Point(591 - x, 1086 - y), Point(617 - x, 1015 - y), colorYellow,
+       line_thickness);
+  line(img, Point(859 + x, 1086 - y), Point(838 + x, 1015 - y), colorYellow,
+       line_thickness);
+  line(img, Point(618 - x, 1017 - y), Point(646 - x, 1017 - y), colorYellow,
+       line_thickness);
+  line(img, Point(839 + x, 1017 - y), Point(807 + x, 1017 - y), colorYellow,
+       line_thickness);
 
-  line(img, Point(617, 1015), Point(663, 874), colorGreen, line_thickness);
-  line(img, Point(838, 1015), Point(790, 874), colorGreen, line_thickness);
-  line(img, Point(638, 955), Point(666, 955), colorGreen, line_thickness);
-  line(img, Point(819, 955), Point(797, 955), colorGreen, line_thickness);
-  line(img, Point(655, 913), Point(673, 913), colorGreen, line_thickness);
-  line(img, Point(801, 913), Point(781, 913), colorGreen, line_thickness);
+  line(img, Point(617 - x, 1015 - y), Point(663 - x, 874 - y), colorGreen,
+       line_thickness);
+  line(img, Point(838 + x, 1015 - y), Point(790 + x, 874 - y), colorGreen,
+       line_thickness);
+  line(img, Point(638 - x, 955 - y), Point(666 - x, 955 - y), colorGreen,
+       line_thickness);
+  line(img, Point(819 + x, 955 - y), Point(797 + x, 955 - y), colorGreen,
+       line_thickness);
+  line(img, Point(655 - x, 913 - y), Point(673 - x, 913 - y), colorGreen,
+       line_thickness);
+  line(img, Point(801 + x, 913 - y), Point(781 + x, 913 - y), colorGreen,
+       line_thickness);
 
-  putText(img, "25 cm", Point(480, 1084), FONT_HERSHEY_COMPLEX, 0.95, colorRed,
-          2);
-  putText(img, "50 cm", Point(520, 1005), FONT_HERSHEY_COMPLEX, 0.8,
+  putText(img, "25 cm", Point(480 - x, 1084 - y), FONT_HERSHEY_COMPLEX, 0.95,
+          colorRed, 2);
+  putText(img, "50 cm", Point(520 - x, 1005 - y), FONT_HERSHEY_COMPLEX, 0.8,
           colorYellow, 2);
-  putText(img, "75 cm", Point(538, 950), FONT_HERSHEY_COMPLEX, 0.75, colorGreen,
-          2);
-  putText(img, "100 cm", Point(545, 910), FONT_HERSHEY_COMPLEX, 0.7, colorGreen,
-          2);
+  putText(img, "75 cm", Point(538 - x, 950 - y), FONT_HERSHEY_COMPLEX, 0.75,
+          colorGreen, 2);
+  putText(img, "100 cm", Point(545 - x, 910 - y), FONT_HERSHEY_COMPLEX, 0.7,
+          colorGreen, 2);
 
   // define static & forward velocity jog lines
   if (cur_vel_.linear.x > 0.01) {
-    arrowedLine(img, Point(734, 1092),
-                Point(734, 1092 - int(nav_line_scale * cur_vel_.linear.x)),
+    arrowedLine(img, Point(734, 1092 - y),
+                Point(734, 1092 - int(nav_line_scale * cur_vel_.linear.x) - y),
                 colorGreen, line_thickness = 5);
   }
 
