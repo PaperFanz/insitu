@@ -25,8 +25,9 @@ catkin build
 source devel/setup.bash
 ```
 
-2. Git clone this repo into your workspace 
+2. Git clone this repo into your source folder 
 ```sh
+cd ~/catkin_ws/src
 git clone https://github.com/PaperFanz/insitu.git
 or
 git clone git@github.com:PaperFanz/insitu.git
@@ -43,9 +44,10 @@ sudo rosdep init
 rosdep update
 ```
  
-4. Go to the top directory of your catkin workspace where the source code of InSitu package is install all dependencies required for InSitu (particularly QT)
+4. Go to the top directory of your catkin workspace where the source code of the InSitu package is and install all dependencies required for InSitu (particularly QT)
 
 ```sh
+cd ~/catkin_ws
 rosdep install --from-paths src --ignore-src -r -y
 ```
     
