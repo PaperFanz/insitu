@@ -6,7 +6,7 @@ InSitu by itself is nothing more than a platform; its real utility comes when us
 
 - [ ] implement example/common filters (assignee @EAkita)
 - [ ] break out filtered view as standalone RQT plugin (assignee none)
-- [ ] optionally republish filtered image stream (assignee none)
 - [ ] save and restore modes, views, and filters from configuration file (assignee @PaperFanz)
 - [x] 'Edit filter' interface (assignee @PaperFanz)
 - [x] script for creating filter templates (assignee @PaperFanz)
+- [x] optionally republish filtered image stream (assignee @PaperFanz)

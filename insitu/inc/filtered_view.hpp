@@ -33,7 +33,8 @@ private:
     QPushButton * refreshTopicButton;
     QPushButton * addFilterButton;
     QPushButton * rmFilterButton;
-    QPushButton * toggleFilterPaneBtn;
+    QCheckBox * republishCheckBox;
+    QCheckBox * showFilterPaneCheckBox;
     QListWidget * filterList;
     RosImageFrame * imgFrame;
     QLabel * imgLabel;
@@ -53,6 +54,7 @@ private:
     ros::AsyncSpinner * spinner;
     ros::Time lastFrameTime;
     image_transport::Subscriber sub;
+    image_transport::Publisher pub;
 
     // OpenCV
     uint32_t frames;
@@ -64,7 +66,6 @@ private:
 
     // Housekeeping
     std::string name;
-    bool filterPaneVisible = true;
 
 public Q_SLOTS:
 
@@ -77,6 +78,8 @@ public Q_SLOTS:
     void rmFilter(void);
 
     void onToggleFilterPane(void);
+
+    void onToggleRepublish(void);
 
 public:
 

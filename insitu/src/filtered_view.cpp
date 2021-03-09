@@ -19,7 +19,11 @@ FilteredView::FilteredView(const ros::NodeHandle& parent_, QString _name,
     refreshTopicButton = new QPushButton(tr("Refresh"));
     addFilterButton = new QPushButton(tr("Add Filter"));
     rmFilterButton = new QPushButton(tr("Delete Filter"));
-    toggleFilterPaneBtn = new QPushButton(tr("Hide Filters"));
+
+    // checkboxes
+    showFilterPaneCheckBox = new QCheckBox(tr("Show Filter Pane"));
+    showFilterPaneCheckBox->setChecked(true);
+    republishCheckBox = new QCheckBox(tr("Republish"));
 
     // frame to preserve image aspect ratio
     imgFrame = new RosImageFrame();
@@ -56,8 +60,9 @@ FilteredView::FilteredView(const ros::NodeHandle& parent_, QString _name,
     layout = new QGridLayout();
     layout->addWidget(topicBox, 0, 0);
     layout->addWidget(refreshTopicButton, 0, 1);
-    layout->addWidget(toggleFilterPaneBtn, 0, 2);
-    layout->addLayout(imagePane, 1, 0, 1, 3);
+    layout->addWidget(republishCheckBox, 0, 2);
+    layout->addWidget(showFilterPaneCheckBox, 0, 3);
+    layout->addLayout(imagePane, 1, 0, 1, 4);
     layout->addWidget(fpsLabel, 2, 0);
     layout->setColumnStretch(0, 1);
     layout->setRowStretch(1, 1);
@@ -74,8 +79,10 @@ FilteredView::FilteredView(const ros::NodeHandle& parent_, QString _name,
     QObject::connect(addFilterButton, SIGNAL(clicked()),
                      SLOT(openFilterDialog()));
     QObject::connect(rmFilterButton, SIGNAL(clicked()), SLOT(rmFilter()));
-    QObject::connect(toggleFilterPaneBtn, SIGNAL(clicked()), 
+    QObject::connect(showFilterPaneCheckBox, SIGNAL(stateChanged(int)), 
                      SLOT(onToggleFilterPane()));
+    QObject::connect(republishCheckBox, SIGNAL(stateChanged(int)),
+                      SLOT(onToggleRepublish()));
 
     name = _name.toStdString();
     nh = new ros::NodeHandle(parent_, name);
@@ -155,11 +162,19 @@ void FilteredView::rmFilter(void)
 
 void FilteredView::onToggleFilterPane(void)
 {
-    filterPaneVisible = !filterPaneVisible;
-    filterPaneWidget->setVisible(filterPaneVisible);
-    toggleFilterPaneBtn->setText(
-        filterPaneVisible ? tr("Hide Filters") : tr("Show Filters")
-    );
+    filterPaneWidget->setVisible(showFilterPaneCheckBox->isChecked());
+}
+
+void FilteredView::onToggleRepublish(void)
+{
+    if (republishCheckBox->isChecked()) {
+        topicBox->setDisabled(true);
+        image_transport::ImageTransport it(*nh);
+        pub = it.advertise("republish", 1);
+    } else {
+        pub.shutdown();
+        topicBox->setDisabled(false);
+    }
 }
 
 /*
@@ -208,7 +223,7 @@ void FilteredView::callbackImg(const sensor_msgs::Image::ConstPtr& msg)
     // convert sensor_msgs::Image to cv matrix
     cv_bridge::CvImageConstPtr cv_ptr;
     try {
-        cv_ptr = cv_bridge::toCvShare(msg, sensor_msgs::image_encodings::RGB8);
+        cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::RGB8);
     } catch (cv_bridge::Exception& e) {
         qWarning("Failed to convert image: %s", e.what());
         return;
@@ -222,6 +237,11 @@ void FilteredView::callbackImg(const sensor_msgs::Image::ConstPtr& msg)
         QListWidgetItem * it = filterList->item(i);
         FilterCard * fc = (FilterCard *) filterList->itemWidget(it);
         imgMat = filters[fc->getFilterName()]->apply(imgMat);
+    }
+
+    // republish
+    if (pub.getNumSubscribers() > 0) {
+        pub.publish(cv_ptr->toImageMsg());
     }
 
     // convert cv matrix to qpixmap
