@@ -18,7 +18,7 @@ https://catkin-tools.readthedocs.io/en/latest/installing.html
 
 Please note that InSitu has only been tested on ROS Melodic/Ubutnu 18.04 so far. See To-Do list in [CONTRIBUTING.md](CONTRIBUTING.md) for status on other setups.
 
-1. Create and source a new catkin workspace
+1. Create and source a new catkin workspace in a new terminal
 ```sh
 mkdir -p ~/catkin_ws/src
 cd ~/catkin_ws/
@@ -45,35 +45,35 @@ sudo rosdep init
 rosdep update
 ```
  
-4. Go to the top directory of your catkin workspace where the source code of the InSitu package is and install all dependencies required for InSitu (particularly QT)
+5. Go to the top directory of your catkin workspace where the source code of the InSitu package is and install all dependencies required for InSitu (particularly QT)
 
 ```sh
 cd ~/catkin_ws
 rosdep install --from-paths src --ignore-src -r -y
 ```
     
-5. Install clang to compile C++ code for InSitu
+6. Install clang to compile C++ code for InSitu
 ```sh
 sudo apt-get update
 sudo apt-get install clang-10
 ```
 
-6. Build the packages
+7. Build the packages
 ```sh
 catkin build
 ```
-7. Source the workspace
+8. Source the workspace
 ```sh
 cd ~/catkin_ws/
 source devel/setup.bash 
 ```
 
-7. Open another terminal and launch roscore
+9. Open another terminal and launch roscore
 ```sh
 roscore
 ```
 
-8. Return to the first terminal (in step #7) and run InSitu 
+10. Return to the first terminal (in step #7) and run InSitu 
 
 ```sh
 rosrun insitu insitu
