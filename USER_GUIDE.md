@@ -9,13 +9,14 @@ Alternatively, these functions can be activated through the toolbar under the `E
 
 ## Building from Source
 
-This guide assumes you've installed ROS on your system.
- 
-If not, please refer to the installation guide at this link for an Ubuntu installation of ROS:
+This guide assumes that ROS and catkin tools have been installed.
+If not, please refer to the installation guide at this link for an Ubuntu 18 installation of ROS and catkin tools respectively:
 
 http://wiki.ros.org/melodic/Installation/Ubuntu
 
-Note that InSitu has only been tested on ROS Melodic/Ubutnu 18.04 so far. See To-Do list in [CONTRIBUTING.md](CONTRIBUTING.md) for status on other setups.
+https://catkin-tools.readthedocs.io/en/latest/installing.html
+
+Please note that InSitu has only been tested on ROS Melodic/Ubutnu 18.04 so far. See To-Do list in [CONTRIBUTING.md](CONTRIBUTING.md) for status on other setups.
 
 1. Create and source a new catkin workspace
 ```sh
@@ -57,18 +58,22 @@ sudo apt-get update
 sudo apt-get install clang-10
 ```
 
-6. Source the workspace
+6. Build the packages
+```sh
+catkin build
+```
+7. Source the workspace
 ```sh
 cd ~/catkin_ws/
 source devel/setup.bash 
 ```
 
-7. Launch roscore in one terminal
+7. Open another terminal and launch roscore
 ```sh
 roscore
 ```
 
-8. Open a new terminal and run InSitu 
+8. Return to the first terminal (in step #7) and run InSitu 
 
 ```sh
 rosrun insitu insitu
