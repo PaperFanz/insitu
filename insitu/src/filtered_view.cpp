@@ -1,6 +1,7 @@
 #include "filtered_view.hpp"
 #include "addfilterdialog.hpp"
 #include "filter_card.hpp"
+#include "timed_run.hpp"
 
 namespace insitu {
 
@@ -57,6 +58,8 @@ FilteredView::FilteredView(const ros::NodeHandle& parent_, QString _name,
     imagePane->addWidget(imgFrame, 1);
     imagePane->addWidget(filterPaneWidget);
 
+    errMsg = new QErrorMessage();
+
     layout = new QGridLayout();
     layout->addWidget(topicBox, 0, 0);
     layout->addWidget(refreshTopicButton, 0, 1);
@@ -82,7 +85,9 @@ FilteredView::FilteredView(const ros::NodeHandle& parent_, QString _name,
     QObject::connect(showFilterPaneCheckBox, SIGNAL(stateChanged(int)), 
                      SLOT(onToggleFilterPane()));
     QObject::connect(republishCheckBox, SIGNAL(stateChanged(int)),
-                      SLOT(onToggleRepublish()));
+                     SLOT(onToggleRepublish()));
+    QObject::connect(this, SIGNAL(timeoutError(const QString&)),
+                     SLOT(onTimeoutError(const QString&)));
 
     name = _name.toStdString();
     nh = new ros::NodeHandle(parent_, name);
@@ -177,6 +182,15 @@ void FilteredView::onToggleRepublish(void)
     }
 }
 
+void FilteredView::onTimeoutError(const QString & filter)
+{
+    errMsg->showMessage(
+        QString("Filter %1/%2 timed out, removing...").arg(
+            name.c_str(), filter
+        )
+    );
+}
+
 /*
     Public Functions
 */
@@ -208,6 +222,22 @@ const ros::NodeHandle& FilteredView::getNodeHandle(void)
     Private Functions
 */
 
+void applyViewFilters(FilteredView * fv)
+{
+    fv->applyFilters();
+}
+
+void FilteredView::applyFilters(void) {
+    for (filterRow = filterList->count() - 1; filterRow >= 0; --filterRow) {
+        // seems awfully verbose for what we're trying to do but at this point
+        // I've just accepted that this is just how QT is designed
+        QListWidgetItem * it = filterList->item(filterRow);
+        FilterCard * fc = (FilterCard *) filterList->itemWidget(it);
+        filterName = fc->getFilterName();
+        imgMat = filters[filterName]->apply(imgMat);
+    }
+}
+
 void FilteredView::callbackImg(const sensor_msgs::Image::ConstPtr& msg)
 {
     // qDebug("cb in");
@@ -231,12 +261,11 @@ void FilteredView::callbackImg(const sensor_msgs::Image::ConstPtr& msg)
     imgMat = cv_ptr->image;
 
     // apply filters
-    for (int i = filterList->count() - 1; i >= 0; --i) {
-        // seems awfully verbose for what we're trying to do but at this point
-        // I've just accepted that this is just how QT is designed
-        QListWidgetItem * it = filterList->item(i);
-        FilterCard * fc = (FilterCard *) filterList->itemWidget(it);
-        imgMat = filters[fc->getFilterName()]->apply(imgMat);
+    try {
+        run_with_timeout(applyViewFilters, 33333us, this);
+    } catch (std::exception e) {
+        filterList->takeItem(filterRow);
+        emit timeoutError(QString(filterName.c_str()));
     }
 
     // republish

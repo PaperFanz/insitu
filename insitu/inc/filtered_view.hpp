@@ -39,6 +39,7 @@ private:
     RosImageFrame * imgFrame;
     QLabel * imgLabel;
     QLabel * fpsLabel;
+    QErrorMessage * errMsg;
 
     // layout elements
     QWidget * filterPaneWidget;
@@ -61,7 +62,9 @@ private:
     cv::Mat imgMat;
     QImage imgbuf;
 
-    // Filter container
+    // Filter structs
+    std::string filterName;
+    int filterRow;
     std::unordered_map<std::string, boost::shared_ptr<insitu::Filter>> filters;
 
     // Housekeeping
@@ -81,6 +84,12 @@ public Q_SLOTS:
 
     void onToggleRepublish(void);
 
+    void onTimeoutError(const QString & filter);
+
+signals:
+
+    void timeoutError(const QString & filter);
+
 public:
 
     FilteredView(const ros::NodeHandle& parent_, QString _name, QString _topic, 
@@ -93,6 +102,8 @@ public:
     const std::string & getViewName(void);
 
     const ros::NodeHandle & getNodeHandle(void);
+
+    void applyFilters(void);
 
 private:
 

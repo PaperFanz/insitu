@@ -158,6 +158,7 @@ public:
     /*
         called by Insitu, do not reimplement
     */
+    // TODO not virt
     virtual void
     openSettingEditor(void)
     {
