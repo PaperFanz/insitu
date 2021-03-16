@@ -8,6 +8,7 @@ find_package(catkin REQUIRED COMPONENTS
     qt_build 
     roscpp
 )
+find_package(jsoncpp REQUIRED)
 
 include_directories(${catkin_INCLUDE_DIRS})
 add_compile_options(-std=c++14 -fPIC)
@@ -57,10 +58,10 @@ include_directories(
 set(INSITU_SRC
     src/main.cpp
     src/main_window.cpp
-    src/mainwindowdesign.cpp
-    src/addmodedialog.cpp
-    src/addviewdialog.cpp
-    src/addfilterdialog.cpp
+    src/main_window_design.cpp
+    src/add_mode_dialog.cpp
+    src/add_view_dialog.cpp
+    src/add_filter_dialog.cpp
     src/insitu_utils.cpp
     src/mode_container.cpp
     src/filtered_view.cpp
@@ -70,10 +71,10 @@ set(INSITU_SRC
     src/ros_image_frame.cpp
 
     inc/main_window.hpp
-    inc/mainwindowdesign.hpp
-    inc/addmodedialog.hpp
-    inc/addviewdialog.hpp
-    inc/addfilterdialog.hpp
+    inc/main_window_design.hpp
+    inc/add_mode_dialog.hpp
+    inc/add_view_dialog.hpp
+    inc/add_filter_dialog.hpp
     inc/insitu_utils.hpp
     inc/mode_container.hpp
     inc/filtered_view.hpp
@@ -93,6 +94,7 @@ add_executable(${PROJECT_NAME}
 )
 
 target_link_libraries(${PROJECT_NAME} 
+    jsoncpp_lib
     Qt5::Core
     Qt5::Widgets
     ${catkin_LIBRARIES}
@@ -108,4 +110,5 @@ install(DIRECTORY lib/${PROJECT_NAME}
 )
 
 catkin_install_python(PROGRAMS scripts/new_insitu_filter
-    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)

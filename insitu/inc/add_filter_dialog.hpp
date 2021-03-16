@@ -11,7 +11,7 @@
 
 namespace insitu {
 
-class AddFilterDialog : public QDialog
+class add_filter_dialog : public QDialog
 {
 
 Q_OBJECT
@@ -40,7 +40,7 @@ public Q_SLOTS:
     void onFilterChanged(void);
 
 public:
-    AddFilterDialog(QWidget * parent = nullptr);
+    add_filter_dialog(QWidget * parent = nullptr);
 
     void setActiveView(FilteredView * view);
 

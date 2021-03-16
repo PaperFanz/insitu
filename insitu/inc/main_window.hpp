@@ -4,7 +4,7 @@
 
 #include <QMainWindow>
 #include <QInputDialog>
-#include "mainwindowdesign.hpp"
+#include "main_window_design.hpp"
 
 namespace insitu {
 
@@ -27,7 +27,7 @@ public Q_SLOTS:
 	void on_actionAbout_triggered();
 
 private:
-	ui::MainWindowDesign ui;
+	ui::main_window_design ui;
 };
 
 }  // namespace insitu

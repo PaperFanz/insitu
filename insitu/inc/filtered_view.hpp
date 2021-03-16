@@ -63,8 +63,6 @@ private:
     QImage imgbuf;
 
     // Filter structs
-    std::string filterName;
-    int filterRow;
     std::unordered_map<std::string, boost::shared_ptr<insitu::Filter>> filters;
 
     // Housekeeping
@@ -83,12 +81,6 @@ public Q_SLOTS:
     void onToggleFilterPane(void);
 
     void onToggleRepublish(void);
-
-    void onTimeoutError(const QString & filter);
-
-signals:
-
-    void timeoutError(const QString & filter);
 
 public:
 

@@ -14,9 +14,9 @@
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QApplication>
 
-#include "addmodedialog.hpp"
-#include "addviewdialog.hpp"
-#include "addfilterdialog.hpp"
+#include "add_mode_dialog.hpp"
+#include "add_view_dialog.hpp"
+#include "add_filter_dialog.hpp"
 
 #include "insitu_utils.hpp"
 
@@ -24,7 +24,7 @@ QT_BEGIN_NAMESPACE
 
 namespace ui {
 
-class MainWindowDesign {
+class main_window_design {
 
 public:
 
@@ -51,9 +51,9 @@ public:
     QAction * actionAbout;
 
     // dialog boxes
-    insitu::AddModeDialog * addmodedialog;
-    insitu::AddViewDialog * addviewdialog;
-    insitu::AddFilterDialog * addfilterdialog;
+    insitu::add_mode_dialog * add_mode_dialog;
+    insitu::add_view_dialog * add_view_dialog;
+    insitu::add_filter_dialog * add_filter_dialog;
 
     // tab / mode interface
     QTabWidget * tabmanager;
@@ -70,7 +70,7 @@ private:
     // ui helpers
     void setupShortcuts(QMainWindow * mainwindow);
 
-}; // class MainWindowDesign
+}; // class main_window_design
 
 } // namespace ui
 

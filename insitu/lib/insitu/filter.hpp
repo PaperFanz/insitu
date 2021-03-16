@@ -12,19 +12,14 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/core/core.hpp>
 
-#include <unordered_map>
-#include <mutex>
-#include <boost/lexical_cast.hpp>
+// C++ includes
+#include <thread>
+#include <chrono>
+#include <json/json.h>
+
+using namespace std::chrono_literals;
 
 namespace insitu {
-
-typedef enum SettingType {
-    BOOLEAN,
-    FLOAT,
-    INT,
-    STRING,
-    NUM_SETTING_TYPES
-} setting_t;
 
 class Filter;
 
@@ -47,54 +42,29 @@ public:
 class Filter : public nodelet::Nodelet
 {
 
+private:
+
+    cv::Mat filterBuf;
+
+    std::thread filterThread;
+
+    bool stopped = false;
+
 protected:
 
     // dialog box for editing settings
     FilterDialog * settingsDialog;
 
-    // settings dictionary; load from ROS param server or configure through GUI
-    std::unordered_map<std::string, std::pair<setting_t, std::string>> settings;
+    // settings object
+    Json::Value settings;
 
-    // BEGIN settings getters
-    // not needed if filter doesn't also write to settings
-    // std::mutex settings_mutex;
-    
-    bool
-    getBoolSetting(std::string key)
+    void updateFilter(cv::Mat filter)
     {
-        // settings_mutex.lock();
-        bool b = boost::lexical_cast<bool>(settings[key].second);
-        // settings_mutex.unlock();
-        return b;
+        filterBuf = filter.clone();
+        if (stopped) {
+            throw stopped;
+        }
     }
-
-    float
-    getFloatSetting(std::string key)
-    {
-        // settings_mutex.lock();
-        float f = boost::lexical_cast<float>(settings[key].second);
-        // settings_mutex.unlock();
-        return f;
-    }
-
-    int
-    getIntSetting(std::string key)
-    {
-        // settings_mutex.lock();
-        int i = boost::lexical_cast<int>(settings[key].second);
-        // settings_mutex.unlock();
-        return i;
-    }
-
-    std::string
-    getStringSetting(std::string key)
-    {
-        // settings_mutex.lock();
-        std::string s = settings[key].second;
-        // settings_mutex.unlock();
-        return s;
-    }
-    // END settings getters
 
 public:
 
@@ -108,12 +78,38 @@ public:
         this function is called during every image subscriber callback for the
         view it is applied to
     */
-
-    virtual cv::Mat
-    apply(cv::Mat img)
+    virtual void
+    run (void)
     {
-        return img;
-    };
+        cv::Mat m = cv::Mat(
+            settings.get("width", 300).asInt(),
+            settings.get("height", 300).asInt(),
+            CV_8UC4,
+            cv::Scalar(255, 255, 255, 0)
+        );
+
+        while (true) {
+            updateFilter(m);
+            std::this_thread::sleep_for(100ms);
+        }
+    }
+
+    void
+    start (void)
+    {
+        filterThread = std::thread(&Filter::run, this);
+    }
+
+    void
+    stop (void)
+    {
+        stopped = true;
+        try {
+            filterThread.join();
+        } catch (bool ret) {
+            assert(ret);
+        }
+    }
 
     const std::string&
     name(void)
@@ -121,35 +117,18 @@ public:
         return getName();
     }
 
-    /*
-        called by Insitu, can also be used to implement custom settings 
-        editing interface
-    */
-    const std::unordered_map<std::string, std::pair<setting_t, std::string>>&
-    getSettings(void)
+    const cv::Mat&
+    getFilterBuf(void)
     {
-        return settings;
+        return filterBuf;
     }
 
+
     /*
-        called by Insitu, do not reimplement [debug function]
+        @Filter implementors: reimplement this function to return true if your 
+        filter has a custom settings dialog
     */
     bool
-    set(std::string key, std::string val)
-    {
-        auto it = settings.find(key);
-        if (it != settings.end()) {
-            it->second.second = val;
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /*
-        reimplement if providing a custom settings dialog
-    */
-    virtual bool
     hasSettingEditor(void)
     {
         return false;
@@ -158,25 +137,27 @@ public:
     /*
         called by Insitu, do not reimplement
     */
-    // TODO not virt
-    virtual void
+    void
     openSettingEditor(void)
     {
-        settingsDialog->open();
+        if (settingsDialog != nullptr) settingsDialog->open();
     }
 
 private:
 
     /*
         @Filter implementors: reimplement this function with any initialization
-        required; the creating of data structures, global variables, etc. 
-        Called by Insitu upon filter load.
+        required; the creating of data structures, global variables, etc. All 
+        initialization of the ROS infrastructure must be put into this function.
     */
     virtual void
     onInit()
     {
         settingsDialog = new FilterDialog(this);
         settingsDialog->setWindowTitle(QString::fromStdString(name()) + " Settings");
+
+        settings["width"] = 300;
+        settings["height"] = 300;
     };
 
 };  // class Filter

@@ -8,7 +8,7 @@
 
 namespace insitu {
 
-class AddModeDialog : public QDialog
+class add_mode_dialog : public QDialog
 {
 
 Q_OBJECT
@@ -26,7 +26,7 @@ public Q_SLOTS:
     void AddMode(void);
 
 public:
-    AddModeDialog(QWidget * parent);
+    add_mode_dialog(QWidget * parent);
 
 };
 

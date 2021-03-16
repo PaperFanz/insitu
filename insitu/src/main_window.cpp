@@ -3,7 +3,7 @@
 #include <QMessageBox>
 #include <iostream>
 #include "main_window.hpp"
-#include "addmodedialog.hpp"
+#include "add_mode_dialog.hpp"
 
 namespace insitu {
 
@@ -30,17 +30,17 @@ void MainWindow::on_actionAbout_triggered()
 
 void MainWindow::on_actionNewMode_triggered()
 {
-	ui.addmodedialog->open();
+	ui.add_mode_dialog->open();
 }
 
 void MainWindow::on_actionNewView_triggered()
 {
-	ui.addviewdialog->open();
+	ui.add_view_dialog->open();
 }
 
 void MainWindow::on_actionNewFilter_triggered()
 {
-	ui.addfilterdialog->open();
+	ui.add_filter_dialog->open();
 }
 
 void MainWindow::ReadSettings()

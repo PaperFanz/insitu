@@ -1,8 +1,8 @@
-#include "mainwindowdesign.hpp"
+#include "main_window_design.hpp"
 
 namespace ui {
 
-void MainWindowDesign::setupUI(QMainWindow * mainwindow)
+void main_window_design::setupUI(QMainWindow * mainwindow)
 {
     // set upject name for find() indexing
     if (mainwindow->objectName().isEmpty()) {
@@ -71,13 +71,13 @@ void MainWindowDesign::setupUI(QMainWindow * mainwindow)
     hbox->addWidget(tabmanager);
 
     // dialog widgets
-    addmodedialog = new insitu::AddModeDialog(mainwindow);
-    addmodedialog->setObjectName(QStringLiteral("addmodedialog"));
-    addviewdialog = new insitu::AddViewDialog(mainwindow);
-    addviewdialog->setObjectName(QStringLiteral("addviewdialog"));
-    addfilterdialog = new insitu::AddFilterDialog(mainwindow);
-    addfilterdialog->setObjectName(QStringLiteral("addfilterdialog"));
-    insitu::addNamedWidget("addfilterdialog", addfilterdialog);
+    add_mode_dialog = new insitu::add_mode_dialog(mainwindow);
+    add_mode_dialog->setObjectName(QStringLiteral("add_mode_dialog"));
+    add_view_dialog = new insitu::add_view_dialog(mainwindow);
+    add_view_dialog->setObjectName(QStringLiteral("add_view_dialog"));
+    add_filter_dialog = new insitu::add_filter_dialog(mainwindow);
+    add_filter_dialog->setObjectName(QStringLiteral("add_filter_dialog"));
+    insitu::addNamedWidget("add_filter_dialog", add_filter_dialog);
 
     mainwindow->setCentralWidget(body);
 
@@ -125,7 +125,7 @@ void MainWindowDesign::setupUI(QMainWindow * mainwindow)
     QMetaObject::connectSlotsByName(mainwindow);
 }
 
-void MainWindowDesign::setupShortcuts(QMainWindow * mainwindow)
+void main_window_design::setupShortcuts(QMainWindow * mainwindow)
 {
     #ifndef QT_NO_SHORTCUT
     actionQuit->setShortcutContext(Qt::ApplicationShortcut);
