@@ -38,15 +38,17 @@ class {1} : public insitu::Filter
 public:
     {1}(void);
 
-    virtual cv::Mat apply(cv::Mat);
+    const cv::Mat apply (void);
 
-    virtual bool hasSettingEditor(void)
+    bool hasSettingEditor(void)
     {{
         return true;
     }}
 
 private:
     void onInit(void);
+
+    void onDelete(void);
 
 }}; // end class {1}
 
@@ -112,10 +114,22 @@ void {1}::onInit(void)
     // TODO initialization code
 }}
 
-cv::Mat {1}::apply(cv::Mat img)
+void {1}::onDelete(void)
 {{
-    // TODO filter code
-    return img;
+    // TODO cleanup code
+}}
+
+
+const cv::Mat {1}::apply (void)
+{{
+    cv::Mat ret = cv::Mat(
+        settings.get("width", 300).asInt(),
+        settings.get("height", 300).asInt(),
+        CV_8UC4,
+        cv::Scalar(255, 255, 255, 0)
+    );
+
+    return ret;
 }}
 
 }} // end namespace {0}
@@ -164,7 +178,7 @@ cmake.write(
 """cmake_minimum_required(VERSION 3.0.2)
 project({0})
 
-add_compile_options(-std=c++11 -fPIC)
+add_compile_options(-std=c++14 -fPIC)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -176,6 +190,7 @@ find_package(catkin REQUIRED COMPONENTS
     roscpp
     insitu
 )
+find_package(jsoncpp REQUIRED)
 
 ## System dependencies are found with CMake's conventions
 find_package(Qt5 COMPONENTS Core Gui Widgets)
@@ -217,6 +232,7 @@ add_library(${{PROJECT_NAME}}
 )
 
 target_link_libraries(${{PROJECT_NAME}} 
+    jsoncpp_lib
     Qt5::Core
     Qt5::Widgets
     ${{catkin_LIBRARIES}}

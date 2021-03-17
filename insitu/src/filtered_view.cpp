@@ -1,7 +1,7 @@
 #include "filtered_view.hpp"
 #include "add_filter_dialog.hpp"
 #include "filter_card.hpp"
-#include "timed_run.hpp"
+#include "filter_graphics_item.hpp"
 
 namespace insitu {
 
@@ -26,17 +26,6 @@ FilteredView::FilteredView(const ros::NodeHandle& parent_, QString _name,
     showFilterPaneCheckBox->setChecked(true);
     republishCheckBox = new QCheckBox(tr("Republish"));
 
-    // frame to preserve image aspect ratio
-    imgFrame = new RosImageFrame();
-    imgFrame->setFrameStyle(QFrame::Plain | QFrame::Box);
-    imgFrame->setBackgroundRole(QPalette::Base);
-
-    // label to hold image
-    imgLabel = new QLabel(imgFrame);
-    imgLabel->setBackgroundRole(QPalette::Base);
-    imgLabel->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
-    imgLabel->setScaledContents(true);
-
     // display statistics in lower status bar
     fpsLabel = new QLabel();
     fpsLabel->setText(tr("FPS: "));
@@ -45,6 +34,13 @@ FilteredView::FilteredView(const ros::NodeHandle& parent_, QString _name,
     filterList = new QListWidget();
     filterList->setDragDropMode(QAbstractItemView::DragDrop);
     filterList->setDefaultDropAction(Qt::DropAction::MoveAction);
+
+    // graphics view for rendering filters
+    filterScene = new FilterGraphicsScene(this);
+    filterScene->setBackgroundBrush(QBrush(Qt::lightGray));
+    filterView = new QGraphicsView(filterScene);
+    rosImg = new FilterGraphicsItem();
+    filterScene->addItem(rosImg);
 
     // layout
     filterPaneLayout = new QGridLayout();
@@ -55,7 +51,7 @@ FilteredView::FilteredView(const ros::NodeHandle& parent_, QString _name,
     filterPaneWidget->setLayout(filterPaneLayout);
 
     imagePane = new QHBoxLayout();
-    imagePane->addWidget(imgFrame, 1);
+    imagePane->addWidget(filterView, 1);
     imagePane->addWidget(filterPaneWidget);
 
     errMsg = new QErrorMessage();
@@ -140,6 +136,7 @@ void FilteredView::onTopicChange(QString topic_transport)
         image_transport::ImageTransport it(*nh);
         image_transport::TransportHints hints(transport);
 
+        firstFrame = true;
         sub = it.subscribe(topic, 1, &FilteredView::callbackImg, this, hints);
     } else {
         // TODO error message
@@ -153,6 +150,7 @@ void FilteredView::rmFilter(void)
     QListWidgetItem * item = filterList->currentItem();
     if (item == nullptr) return;
     FilterCard * fc = (FilterCard *) filterList->itemWidget(item);
+    filters[fc->getFilterName()]->stop();
     filters[fc->getFilterName()].reset();
     filters.erase(fc->getFilterName());
 
@@ -197,6 +195,11 @@ void FilteredView::addFilter(boost::shared_ptr<insitu::Filter> filter)
     filterList->setItemWidget(item, fc);
 
     filter->start();
+    FilterGraphicsItem * gi = new FilterGraphicsItem();
+    qRegisterMetaType<cv::Mat>("cv::Mat");
+    connect(filter->filterWatchdog, SIGNAL(filterUpdated(const cv::Mat &)),
+            gi, SLOT(updateFilter(const cv::Mat &)));
+    filterScene->addItem(gi);
 }
 
 const std::string & FilteredView::getViewName(void)
@@ -227,34 +230,23 @@ void FilteredView::callbackImg(const sensor_msgs::Image::ConstPtr& msg)
     // convert sensor_msgs::Image to cv matrix
     cv_bridge::CvImageConstPtr cv_ptr;
     try {
-        cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::RGB8);
+        cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::RGBA8);
     } catch (cv_bridge::Exception& e) {
         qWarning("Failed to convert image: %s", e.what());
         return;
     }
     imgMat = cv_ptr->image;
 
-    // apply filters
-    for (int i = filterList->count() - 1; i >= 0; --i) {
-        // seems awfully verbose for what we're trying to do but at this point
-        // I've just accepted that this is just how QT is designed
-        QListWidgetItem * it = filterList->item(i);
-        FilterCard * fc = (FilterCard *) filterList->itemWidget(it);
-
-        // TODO
+    rosImg->updateFilter(imgMat);
+    if (firstFrame) {
+        // filterView->fitInView(rosImg, Qt::KeepAspectRatio);
+        firstFrame = false;
     }
 
     // republish
     if (pub.getNumSubscribers() > 0) {
         pub.publish(cv_ptr->toImageMsg());
     }
-
-    // convert cv matrix to qpixmap
-    QImage image(imgMat.data, imgMat.cols, imgMat.rows, imgMat.step[0], 
-                 QImage::Format_RGB888);
-    
-    imgFrame->setImage(image);
-    // qDebug("cb out");
 }
 
 }

@@ -69,6 +69,8 @@ set(INSITU_SRC
     src/filter_card.cpp
     src/filter_info.cpp
     src/ros_image_frame.cpp
+    src/filter_graphics_item.cpp
+    src/filter_graphics_scene.cpp
 
     inc/main_window.hpp
     inc/main_window_design.hpp
@@ -82,6 +84,8 @@ set(INSITU_SRC
     inc/filter_card.hpp
     inc/filter_info.hpp
     inc/ros_image_frame.hpp
+    inc/filter_graphics_item.hpp
+    inc/filter_graphics_scene.hpp
 
     lib/insitu/filter.hpp
 )

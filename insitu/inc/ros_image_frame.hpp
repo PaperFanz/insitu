@@ -10,7 +10,7 @@ class RosImageFrame : public QFrame
 
 Q_OBJECT
 private:
-    // data
+
     QImage img;
 
     mutable QMutex img_mutex;

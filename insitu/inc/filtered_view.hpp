@@ -20,6 +20,7 @@
 #include "insitu_utils.hpp"
 #include <insitu/filter.hpp>
 #include "ros_image_frame.hpp"
+#include "filter_graphics_scene.hpp"
 
 namespace insitu {
 
@@ -36,8 +37,9 @@ private:
     QCheckBox * republishCheckBox;
     QCheckBox * showFilterPaneCheckBox;
     QListWidget * filterList;
-    RosImageFrame * imgFrame;
-    QLabel * imgLabel;
+    QGraphicsView * filterView;
+    FilterGraphicsScene * filterScene;
+    FilterGraphicsItem * rosImg;
     QLabel * fpsLabel;
     QErrorMessage * errMsg;
 
@@ -58,6 +60,7 @@ private:
     image_transport::Publisher pub;
 
     // OpenCV
+    bool firstFrame = true;
     uint32_t frames;
     cv::Mat imgMat;
     QImage imgbuf;

@@ -14,6 +14,7 @@
 
 // C++ includes
 #include <thread>
+#include <future>
 #include <chrono>
 #include <json/json.h>
 
@@ -39,6 +40,31 @@ public:
 
 }; // class FilterDialog
 
+class FilterWatchdog : public QObject
+{
+Q_OBJECT
+private:
+
+    insitu::Filter * parent;
+    
+public:
+
+    FilterWatchdog(insitu::Filter * parent_)
+    {
+        parent = parent_;  
+    }
+
+    void notify(const cv::Mat& update)
+    {
+        emit filterUpdated(update);
+    }
+
+signals:
+
+    void filterUpdated(const cv::Mat& update);
+
+}; // class FilterWatchdog
+
 class Filter : public nodelet::Nodelet
 {
 
@@ -46,9 +72,9 @@ private:
 
     cv::Mat filterBuf;
 
-    std::thread filterThread;
+    std::promise<void> exitObj;
 
-    bool stopped = false;
+    std::thread filterThread;
 
 protected:
 
@@ -58,57 +84,63 @@ protected:
     // settings object
     Json::Value settings;
 
-    void updateFilter(cv::Mat filter)
+    void updateFilter(const cv::Mat& filter)
     {
         filterBuf = filter.clone();
-        if (stopped) {
-            throw stopped;
-        }
+        filterWatchdog->notify(filterBuf);
     }
 
 public:
 
-    Filter(){};
+    // qobject for notifying InSitu of new filter updates
+    FilterWatchdog * filterWatchdog;
 
-    virtual void
-    rmFilter(){};
+    Filter(){};
 
     /*
         @Filter implementors: reimplement this function to apply filter effects;
-        this function is called during every image subscriber callback for the
-        view it is applied to
+        this function MUST CALL updateFilter in its main loop, both to push
+        changes in the filter to InSitu and to facilitate filter shutdown
     */
-    virtual void
-    run (void)
+    virtual const cv::Mat
+    apply (void)
     {
-        cv::Mat m = cv::Mat(
+        cv::Mat ret = cv::Mat(
             settings.get("width", 300).asInt(),
             settings.get("height", 300).asInt(),
             CV_8UC4,
             cv::Scalar(255, 255, 255, 0)
         );
 
-        while (true) {
-            updateFilter(m);
-            std::this_thread::sleep_for(100ms);
+        return ret;
+    }
+
+    void
+    run (std::future<void> exitCond)
+    {
+        while (exitCond.wait_for(1ms) == std::future_status::timeout) {
+            updateFilter(apply());
+            std::this_thread::sleep_for(10ms);
         }
     }
 
     void
     start (void)
     {
-        filterThread = std::thread(&Filter::run, this);
+        std::future<void> exitCond = exitObj.get_future();
+
+        filterWatchdog = new FilterWatchdog(this);
+        filterThread = std::thread(&Filter::run, this, std::move(exitCond));
     }
 
     void
     stop (void)
     {
-        stopped = true;
-        try {
-            filterThread.join();
-        } catch (bool ret) {
-            assert(ret);
-        }
+        exitObj.set_value();
+        filterThread.join();
+        onDelete();
+        delete settingsDialog;
+        delete filterWatchdog;
     }
 
     const std::string&
@@ -128,7 +160,7 @@ public:
         @Filter implementors: reimplement this function to return true if your 
         filter has a custom settings dialog
     */
-    bool
+    virtual bool
     hasSettingEditor(void)
     {
         return false;
@@ -159,6 +191,13 @@ private:
         settings["width"] = 300;
         settings["height"] = 300;
     };
+
+    /*
+        @Filter implementors: reimplement this function to include any cleanup
+        operations before filter shutdown
+    */
+    virtual void
+    onDelete(){};
 
 };  // class Filter
 
