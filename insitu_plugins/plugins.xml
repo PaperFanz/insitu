@@ -1,5 +1,11 @@
 <library path="lib/libinsitu_plugins">
+  <class type="insitu_plugins::Label" base_class_type="insitu::Filter">
+    <description>editable text label</description>
+  </class>
   <class type="insitu_plugins::Crosshair" base_class_type="insitu::Filter">
     <description>a simple crosshair</description>
+  </class>
+  <class type="insitu_plugins::Transparent" base_class_type="insitu::Filter">
+    <description>testing new transparency filters</description>
   </class>
 </library>

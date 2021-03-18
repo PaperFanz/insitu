@@ -2,7 +2,7 @@
 <package format="2">
   <name>insitu_plugins</name>
   <version>0.0.0</version>
-  <description>a simple crosshair</description>
+  <description>editable text label</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->

@@ -40,16 +40,28 @@ include_directories(
 )
 
 set(insitu_plugins_HDRS
+    inc/Label/Label.hpp
+    inc/Label/Label_dialog.hpp
+
     inc/Crosshair/Crosshair.hpp
     inc/Crosshair/Crosshair_dialog.hpp
+
+    inc/Transparent/Transparent.hpp
+    inc/Transparent/Transparent_dialog.hpp
 )
 
 qt5_wrap_cpp(insitu_plugins_MOCS ${insitu_plugins_HDRS})
 
 ## Declare a C++ library
 add_library(${PROJECT_NAME}
+    src/Label/Label.cpp
+    src/Label/Label_dialog.cpp
+
     src/Crosshair/Crosshair.cpp
     src/Crosshair/Crosshair_dialog.cpp
+
+    src/Transparent/Transparent.cpp
+    src/Transparent/Transparent_dialog.cpp
 
     ${insitu_plugins_MOCS}
 )

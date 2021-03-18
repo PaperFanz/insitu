@@ -1,6 +1,348 @@
 #! /usr/bin/env python
 import os
 
+def makeHeaders(path):
+    header = open(path, "w")
+    header.write(
+    """#ifndef {0}_{1}_HPP
+    #define {0}_{1}_HPP
+
+    #include <pluginlib/class_list_macros.h>
+    #include <insitu/filter.hpp>
+
+    namespace {0} {{
+
+    class {1} : public insitu::Filter
+    {{
+
+    public:
+        {1}(void);
+
+        const cv::Mat apply (void);
+
+        bool hasSettingEditor(void)
+        {{
+            return true;
+        }}
+
+    private:
+        void onInit(void);
+
+        void onDelete(void);
+
+    }}; // end class {1}
+
+    }} // end namespace {0}
+
+    #endif // end {0}_{1}_HPP
+    """.format(pkg_name, filter_name)
+    )
+
+    header = open(folderlist[2] + "/" + filter_name + "_dialog.hpp", "w")
+    header.write(
+    """#ifndef {0}_{1}_DIALOG_HPP
+    #define {0}_{1}_DIALOG_HPP
+
+    #include <insitu/filter.hpp>
+
+    namespace {0} {{
+
+    class {1}Dialog : public insitu::FilterDialog
+    {{
+    Q_OBJECT
+    private:
+
+        QPushButton * okButton;
+        QPushButton * cancelButton;
+
+        QGridLayout * layout;
+
+    public Q_SLOTS:
+
+        void onOK(void);
+
+    public:
+        {1}Dialog(insitu::Filter * parent_);
+
+    }};
+
+    }} // end namespace {0}
+
+    #endif // end {0}_{1}_DIALOG_HPP
+    """.format(pkg_name, filter_name)
+    )
+
+def makeSources(path):
+    source = open(path, "w")
+    source.write(
+    """#include <{1}/{1}.hpp>
+    #include <{1}/{1}_dialog.hpp>
+
+    namespace {0} {{
+
+    /*
+        Filter Implementation
+    */
+    {1}::{1}(void)
+    {{
+        // TODO instantiation code
+    }}
+
+    void {1}::onInit(void)
+    {{
+        settingsDialog = new {1}Dialog(this);
+
+        // TODO initialization code
+    }}
+
+    void {1}::onDelete(void)
+    {{
+        // TODO cleanup code
+    }}
+
+
+    const cv::Mat {1}::apply (void)
+    {{
+        /*
+            Create a transparent image to construct your overlay on
+        */
+        cv::Mat ret = cv::Mat(
+            settings.get("height", 300).asInt(),
+            settings.get("width", 300).asInt(),
+            CV_8UC4,
+            cv::Scalar(255, 255, 255, 0)
+        );
+
+        // TODO edit your overlay from user settings 
+        // e.g. settings.get("key", defaultValue).asType()
+
+        return ret;
+    }}
+
+    }} // end namespace {0}
+
+    PLUGINLIB_EXPORT_CLASS({0}::{1}, insitu::Filter);
+    """.format(pkg_name, filter_name)
+    )
+
+    source = open(folderlist[4] + "/" + filter_name + "_dialog.cpp", "w")
+    source.write(
+    """#include <{1}/{1}_dialog.hpp>
+
+    namespace {0} {{
+
+    {1}Dialog::{1}Dialog(insitu::Filter * parent_)
+    : FilterDialog(parent_)
+    {{
+        okButton = new QPushButton(tr("OK"));
+        okButton->setDefault(true);
+        cancelButton = new QPushButton(tr("Cancel"));
+
+        layout = new QGridLayout();
+        layout->addWidget(cancelButton, 0, 0);
+        layout->addWidget(okButton, 0, 1);
+
+        setLayout(layout);
+
+        QObject::connect(okButton, SIGNAL(clicked()), SLOT(onOK()));
+        QObject::connect(cancelButton, SIGNAL(clicked()), SLOT(reject()));
+    }}
+
+    void {1}Dialog::onOK(void)
+    {{
+        Json::Value & settings = parent->getSettingsValue();
+        // TODO change parent settings e.g. settings["key"] = value
+        
+        accept();
+    }}
+
+    }} // end namespace {0}
+    """.format(pkg_name, filter_name)
+    )
+
+# generate CMakeLists.txt
+def makeBuild(path):
+    if os.path.isfile(path):
+        print(path + "already exists, skipping...")
+        print("Please manually add source files to " + path)
+    else:
+        cmake = open(path, "w")
+        cmake.write(
+        """cmake_minimum_required(VERSION 3.0.2)
+        project({0})
+
+        add_compile_options(-std=c++14 -fPIC)
+
+        ## Find catkin macros and libraries
+        ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
+        ## is used, also find other catkin packages
+        find_package(catkin REQUIRED COMPONENTS
+            qt_build 
+            nodelet
+            pluginlib
+            roscpp
+            insitu
+        )
+        find_package(jsoncpp REQUIRED)
+
+        ## System dependencies are found with CMake's conventions
+        find_package(Qt5 COMPONENTS Core Gui Widgets)
+
+        catkin_package(
+        #  INCLUDE_DIRS include
+        #  LIBRARIES {0}
+        #  CATKIN_DEPENDS nodelet pluginlib roscpp
+        #  DEPENDS system_lib
+        )
+
+        ###########
+        ## Build ##
+        ###########
+
+        ## Specify additional locations of header files
+        ## Your package locations should be listed before other locations
+        include_directories(
+            inc
+            ${{catkin_INCLUDE_DIRS}}
+            ${{Qt5Core_INCLUDE_DIRS}}
+            ${{Qt5Gui_INCLUDE_DIRS}}
+            ${{Qt5Widgets_INCLUDE_DIRS}}
+        )
+
+        set({0}_HDRS
+            inc/{1}/{1}.hpp
+            inc/{1}/{1}_dialog.hpp
+        )
+
+        qt5_wrap_cpp({0}_MOCS ${{{0}_HDRS}})
+
+        ## Declare a C++ library
+        add_library(${{PROJECT_NAME}}
+            src/{1}/{1}.cpp
+            src/{1}/{1}_dialog.cpp
+
+            ${{{0}_MOCS}}
+        )
+
+        target_link_libraries(${{PROJECT_NAME}} 
+            jsoncpp_lib
+            Qt5::Core
+            Qt5::Widgets
+            ${{catkin_LIBRARIES}}
+        )
+
+        find_package(class_loader)
+        class_loader_hide_library_symbols(${{PROJECT_NAME}})
+
+        ## Install plugins
+        install(FILES plugins.xml
+            DESTINATION ${{CATKIN_PACKAGE_SHARE_DESTINATION}}
+        )
+
+        install(TARGETS ${{PROJECT_NAME}}
+            LIBRARY DESTINATION ${{CATKIN_PACKAGE_LIB_DESTINATION}}
+        )
+        """.format(pkg_name, filter_name)
+        )
+
+# generate plugins.xmldef makeBuild(path):
+def makePlugins(path):
+    if os.path.isfile(path):
+        print(path + "already exists, skipping...")
+        print("Please manually add new classes to " + path)
+    else:
+        plugins = open(path, "w")
+        plugins.write(
+        """<library path="lib/lib{0}">
+        <class type="{0}::{1}" base_class_type="insitu::Filter">
+            <description>{2}</description>
+        </class>
+        </library>
+        """.format(pkg_name, filter_name, filter_desc)
+        )
+
+# generate package.xml
+def makePackage(path):
+    if os.path.isfile(path):
+        print(path + "already exists, skipping...")
+        print("Please manually add new dependencies to " + path)
+    else:
+        package = open(path, "w")
+        package.write(
+        """<?xml version="1.0"?>
+        <package format="2">
+        <name>{0}</name>
+        <version>0.0.0</version>
+        <description>{1}</description>
+
+        <!-- One maintainer tag required, multiple allowed, one person per tag -->
+        <!-- Example:  -->
+        <!-- <maintainer email="jane.doe@example.com">Jane Doe</maintainer> -->
+        <maintainer email="todo@todo.todo">todo</maintainer>
+
+
+        <!-- One license tag required, multiple allowed, one license per tag -->
+        <!-- Commonly used license strings: -->
+        <!--   BSD, MIT, Boost Software License, GPLv2, GPLv3, LGPLv2.1, LGPLv3 -->
+        <license>TODO</license>
+
+
+        <!-- Url tags are optional, but multiple are allowed, one per tag -->
+        <!-- Optional attribute type can be: website, bugtracker, or repository -->
+        <!-- Example: -->
+        <!-- <url type="website">http://wiki.ros.org/{0}</url> -->
+
+
+        <!-- Author tags are optional, multiple are allowed, one per tag -->
+        <!-- Authors do not have to be maintainers, but could be -->
+        <!-- Example: -->
+        <!-- <author email="jane.doe@example.com">Jane Doe</author> -->
+
+
+        <!-- The *depend tags are used to specify dependencies -->
+        <!-- Dependencies can be catkin packages or system dependencies -->
+        <!-- Examples: -->
+        <!-- Use depend as a shortcut for packages that are both build and exec dependencies -->
+        <!--   <depend>roscpp</depend> -->
+        <!--   Note that this is equivalent to the following: -->
+        <!--   <build_depend>roscpp</build_depend> -->
+        <!--   <exec_depend>roscpp</exec_depend> -->
+        <!-- Use build_depend for packages you need at compile time: -->
+        <!--   <build_depend>message_generation</build_depend> -->
+        <!-- Use build_export_depend for packages you need in order to build against this package: -->
+        <!--   <build_export_depend>message_generation</build_export_depend> -->
+        <!-- Use buildtool_depend for build tool packages: -->
+        <!--   <buildtool_depend>catkin</buildtool_depend> -->
+        <!-- Use exec_depend for packages you need at runtime: -->
+        <!--   <exec_depend>message_runtime</exec_depend> -->
+        <!-- Use test_depend for packages you need only for testing: -->
+        <!--   <test_depend>gtest</test_depend> -->
+        <!-- Use doc_depend for packages you need only for building documentation: -->
+        <!--   <doc_depend>doxygen</doc_depend> -->
+        <buildtool_depend>catkin</buildtool_depend>
+        <build_depend>nodelet</build_depend>
+        <build_depend>pluginlib</build_depend>
+        <build_depend>roscpp</build_depend>
+        <build_depend>insitu</build_depend>
+
+        <build_export_depend>nodelet</build_export_depend>
+        <build_export_depend>pluginlib</build_export_depend>
+        <build_export_depend>roscpp</build_export_depend>
+        <build_export_depend>insitu</build_export_depend>
+
+        <exec_depend>nodelet</exec_depend>
+        <exec_depend>pluginlib</exec_depend>
+        <exec_depend>roscpp</exec_depend>
+        <exec_depend>insitu</exec_depend>
+
+        <!-- The export tag contains other, unspecified, tags -->
+        <export>
+            <insitu plugin="${{prefix}}/plugins.xml"/>
+        </export>
+        </package>
+        """.format(pkg_name, filter_desc)
+        )
+
 # get user input
 pkg_name = input("Enter package name: ")
 filter_name = input("Enter filter name: ")
@@ -21,324 +363,11 @@ for f in folderlist:
         os.mkdir(f)
 
 # generate dummy header and source files
-
-header = open(folderlist[2] + "/" + filter_name + ".hpp", "w")
-header.write(
-"""#ifndef {0}_{1}_HPP
-#define {0}_{1}_HPP
-
-#include <pluginlib/class_list_macros.h>
-#include <insitu/filter.hpp>
-
-namespace {0} {{
-
-class {1} : public insitu::Filter
-{{
-
-public:
-    {1}(void);
-
-    const cv::Mat apply (void);
-
-    bool hasSettingEditor(void)
-    {{
-        return true;
-    }}
-
-private:
-    void onInit(void);
-
-    void onDelete(void);
-
-}}; // end class {1}
-
-}} // end namespace {0}
-
-#endif // end {0}_{1}_HPP
-""".format(pkg_name, filter_name)
-)
-
-header = open(folderlist[2] + "/" + filter_name + "_dialog.hpp", "w")
-header.write(
-"""#ifndef {0}_{1}_DIALOG_HPP
-#define {0}_{1}_DIALOG_HPP
-
-#include <insitu/filter.hpp>
-
-namespace {0} {{
-
-class {1}Dialog : public insitu::FilterDialog
-{{
-Q_OBJECT
-private:
-
-    QPushButton * okButton;
-    QPushButton * cancelButton;
-
-    QGridLayout * layout;
-
-public Q_SLOTS:
-
-    void onOK(void);
-
-public:
-    {1}Dialog(insitu::Filter * parent_);
-
-}};
-
-}} // end namespace {0}
-
-#endif // end {0}_{1}_DIALOG_HPP
-""".format(pkg_name, filter_name)
-)
-
-source = open(folderlist[4] + "/" + filter_name + ".cpp", "w")
-source.write(
-"""#include <{1}/{1}.hpp>
-#include <{1}/{1}_dialog.hpp>
-
-namespace {0} {{
-
-/*
-    Filter Implementation
-*/
-{1}::{1}(void)
-{{
-    // TODO instantiation code
-}}
-
-void {1}::onInit(void)
-{{
-    settingsDialog = new {1}Dialog(this);
-
-    // TODO initialization code
-}}
-
-void {1}::onDelete(void)
-{{
-    // TODO cleanup code
-}}
-
-
-const cv::Mat {1}::apply (void)
-{{
-    cv::Mat ret = cv::Mat(
-        settings.get("width", 300).asInt(),
-        settings.get("height", 300).asInt(),
-        CV_8UC4,
-        cv::Scalar(255, 255, 255, 0)
-    );
-
-    return ret;
-}}
-
-}} // end namespace {0}
-
-PLUGINLIB_EXPORT_CLASS({0}::{1}, insitu::Filter);
-""".format(pkg_name, filter_name)
-)
-
-source = open(folderlist[4] + "/" + filter_name + "_dialog.cpp", "w")
-source.write(
-"""#include <{1}/{1}_dialog.hpp>
-
-namespace {0} {{
-
-{1}Dialog::{1}Dialog(insitu::Filter * parent_)
-: FilterDialog(parent_)
-{{
-    okButton = new QPushButton(tr("OK"));
-    cancelButton = new QPushButton(tr("Cancel"));
-
-    layout = new QGridLayout();
-    layout->addWidget(okButton);
-    layout->addWidget(cancelButton);
-
-    setLayout(layout);
-
-    QObject::connect(okButton, SIGNAL(clicked()), SLOT(onOK()));
-    QObject::connect(cancelButton, SIGNAL(clicked()), SLOT(reject()));
-}}
-
-void {1}Dialog::onOK(void)
-{{
-    // TODO change parent settings e.g.
-    // parent->set("key", "setting");
-    
-    accept();
-}}
-
-}} // end namespace {0}
-""".format(pkg_name, filter_name)
-)
-
-# generate CMakeLists.txt
-cmake = open(folderlist[0] + "/CMakeLists.txt", "w")
-cmake.write(
-"""cmake_minimum_required(VERSION 3.0.2)
-project({0})
-
-add_compile_options(-std=c++14 -fPIC)
-
-## Find catkin macros and libraries
-## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
-## is used, also find other catkin packages
-find_package(catkin REQUIRED COMPONENTS
-    qt_build 
-    nodelet
-    pluginlib
-    roscpp
-    insitu
-)
-find_package(jsoncpp REQUIRED)
-
-## System dependencies are found with CMake's conventions
-find_package(Qt5 COMPONENTS Core Gui Widgets)
-
-catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES {0}
-#  CATKIN_DEPENDS nodelet pluginlib roscpp
-#  DEPENDS system_lib
-)
-
-###########
-## Build ##
-###########
-
-## Specify additional locations of header files
-## Your package locations should be listed before other locations
-include_directories(
-    inc
-    ${{catkin_INCLUDE_DIRS}}
-    ${{Qt5Core_INCLUDE_DIRS}}
-    ${{Qt5Gui_INCLUDE_DIRS}}
-    ${{Qt5Widgets_INCLUDE_DIRS}}
-)
-
-set({0}_HDRS
-    inc/{1}/{1}.hpp
-    inc/{1}/{1}_dialog.hpp
-)
-
-qt5_wrap_cpp({0}_MOCS ${{{0}_HDRS}})
-
-## Declare a C++ library
-add_library(${{PROJECT_NAME}}
-    src/{1}/{1}.cpp
-    src/{1}/{1}_dialog.cpp
-
-    ${{{0}_MOCS}}
-)
-
-target_link_libraries(${{PROJECT_NAME}} 
-    jsoncpp_lib
-    Qt5::Core
-    Qt5::Widgets
-    ${{catkin_LIBRARIES}}
-)
-
-find_package(class_loader)
-class_loader_hide_library_symbols(${{PROJECT_NAME}})
-
-## Install plugins
-install(FILES plugins.xml
-    DESTINATION ${{CATKIN_PACKAGE_SHARE_DESTINATION}}
-)
-
-install(TARGETS ${{PROJECT_NAME}}
-    LIBRARY DESTINATION ${{CATKIN_PACKAGE_LIB_DESTINATION}}
-)
-""".format(pkg_name, filter_name)
-)
-
-# generate plugins.xml
-plugins = open(folderlist[0] + "/plugins.xml", "w")
-plugins.write(
-"""<library path="lib/lib{0}">
-  <class type="{0}::{1}" base_class_type="insitu::Filter">
-    <description>{2}</description>
-  </class>
-</library>
-""".format(pkg_name, filter_name, filter_desc)
-)
-
-# generate package.xml
-package = open(folderlist[0] + "/package.xml", "w")
-package.write(
-"""<?xml version="1.0"?>
-<package format="2">
-  <name>{0}</name>
-  <version>0.0.0</version>
-  <description>{1}</description>
-
-  <!-- One maintainer tag required, multiple allowed, one person per tag -->
-  <!-- Example:  -->
-  <!-- <maintainer email="jane.doe@example.com">Jane Doe</maintainer> -->
-  <maintainer email="todo@todo.todo">todo</maintainer>
-
-
-  <!-- One license tag required, multiple allowed, one license per tag -->
-  <!-- Commonly used license strings: -->
-  <!--   BSD, MIT, Boost Software License, GPLv2, GPLv3, LGPLv2.1, LGPLv3 -->
-  <license>TODO</license>
-
-
-  <!-- Url tags are optional, but multiple are allowed, one per tag -->
-  <!-- Optional attribute type can be: website, bugtracker, or repository -->
-  <!-- Example: -->
-  <!-- <url type="website">http://wiki.ros.org/{0}</url> -->
-
-
-  <!-- Author tags are optional, multiple are allowed, one per tag -->
-  <!-- Authors do not have to be maintainers, but could be -->
-  <!-- Example: -->
-  <!-- <author email="jane.doe@example.com">Jane Doe</author> -->
-
-
-  <!-- The *depend tags are used to specify dependencies -->
-  <!-- Dependencies can be catkin packages or system dependencies -->
-  <!-- Examples: -->
-  <!-- Use depend as a shortcut for packages that are both build and exec dependencies -->
-  <!--   <depend>roscpp</depend> -->
-  <!--   Note that this is equivalent to the following: -->
-  <!--   <build_depend>roscpp</build_depend> -->
-  <!--   <exec_depend>roscpp</exec_depend> -->
-  <!-- Use build_depend for packages you need at compile time: -->
-  <!--   <build_depend>message_generation</build_depend> -->
-  <!-- Use build_export_depend for packages you need in order to build against this package: -->
-  <!--   <build_export_depend>message_generation</build_export_depend> -->
-  <!-- Use buildtool_depend for build tool packages: -->
-  <!--   <buildtool_depend>catkin</buildtool_depend> -->
-  <!-- Use exec_depend for packages you need at runtime: -->
-  <!--   <exec_depend>message_runtime</exec_depend> -->
-  <!-- Use test_depend for packages you need only for testing: -->
-  <!--   <test_depend>gtest</test_depend> -->
-  <!-- Use doc_depend for packages you need only for building documentation: -->
-  <!--   <doc_depend>doxygen</doc_depend> -->
-  <buildtool_depend>catkin</buildtool_depend>
-  <build_depend>nodelet</build_depend>
-  <build_depend>pluginlib</build_depend>
-  <build_depend>roscpp</build_depend>
-  <build_depend>insitu</build_depend>
-
-  <build_export_depend>nodelet</build_export_depend>
-  <build_export_depend>pluginlib</build_export_depend>
-  <build_export_depend>roscpp</build_export_depend>
-  <build_export_depend>insitu</build_export_depend>
-
-  <exec_depend>nodelet</exec_depend>
-  <exec_depend>pluginlib</exec_depend>
-  <exec_depend>roscpp</exec_depend>
-  <exec_depend>insitu</exec_depend>
-
-  <!-- The export tag contains other, unspecified, tags -->
-  <export>
-    <insitu plugin="${{prefix}}/plugins.xml"/>
-  </export>
-</package>
-""".format(pkg_name, filter_desc)
-)
+makeHeaders(folderlist[2] + "/" + filter_name + ".hpp")
+makeSources(folderlist[4] + "/" + filter_name + ".cpp")
+makeBuild(folderlist[0] + "/CMakeLists.txt")
+makePlugins(folderlist[0] + "/plugins.xml")
+makePackage(folderlist[0] + "/package.xml")
 
 os.system("tree " + pkg_name)
 print("\nDone\n")

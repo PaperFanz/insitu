@@ -132,6 +132,12 @@ public:
         return false;
     }
 
+    virtual Json::Value &
+    getSettingsValue (void)
+    {
+        return settings;
+    }
+
     /*
         called by Insitu
     */
