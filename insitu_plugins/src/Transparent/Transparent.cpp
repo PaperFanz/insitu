@@ -34,7 +34,12 @@
             settings.get("height", 300).asInt(),
             settings.get("width", 300).asInt(),
             CV_8UC4,
-            cv::Scalar(255, 255, 255, (int)(alpha * 255))
+            cv::Scalar(
+                settings.get("red", 255).asInt(), 
+                settings.get("green", 255).asInt(), 
+                settings.get("blue", 255).asInt(), 
+                (int)(alpha * 255)
+            )
         );
 
         // TODO edit your overlay from user settings 

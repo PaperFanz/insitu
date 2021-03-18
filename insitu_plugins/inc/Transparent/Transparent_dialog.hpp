@@ -12,6 +12,12 @@
 
         QLabel * doubleLabel;
         QDoubleSpinBox * doubleBox;
+        QLabel * redLabel;
+        QSlider * redSlider;
+        QLabel * greenLabel;
+        QSlider * greenSlider;
+        QLabel * blueLabel;
+        QSlider * blueSlider;
         QPushButton * okButton;
         QPushButton * cancelButton;
 

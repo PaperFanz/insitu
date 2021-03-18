@@ -85,6 +85,8 @@ public Q_SLOTS:
 
     void onToggleRepublish(void);
 
+    void onFilterOrderChanged(void);
+
     void updateFilter(QGraphicsItem * item, const cv::Mat & update);
 
 public:
