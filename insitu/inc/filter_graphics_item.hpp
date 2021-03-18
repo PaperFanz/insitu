@@ -34,6 +34,10 @@ public:
 
     QSize getImgSize(void);
 
+    void updateFilter(const cv::Mat& filter);
+
+    void setResizable(bool resizeable);
+
 protected:
 
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
@@ -47,11 +51,7 @@ protected:
 
 public slots:
 
-    void updateFilter(const cv::Mat& filter);
-
     void queuedUpdate(void);
-
-    void setResizable(bool resizeable);
 
 signals:
 

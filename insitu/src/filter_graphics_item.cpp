@@ -38,7 +38,7 @@ void FilterGraphicsItem::updateFilter(const cv::Mat& filter)
     // convert cv matrix to qpixmap
     img_mutex.lock();
     img = QImage(filter.data, filter.cols, filter.rows, filter.step[0], 
-                 QImage::Format_RGBA8888);
+                 QImage::Format_RGBA8888).copy();
     img_mutex.unlock();
     if (imgSize != img.size()) {
         imgSize = img.size();
