@@ -9,7 +9,7 @@ namespace insitu
 FilterGraphicsScene::FilterGraphicsScene(QObject * parent)
     : QGraphicsScene(parent)
 {
-    // TODO freezing  
+    
 }
 
 } // namespace insitu

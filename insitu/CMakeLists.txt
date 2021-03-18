@@ -8,12 +8,13 @@ find_package(catkin REQUIRED COMPONENTS
     qt_build 
     roscpp
 )
+find_package(OpenCV 3.4.5 REQUIRED)
 find_package(jsoncpp REQUIRED)
 
 include_directories(${catkin_INCLUDE_DIRS})
 add_compile_options(-std=c++14 -fPIC)
 
-# specify the C++ standard
+# # specify the C++ standard
 set(CMAKE_CXX_COMPILER "/usr/bin/clang++-10")
 set(CMAKE_C_COMPILER "/usr/bin/clang-10")
 set(CMAKE_CXX_STANDARD 14)
@@ -70,6 +71,7 @@ set(INSITU_SRC
     src/filter_info.cpp
     src/ros_image_frame.cpp
     src/filter_graphics_item.cpp
+    src/filter_graphics_view.cpp
     src/filter_graphics_scene.cpp
 
     inc/main_window.hpp
@@ -85,6 +87,7 @@ set(INSITU_SRC
     inc/filter_info.hpp
     inc/ros_image_frame.hpp
     inc/filter_graphics_item.hpp
+    inc/filter_graphics_view.hpp
     inc/filter_graphics_scene.hpp
 
     lib/insitu/filter.hpp
@@ -101,6 +104,7 @@ target_link_libraries(${PROJECT_NAME}
     jsoncpp_lib
     Qt5::Core
     Qt5::Widgets
+    ${OpenCV_LIBRARIES}
     ${catkin_LIBRARIES}
 )
 

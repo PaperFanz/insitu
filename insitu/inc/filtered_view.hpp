@@ -20,7 +20,7 @@
 #include "insitu_utils.hpp"
 #include <insitu/filter.hpp>
 #include "ros_image_frame.hpp"
-#include "filter_graphics_scene.hpp"
+#include "filter_graphics_view.hpp"
 
 namespace insitu {
 
@@ -37,8 +37,8 @@ private:
     QCheckBox * republishCheckBox;
     QCheckBox * showFilterPaneCheckBox;
     QListWidget * filterList;
-    QGraphicsView * filterView;
-    FilterGraphicsScene * filterScene;
+    FilterGraphicsView * filterView;
+    QGraphicsScene * filterScene;
     FilterGraphicsItem * rosImg;
     QLabel * fpsLabel;
     QErrorMessage * errMsg;
@@ -58,12 +58,12 @@ private:
     ros::Time lastFrameTime;
     image_transport::Subscriber sub;
     image_transport::Publisher pub;
+    bool topicChanged;
 
     // OpenCV
-    bool firstFrame = true;
     uint32_t frames;
-    cv::Mat imgMat;
-    QImage imgbuf;
+    cv_bridge::CvImageConstPtr cv_ptr;
+    QImage filteredImg;
 
     // Filter structs
     std::unordered_map<std::string, boost::shared_ptr<insitu::Filter>> filters;
@@ -84,6 +84,8 @@ public Q_SLOTS:
     void onToggleFilterPane(void);
 
     void onToggleRepublish(void);
+
+    void updateFilter(QGraphicsItem * item, const cv::Mat & update);
 
 public:
 

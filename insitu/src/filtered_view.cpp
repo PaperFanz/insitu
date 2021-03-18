@@ -36,11 +36,12 @@ FilteredView::FilteredView(const ros::NodeHandle& parent_, QString _name,
     filterList->setDefaultDropAction(Qt::DropAction::MoveAction);
 
     // graphics view for rendering filters
-    filterScene = new FilterGraphicsScene(this);
+    filterScene = new QGraphicsScene(this);
     filterScene->setBackgroundBrush(QBrush(Qt::lightGray));
-    filterView = new QGraphicsView(filterScene);
+    filterView = new FilterGraphicsView(filterScene, this);
     rosImg = new FilterGraphicsItem();
     filterScene->addItem(rosImg);
+    filterView->setRootItem(rosImg);
 
     // layout
     filterPaneLayout = new QGridLayout();
@@ -122,10 +123,6 @@ void FilteredView::openFilterDialog(void)
 
 void FilteredView::onTopicChange(QString topic_transport)
 {
-    // qDebug("topic changed");
-
-    // imgMat.release();
-
     QList<QString> l = topic_transport.split(" ");
     std::string topic = l.first().toStdString();
     std::string transport = l.length() == 2 ? l.last().toStdString() : "raw";
@@ -136,13 +133,11 @@ void FilteredView::onTopicChange(QString topic_transport)
         image_transport::ImageTransport it(*nh);
         image_transport::TransportHints hints(transport);
 
-        firstFrame = true;
+        topicChanged = true;
         sub = it.subscribe(topic, 1, &FilteredView::callbackImg, this, hints);
     } else {
         // TODO error message
     }
-
-    // qDebug("Subscribed to topic %s / %s", sub.getTopic().c_str(), sub.getTransport().c_str());
 }
 
 void FilteredView::rmFilter(void)
@@ -150,8 +145,10 @@ void FilteredView::rmFilter(void)
     QListWidgetItem * item = filterList->currentItem();
     if (item == nullptr) return;
     FilterCard * fc = (FilterCard *) filterList->itemWidget(item);
-    filters[fc->getFilterName()]->stop();
-    filters[fc->getFilterName()].reset();
+    boost::shared_ptr<insitu::Filter> f = filters[fc->getFilterName()];
+    filterScene->removeItem(f->getGraphicsItem());
+    f->stop();
+    f.reset();
     filters.erase(fc->getFilterName());
 
     add_filter_dialog * afd = (add_filter_dialog *) getNamedWidget("add_filter_dialog");
@@ -170,12 +167,20 @@ void FilteredView::onToggleRepublish(void)
 {
     if (republishCheckBox->isChecked()) {
         topicBox->setDisabled(true);
+        filterView->setReplublishing(true);
         image_transport::ImageTransport it(*nh);
         pub = it.advertise("republish", 1);
     } else {
         pub.shutdown();
         topicBox->setDisabled(false);
+        filterView->setReplublishing(false);
+        filterScene->update();
     }
+}
+
+void FilteredView::updateFilter(QGraphicsItem * item, const cv::Mat & update)
+{
+    ((FilterGraphicsItem *) item)->updateFilter(update);
 }
 
 /*
@@ -194,12 +199,12 @@ void FilteredView::addFilter(boost::shared_ptr<insitu::Filter> filter)
     filterList->addItem(item);
     filterList->setItemWidget(item, fc);
 
-    filter->start();
-    FilterGraphicsItem * gi = new FilterGraphicsItem();
+    FilterGraphicsItem * gi = new FilterGraphicsItem(rosImg);
+    filter->start(gi);
     qRegisterMetaType<cv::Mat>("cv::Mat");
-    connect(filter->filterWatchdog, SIGNAL(filterUpdated(const cv::Mat &)),
-            gi, SLOT(updateFilter(const cv::Mat &)));
-    filterScene->addItem(gi);
+    connect(filter->getFilterWatchDog(), 
+            SIGNAL(filterUpdated(QGraphicsItem *, const cv::Mat &)),
+            this, SLOT(updateFilter(QGraphicsItem *, const cv::Mat &)));
 }
 
 const std::string & FilteredView::getViewName(void)
@@ -217,7 +222,6 @@ const ros::NodeHandle& FilteredView::getNodeHandle(void)
 */
 void FilteredView::callbackImg(const sensor_msgs::Image::ConstPtr& msg)
 {
-    // qDebug("cb in");
     // track frames per second
     ros::Time now = ros::Time::now();
     ++frames;
@@ -228,24 +232,29 @@ void FilteredView::callbackImg(const sensor_msgs::Image::ConstPtr& msg)
     }
 
     // convert sensor_msgs::Image to cv matrix
-    cv_bridge::CvImageConstPtr cv_ptr;
     try {
         cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::RGBA8);
     } catch (cv_bridge::Exception& e) {
         qWarning("Failed to convert image: %s", e.what());
         return;
     }
-    imgMat = cv_ptr->image;
 
-    rosImg->updateFilter(imgMat);
-    if (firstFrame) {
-        // filterView->fitInView(rosImg, Qt::KeepAspectRatio);
-        firstFrame = false;
+    rosImg->updateFilter(cv_ptr->image);
+    if (topicChanged) {
+        filterView->fitToRoot();
+        topicChanged = false;
     }
 
     // republish
     if (pub.getNumSubscribers() > 0) {
-        pub.publish(cv_ptr->toImageMsg());
+        cv_bridge::CvImage repub;
+        filteredImg = filterView->getImage().copy();
+        repub.encoding = "rgba8";
+        repub.image = cv::Mat( filteredImg.height(), filteredImg.width(),
+                          CV_8UC4,
+                          const_cast<uchar*>(filteredImg.bits()),
+                          static_cast<size_t>(filteredImg.bytesPerLine()));     
+        pub.publish(repub.toImageMsg());
     }
 }
 
