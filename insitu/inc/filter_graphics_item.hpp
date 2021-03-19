@@ -33,7 +33,7 @@ public:
 
     FilterGraphicsItem(QGraphicsItem* parent = nullptr);
 
-    int type() const override
+    int type(void) const override
     {
         return Type;
     }

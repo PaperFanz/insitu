@@ -17,8 +17,7 @@ FilterGraphicsView::FilterGraphicsView(QGraphicsScene* scene, QWidget* parent)
 */
 void FilterGraphicsView::setRootItem(FilterGraphicsItem* item)
 {
-    if (item == nullptr)
-        return;
+    if (item == nullptr) return;
     root = item;
     root->setFlag(QGraphicsItem::ItemIsMovable, false);
     root->setFlag(QGraphicsItem::ItemIsSelectable, false);
@@ -56,8 +55,7 @@ void FilterGraphicsView::setReplublishing(bool repub)
 const QImage& FilterGraphicsView::getImage(void)
 {
     QPainter imgPainter(&imgBuf);
-    if (republishing)
-        scene()->render(&imgPainter);
+    if (republishing) scene()->render(&imgPainter);
     return imgBuf;
 }
 

@@ -137,8 +137,7 @@ void FilteredView::onTopicChange(QString topic_transport)
 
     if (!topic.empty())
     {
-        if (sub.getNumPublishers())
-            sub.shutdown();
+        if (sub.getNumPublishers()) sub.shutdown();
 
         image_transport::ImageTransport it(*nh);
         image_transport::TransportHints hints(transport);
@@ -284,8 +283,7 @@ void FilteredView::callbackImg(const sensor_msgs::Image::ConstPtr& msg)
 
 void FilteredView::unloadFilter(QListWidgetItem* filterItem)
 {
-    if (filterItem == nullptr)
-        return;
+    if (filterItem == nullptr) return;
     FilterCard* fc = (FilterCard*)filterList->itemWidget(filterItem);
     std::string filterName = fc->getFilterName();
 
