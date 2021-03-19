@@ -16,7 +16,7 @@
 
 namespace insitu
 {
-class add_view_dialog : public QDialog
+class AddViewDialog : public QDialog
 {
     Q_OBJECT
 private:
@@ -37,7 +37,7 @@ public Q_SLOTS:
     void AddView(void);
 
 public:
-    add_view_dialog(QWidget* parent = nullptr);
+    AddViewDialog(QWidget* parent = nullptr);
 
     void open();
 };

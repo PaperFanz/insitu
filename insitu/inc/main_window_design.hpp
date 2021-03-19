@@ -50,9 +50,9 @@ public:
     QAction* actionAbout;
 
     // dialog boxes
-    insitu::add_mode_dialog* add_mode_dialog;
-    insitu::add_view_dialog* add_view_dialog;
-    insitu::add_filter_dialog* add_filter_dialog;
+    insitu::AddModeDialog* add_mode_dialog;
+    insitu::AddViewDialog* add_view_dialog;
+    insitu::AddFilterDialog* add_filter_dialog;
 
     // tab / mode interface
     QTabWidget* tabmanager;

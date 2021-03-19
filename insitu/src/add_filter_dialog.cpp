@@ -5,7 +5,7 @@ namespace insitu
 /*
     Constructor
 */
-add_filter_dialog::add_filter_dialog(QWidget* parent) : QDialog(parent)
+AddFilterDialog::AddFilterDialog(QWidget* parent) : QDialog(parent)
 {
     filterLoader = new FilterFactory("insitu");
     activeView = nullptr;
@@ -46,7 +46,7 @@ add_filter_dialog::add_filter_dialog(QWidget* parent) : QDialog(parent)
 /*
     Slots
 */
-void add_filter_dialog::AddFilter()
+void AddFilterDialog::AddFilter()
 {
     if (activeView != nullptr)
     {
@@ -80,7 +80,7 @@ void add_filter_dialog::AddFilter()
     }
 }
 
-void add_filter_dialog::onFilterChanged(void)
+void AddFilterDialog::onFilterChanged(void)
 {
     QListWidgetItem* item = filterList->currentItem();
     FilterInfo* fi = (FilterInfo*)filterList->itemWidget(item);
@@ -92,19 +92,19 @@ void add_filter_dialog::onFilterChanged(void)
 /*
     Public Functions
 */
-void add_filter_dialog::open()
+void AddFilterDialog::open()
 {
     refreshFilters();
     filterList->setCurrentRow(0);
     QDialog::open();
 }
 
-bool add_filter_dialog::unloadFilter(const std::string& name)
+bool AddFilterDialog::unloadFilter(const std::string& name)
 {
     return filterLoader->unloadFilter(name);
 }
 
-void add_filter_dialog::setActiveView(FilteredView* view)
+void AddFilterDialog::setActiveView(FilteredView* view)
 {
     activeView = view;
 }
@@ -112,7 +112,7 @@ void add_filter_dialog::setActiveView(FilteredView* view)
 /*
     Private Functions
 */
-void add_filter_dialog::refreshFilters(void)
+void AddFilterDialog::refreshFilters(void)
 {
     filterList->clear();
 

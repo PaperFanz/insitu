@@ -2,7 +2,7 @@
 
 namespace insitu
 {
-add_mode_dialog::add_mode_dialog(QWidget* parent) : QDialog(parent)
+AddModeDialog::AddModeDialog(QWidget* parent) : QDialog(parent)
 {
     tabmanager = (QTabWidget*)getNamedWidget("tabmanager");
 
@@ -32,7 +32,7 @@ add_mode_dialog::add_mode_dialog(QWidget* parent) : QDialog(parent)
     setWindowTitle(tr("Add Mode"));
 }
 
-void add_mode_dialog::AddMode()
+void AddModeDialog::AddMode()
 {
     QString name = nameEdit->text();
 

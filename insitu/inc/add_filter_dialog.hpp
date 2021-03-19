@@ -11,7 +11,7 @@
 
 namespace insitu
 {
-class add_filter_dialog : public QDialog
+class AddFilterDialog : public QDialog
 {
     Q_OBJECT
 private:
@@ -39,13 +39,13 @@ public Q_SLOTS:
     void onFilterChanged(void);
 
 public:
-    add_filter_dialog(QWidget* parent = nullptr);
+    AddFilterDialog(QWidget* parent = nullptr);
 
     void setActiveView(FilteredView* view);
 
     bool unloadFilter(const std::string& name);
 
-    void open();
+    void open(void);
 
 private:
     void refreshFilters(void);

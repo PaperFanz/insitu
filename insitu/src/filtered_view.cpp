@@ -123,8 +123,8 @@ void FilteredView::refreshTopics(void)
 
 void FilteredView::openFilterDialog(void)
 {
-    add_filter_dialog* afd =
-        (add_filter_dialog*)getNamedWidget("add_filter_dialog");
+    AddFilterDialog* afd =
+        (AddFilterDialog*)getNamedWidget("add_filter_dialog");
     afd->setActiveView(this);
     afd->open();
 }
@@ -296,8 +296,8 @@ void FilteredView::unloadFilter(QListWidgetItem* filterItem)
     f->stop();
     filters.erase(filterName);
 
-    add_filter_dialog* afd =
-        (add_filter_dialog*)getNamedWidget("add_filter_dialog");
+    AddFilterDialog* afd =
+        (AddFilterDialog*)getNamedWidget("add_filter_dialog");
     afd->unloadFilter(filterName);
 }
 

@@ -72,11 +72,11 @@ void main_window_design::setupUI(QMainWindow* mainwindow)
     hbox->addWidget(tabmanager);
 
     // dialog widgets
-    add_mode_dialog = new insitu::add_mode_dialog(mainwindow);
+    add_mode_dialog = new insitu::AddModeDialog(mainwindow);
     add_mode_dialog->setObjectName(QStringLiteral("add_mode_dialog"));
-    add_view_dialog = new insitu::add_view_dialog(mainwindow);
+    add_view_dialog = new insitu::AddViewDialog(mainwindow);
     add_view_dialog->setObjectName(QStringLiteral("add_view_dialog"));
-    add_filter_dialog = new insitu::add_filter_dialog(mainwindow);
+    add_filter_dialog = new insitu::AddFilterDialog(mainwindow);
     add_filter_dialog->setObjectName(QStringLiteral("add_filter_dialog"));
     insitu::addNamedWidget("add_filter_dialog", add_filter_dialog);
 

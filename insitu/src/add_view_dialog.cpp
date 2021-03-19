@@ -2,7 +2,7 @@
 
 namespace insitu
 {
-add_view_dialog::add_view_dialog(QWidget* parent) : QDialog(parent)
+AddViewDialog::AddViewDialog(QWidget* parent) : QDialog(parent)
 {
     tabmanager = (QTabWidget*)getNamedWidget("tabmanager");
     nameEdit = new QLineEdit;
@@ -32,7 +32,7 @@ add_view_dialog::add_view_dialog(QWidget* parent) : QDialog(parent)
     setWindowTitle(tr("Add View"));
 }
 
-void add_view_dialog::AddView()
+void AddViewDialog::AddView()
 {
     if (modeBox->count() > 0)
     {
@@ -55,7 +55,7 @@ void add_view_dialog::AddView()
     accept();
 }
 
-void add_view_dialog::open()
+void AddViewDialog::open()
 {
     modeBox->clear();
     modeBox->addItems(getModeList());
@@ -67,7 +67,7 @@ void add_view_dialog::open()
     QDialog::open();
 }
 
-QList<QString> add_view_dialog::getModeList()
+QList<QString> AddViewDialog::getModeList()
 {
     QList<QString> modes;
     int modenum = tabmanager->count();
