@@ -226,12 +226,12 @@ void FilteredView::addFilter(boost::shared_ptr<insitu::Filter> filter)
             SLOT(updateFilter(QGraphicsItem*, const cv::Mat&)));
 }
 
-const std::string& FilteredView::getViewName(void)
+const std::string& FilteredView::getViewName(void) const
 {
     return name;
 }
 
-const ros::NodeHandle& FilteredView::getNodeHandle(void)
+const ros::NodeHandle& FilteredView::getNodeHandle(void) const
 {
     return *nh;
 }

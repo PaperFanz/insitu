@@ -24,7 +24,7 @@ FilterGraphicsItem::FilterGraphicsItem(QGraphicsItem* parent)
 /*
     Public
 */
-QSize FilterGraphicsItem::getImgSize(void)
+QSize FilterGraphicsItem::getImgSize(void) const
 {
     return imgSize;
 }
@@ -155,7 +155,7 @@ void FilterGraphicsItem::paint(QPainter* painter,
 /*
     Private
 */
-QPointF FilterGraphicsItem::itemCenter(void)
+QPointF FilterGraphicsItem::itemCenter(void) const
 {
     return QPointF(
         (boundingRect().topLeft().x() + boundingRect().bottomRight().x()) / 2,

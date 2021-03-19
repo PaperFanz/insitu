@@ -16,16 +16,16 @@ public:
     MainWindow(int argc, char** argv, QWidget* parent = 0);
     ~MainWindow();
 
-    void ReadSettings();     // Load up qt program settings at startup
-    void WriteSettings();    // Save qt program settings when closing
+    void ReadSettings(void);     // Load up qt program settings at startup
+    void WriteSettings(void);    // Save qt program settings when closing
 
     void closeEvent(QCloseEvent* event);    // Overloaded function
 
 public Q_SLOTS:
-    void on_actionNewMode_triggered();
-    void on_actionNewView_triggered();
-    void on_actionNewFilter_triggered();
-    void on_actionAbout_triggered();
+    void on_actionNewMode_triggered(void);
+    void on_actionNewView_triggered(void);
+    void on_actionNewFilter_triggered(void);
+    void on_actionAbout_triggered(void);
 
 private:
     ui::main_window_design ui;

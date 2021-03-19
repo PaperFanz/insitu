@@ -17,9 +17,9 @@
 
 namespace insitu
 {
-QList<QString> getModeList();
+QList<QString> getModeList(void);
 
-QList<QString> getTopicList();
+QList<QString> getTopicList(void);
 
 void addNamedWidget(std::string name, QWidget* widget);
 

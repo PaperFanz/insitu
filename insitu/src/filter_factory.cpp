@@ -11,10 +11,8 @@ FilterFactory::FilterFactory(const std::string& pkg)
 
 FilterFactory::~FilterFactory(void)
 {
-    if (nLoader)
-        delete nLoader;
-    if (pLoader)
-        delete pLoader;
+    if (nLoader) delete nLoader;
+    if (pLoader) delete pLoader;
 }
 
 std::vector<std::string> FilterFactory::getFilterList(void)

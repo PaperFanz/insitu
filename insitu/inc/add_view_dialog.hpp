@@ -31,7 +31,7 @@ private:
 
     QTabWidget* tabmanager;
 
-    QList<QString> getModeList();
+    QList<QString> getModeList(void);
 
 public Q_SLOTS:
     void AddView(void);
@@ -39,7 +39,7 @@ public Q_SLOTS:
 public:
     AddViewDialog(QWidget* parent = nullptr);
 
-    void open();
+    void open(void);
 };
 
 }    // namespace insitu

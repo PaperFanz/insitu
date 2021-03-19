@@ -95,9 +95,9 @@ public:
 
     void addFilter(boost::shared_ptr<insitu::Filter> filter);
 
-    const std::string& getViewName(void);
+    const std::string& getViewName(void) const;
 
-    const ros::NodeHandle& getNodeHandle(void);
+    const ros::NodeHandle& getNodeHandle(void) const;
 
 private:
     void callbackImg(const sensor_msgs::Image::ConstPtr& msg);

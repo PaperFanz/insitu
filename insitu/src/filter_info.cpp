@@ -37,12 +37,12 @@ FilterInfo::~FilterInfo(void)
 /*
     Public Functions
 */
-const std::string& FilterInfo::getFilterName(void)
+const std::string& FilterInfo::getFilterName(void) const
 {
     return name;
 }
 
-std::string FilterInfo::getFilterType(void)
+const std::string FilterInfo::getFilterType(void) const
 {
     return typeLabel->text().toStdString();
 }

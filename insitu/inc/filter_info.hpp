@@ -32,9 +32,9 @@ public:
 
     ~FilterInfo(void);
 
-    const std::string& getFilterName(void);
+    const std::string& getFilterName(void) const;
 
-    std::string getFilterType(void);
+    const std::string getFilterType(void) const;
 };
 
 }    // end namespace insitu

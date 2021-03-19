@@ -55,7 +55,7 @@ public:
         emit filterUpdated(graphicsItem, update);
     }
 
-    QGraphicsItem* getGraphicsItem(void)
+    QGraphicsItem* getGraphicsItem(void) const
     {
         return graphicsItem;
     }
@@ -91,7 +91,7 @@ protected:
     }
 
 public:
-    Filter(){};
+    Filter(void){};
 
     /*
         @Filter implementors: reimplement this function to apply filter effects;
@@ -116,13 +116,12 @@ public:
         return false;
     }
 
-    virtual Json::Value& getSettingsValue(void)
-    {
-        return settings;
-    }
-
     /*
-        called by Insitu
+        @Filter implementors: advanced filters may be limited by the interface
+        provided by the apply() function, therefore this run() function is left
+        virtual to allow users to implement their own threads. However, users
+        MUST wait on exitCond and call updateFilter(), or InSitu will not be
+        able to render or unload the filter.
     */
     virtual void run(std::future<void> exitCond)
     {
@@ -133,6 +132,9 @@ public:
         }
     }
 
+    /*
+        called by Insitu
+    */
     void start(QGraphicsItem* item)
     {
         std::future<void> exitCond = exitObj.get_future();
@@ -148,23 +150,27 @@ public:
         delete settingsDialog;
     }
 
-    const std::string& name(void)
+    Json::Value& getSettingsValue(void)
+    {
+        return settings;
+    }
+
+    const std::string& name(void) const
     {
         return getName();
     }
 
     void openSettingEditor(void)
     {
-        if (settingsDialog != nullptr)
-            settingsDialog->open();
+        if (settingsDialog != nullptr) settingsDialog->open();
     }
 
-    FilterWatchdog* getFilterWatchDog(void)
+    FilterWatchdog* getFilterWatchDog(void) const
     {
         return filterWatchdog;
     }
 
-    QGraphicsItem* getGraphicsItem(void)
+    QGraphicsItem* getGraphicsItem(void) const
     {
         return filterWatchdog->getGraphicsItem();
     }

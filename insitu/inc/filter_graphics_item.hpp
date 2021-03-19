@@ -40,7 +40,7 @@ public:
 
     QRectF boundingRect(void) const override;
 
-    QSize getImgSize(void);
+    QSize getImgSize(void) const;
 
     void updateFilter(const cv::Mat& filter);
 
@@ -67,7 +67,7 @@ signals:
     void imgSizeChanged(QSize size);
 
 private:
-    QPointF itemCenter(void);
+    QPointF itemCenter(void) const;
 
     QImage img;
 
