@@ -1,38 +1,35 @@
 #ifndef insitu_plugins_Transparent_DIALOG_HPP
-    #define insitu_plugins_Transparent_DIALOG_HPP
+#define insitu_plugins_Transparent_DIALOG_HPP
 
-    #include <insitu/filter.hpp>
+#include <insitu/filter.hpp>
 
-    namespace insitu_plugins {
-
-    class TransparentDialog : public insitu::FilterDialog
-    {
+namespace insitu_plugins
+{
+class TransparentDialog : public insitu::FilterDialog
+{
     Q_OBJECT
-    private:
+private:
+    QLabel* doubleLabel;
+    QDoubleSpinBox* doubleBox;
+    QLabel* redLabel;
+    QSlider* redSlider;
+    QLabel* greenLabel;
+    QSlider* greenSlider;
+    QLabel* blueLabel;
+    QSlider* blueSlider;
+    QPushButton* okButton;
+    QPushButton* cancelButton;
 
-        QLabel * doubleLabel;
-        QDoubleSpinBox * doubleBox;
-        QLabel * redLabel;
-        QSlider * redSlider;
-        QLabel * greenLabel;
-        QSlider * greenSlider;
-        QLabel * blueLabel;
-        QSlider * blueSlider;
-        QPushButton * okButton;
-        QPushButton * cancelButton;
+    QGridLayout* layout;
 
-        QGridLayout * layout;
+public Q_SLOTS:
 
-    public Q_SLOTS:
+    void onOK(void);
 
-        void onOK(void);
+public:
+    TransparentDialog(insitu::Filter* parent_);
+};
 
-    public:
-        TransparentDialog(insitu::Filter * parent_);
+}    // end namespace insitu_plugins
 
-    };
-
-    } // end namespace insitu_plugins
-
-    #endif // end insitu_plugins_Transparent_DIALOG_HPP
-    
+#endif    // end insitu_plugins_Transparent_DIALOG_HPP

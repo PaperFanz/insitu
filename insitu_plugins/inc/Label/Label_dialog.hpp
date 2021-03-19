@@ -3,29 +3,27 @@
 
 #include <insitu/filter.hpp>
 
-namespace insitu_plugins {
-
+namespace insitu_plugins
+{
 class LabelDialog : public insitu::FilterDialog
 {
-Q_OBJECT
+    Q_OBJECT
 private:
+    QPushButton* okButton;
+    QPushButton* cancelButton;
+    QLineEdit* textEdit;
+    QLabel* textLabel;
 
-    QPushButton * okButton;
-    QPushButton * cancelButton;
-    QLineEdit * textEdit;
-    QLabel * textLabel;
-
-    QGridLayout * layout;
+    QGridLayout* layout;
 
 public Q_SLOTS:
 
     void onOK(void);
 
 public:
-    LabelDialog(insitu::Filter * parent_);
-
+    LabelDialog(insitu::Filter* parent_);
 };
 
-} // end namespace insitu_plugins
+}    // end namespace insitu_plugins
 
-#endif // end insitu_plugins_Label_DIALOG_HPP
+#endif    // end insitu_plugins_Label_DIALOG_HPP

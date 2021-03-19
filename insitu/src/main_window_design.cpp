@@ -1,11 +1,12 @@
 #include "main_window_design.hpp"
 
-namespace ui {
-
-void main_window_design::setupUI(QMainWindow * mainwindow)
+namespace ui
+{
+void main_window_design::setupUI(QMainWindow* mainwindow)
 {
     // set upject name for find() indexing
-    if (mainwindow->objectName().isEmpty()) {
+    if (mainwindow->objectName().isEmpty())
+    {
         mainwindow->setObjectName(QStringLiteral("MainWindow"));
     }
     // app locale
@@ -121,13 +122,14 @@ void main_window_design::setupUI(QMainWindow * mainwindow)
 
     setupShortcuts(mainwindow);
 
-    QObject::connect(actionQuit, SIGNAL(triggered()), mainwindow, SLOT(close()));
+    QObject::connect(actionQuit, SIGNAL(triggered()), mainwindow,
+                     SLOT(close()));
     QMetaObject::connectSlotsByName(mainwindow);
 }
 
-void main_window_design::setupShortcuts(QMainWindow * mainwindow)
+void main_window_design::setupShortcuts(QMainWindow* mainwindow)
 {
-    #ifndef QT_NO_SHORTCUT
+#ifndef QT_NO_SHORTCUT
     actionQuit->setShortcutContext(Qt::ApplicationShortcut);
     actionSave->setShortcutContext(Qt::ApplicationShortcut);
     actionLoad->setShortcutContext(Qt::ApplicationShortcut);
@@ -136,14 +138,21 @@ void main_window_design::setupShortcuts(QMainWindow * mainwindow)
     actionNewFilter->setShortcutContext(Qt::ApplicationShortcut);
     actionPreferences->setShortcutContext(Qt::ApplicationShortcut);
 
-    actionQuit->setShortcut(QApplication::translate("MainWindow", "Ctrl+Q", Q_NULLPTR));
-    actionSave->setShortcut(QApplication::translate("MainWindow", "Ctrl+S", Q_NULLPTR));
-    actionLoad->setShortcut(QApplication::translate("MainWindow", "Ctrl+L", Q_NULLPTR));
-    actionNewMode->setShortcut(QApplication::translate("MainWindow", "Ctrl+Shift+M", Q_NULLPTR));
-    actionNewView->setShortcut(QApplication::translate("MainWindow", "Ctrl+Shift+V", Q_NULLPTR));
-    actionNewFilter->setShortcut(QApplication::translate("MainWindow", "Ctrl+Shift+F", Q_NULLPTR));
-    actionPreferences->setShortcut(QApplication::translate("MainWindow", "Ctrl+Shift+P", Q_NULLPTR));
-    #endif
+    actionQuit->setShortcut(
+        QApplication::translate("MainWindow", "Ctrl+Q", Q_NULLPTR));
+    actionSave->setShortcut(
+        QApplication::translate("MainWindow", "Ctrl+S", Q_NULLPTR));
+    actionLoad->setShortcut(
+        QApplication::translate("MainWindow", "Ctrl+L", Q_NULLPTR));
+    actionNewMode->setShortcut(
+        QApplication::translate("MainWindow", "Ctrl+Shift+M", Q_NULLPTR));
+    actionNewView->setShortcut(
+        QApplication::translate("MainWindow", "Ctrl+Shift+V", Q_NULLPTR));
+    actionNewFilter->setShortcut(
+        QApplication::translate("MainWindow", "Ctrl+Shift+F", Q_NULLPTR));
+    actionPreferences->setShortcut(
+        QApplication::translate("MainWindow", "Ctrl+Shift+P", Q_NULLPTR));
+#endif
 }
 
-}
+}    // namespace ui

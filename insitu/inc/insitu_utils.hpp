@@ -15,17 +15,17 @@
 #include <vector>
 #include <unordered_map>
 
-namespace insitu {
-
+namespace insitu
+{
 QList<QString> getModeList();
 
 QList<QString> getTopicList();
 
-void addNamedWidget(std::string name, QWidget * widget);
+void addNamedWidget(std::string name, QWidget* widget);
 
-QWidget * getNamedWidget(std::string name);
+QWidget* getNamedWidget(std::string name);
 
 void clearLayout(QLayout* layout);
 
-} // namespace insitu
+}    // namespace insitu
 #endif

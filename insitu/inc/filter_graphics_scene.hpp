@@ -7,25 +7,22 @@
 // insitu includes
 #include "filter_graphics_item.hpp"
 
-namespace insitu {
-
+namespace insitu
+{
 class FilterGraphicsScene : public QGraphicsScene
 {
-Q_OBJECT
+    Q_OBJECT
 public:
-
-    FilterGraphicsScene(QObject * parent = nullptr);
+    FilterGraphicsScene(QObject* parent = nullptr);
 
 public slots:
 
 signals:
 
 protected:
-
 private:
-
 };
 
-} // namespace insitu
+}    // namespace insitu
 
-#endif // insitu_FILTER_GRAPHICS_SCENE_HPP
+#endif    // insitu_FILTER_GRAPHICS_SCENE_HPP

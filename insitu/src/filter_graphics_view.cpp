@@ -2,36 +2,37 @@
 
 namespace insitu
 {
-
 /*
     Constructor
 */
-FilterGraphicsView::FilterGraphicsView(QGraphicsScene * scene, 
-    QWidget * parent) : QGraphicsView(scene, parent)
+FilterGraphicsView::FilterGraphicsView(QGraphicsScene* scene, QWidget* parent)
+    : QGraphicsView(scene, parent)
 {
     root = nullptr;
-    imgBuf = QImage(1,1, QImage::Format_ARGB32);
+    imgBuf = QImage(1, 1, QImage::Format_ARGB32);
 }
 
 /*
     Public Functions
 */
-void FilterGraphicsView::setRootItem(FilterGraphicsItem * item)
+void FilterGraphicsView::setRootItem(FilterGraphicsItem* item)
 {
-    if (item == nullptr) return;
+    if (item == nullptr)
+        return;
     root = item;
     root->setFlag(QGraphicsItem::ItemIsMovable, false);
     root->setFlag(QGraphicsItem::ItemIsSelectable, false);
     root->setFlag(QGraphicsItem::ItemSendsGeometryChanges, false);
     root->setResizable(false);
 
-    connect(root, SIGNAL(imgSizeChanged(QSize)),
-            this, SLOT(rootImgSizeChanged(QSize)));
+    connect(root, SIGNAL(imgSizeChanged(QSize)), this,
+            SLOT(rootImgSizeChanged(QSize)));
 }
 
 void FilterGraphicsView::fitToRoot(void)
 {
-    if (root != nullptr) {
+    if (root != nullptr)
+    {
         fitInView(root, Qt::KeepAspectRatio);
         setSceneRect(root->boundingRect());
     }
@@ -40,19 +41,23 @@ void FilterGraphicsView::fitToRoot(void)
 void FilterGraphicsView::setReplublishing(bool repub)
 {
     republishing = repub;
-    if (republishing) {
+    if (republishing)
+    {
         setViewportUpdateMode(QGraphicsView::NoViewportUpdate);
         setInteractive(false);
-    } else {
+    }
+    else
+    {
         setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
         setInteractive(true);
     }
 }
 
-const QImage & FilterGraphicsView::getImage(void)
+const QImage& FilterGraphicsView::getImage(void)
 {
     QPainter imgPainter(&imgBuf);
-    if (republishing) scene()->render(&imgPainter);
+    if (republishing)
+        scene()->render(&imgPainter);
     return imgBuf;
 }
 
@@ -67,10 +72,10 @@ void FilterGraphicsView::rootImgSizeChanged(QSize size)
 /*
     Reimplemented Protected Functions
 */
-void FilterGraphicsView::resizeEvent(QResizeEvent * event)
+void FilterGraphicsView::resizeEvent(QResizeEvent* event)
 {
     QGraphicsView::resizeEvent(event);
     fitToRoot();
 }
 
-} // namespace insitu
+}    // namespace insitu

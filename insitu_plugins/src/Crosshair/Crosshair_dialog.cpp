@@ -1,9 +1,9 @@
 #include <Crosshair/Crosshair_dialog.hpp>
 
-namespace insitu_plugins {
-
-CrosshairDialog::CrosshairDialog(insitu::Filter * parent_)
-: FilterDialog(parent_)
+namespace insitu_plugins
+{
+CrosshairDialog::CrosshairDialog(insitu::Filter* parent_)
+    : FilterDialog(parent_)
 {
     okButton = new QPushButton(tr("OK"));
     cancelButton = new QPushButton(tr("Cancel"));
@@ -22,8 +22,8 @@ void CrosshairDialog::onOK(void)
 {
     // TODO change parent settings e.g.
     // parent->set("key", "setting");
-    
+
     accept();
 }
 
-} // end namespace insitu_plugins
+}    // end namespace insitu_plugins

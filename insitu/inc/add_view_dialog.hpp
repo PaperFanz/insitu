@@ -14,35 +14,33 @@
 #include "mode_container.hpp"
 #include "filtered_view.hpp"
 
-namespace insitu {
-
+namespace insitu
+{
 class add_view_dialog : public QDialog
 {
-
-Q_OBJECT
+    Q_OBJECT
 private:
-    QLineEdit * nameEdit;
-    QComboBox * modeBox;
-    QComboBox * topicBox;
-    QPushButton * createButton;
-    QPushButton * cancelButton;
+    QLineEdit* nameEdit;
+    QComboBox* modeBox;
+    QComboBox* topicBox;
+    QPushButton* createButton;
+    QPushButton* cancelButton;
 
-    QFormLayout * form;
-    QHBoxLayout * buttonHBox;
+    QFormLayout* form;
+    QHBoxLayout* buttonHBox;
 
-    QTabWidget * tabmanager;
+    QTabWidget* tabmanager;
 
     QList<QString> getModeList();
-    
+
 public Q_SLOTS:
     void AddView(void);
 
 public:
-    add_view_dialog(QWidget * parent = nullptr);
+    add_view_dialog(QWidget* parent = nullptr);
 
     void open();
-
 };
 
-} // namespace insitu
+}    // namespace insitu
 #endif

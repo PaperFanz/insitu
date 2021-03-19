@@ -1,9 +1,8 @@
 #include <Label/Label_dialog.hpp>
 
-namespace insitu_plugins {
-
-LabelDialog::LabelDialog(insitu::Filter * parent_)
-: FilterDialog(parent_)
+namespace insitu_plugins
+{
+LabelDialog::LabelDialog(insitu::Filter* parent_) : FilterDialog(parent_)
 {
     okButton = new QPushButton(tr("OK"));
     okButton->setDefault(true);
@@ -25,12 +24,12 @@ LabelDialog::LabelDialog(insitu::Filter * parent_)
 
 void LabelDialog::onOK(void)
 {
-    Json::Value & settings = parent->getSettingsValue();
+    Json::Value& settings = parent->getSettingsValue();
     // TODO change parent settings e.g. settings["key"] = value
 
     settings["text"] = textEdit->text().toStdString();
-    
+
     accept();
 }
 
-} // end namespace insitu_plugins
+}    // end namespace insitu_plugins

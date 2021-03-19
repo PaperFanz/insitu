@@ -8,27 +8,35 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/core/core.hpp>
 
-namespace insitu {
-
+namespace insitu
+{
 class FilterGraphicsItem : public QObject, public QGraphicsItem
 {
-/*
-    Why the hell does a QGraphicsItem also subclass QObject? It's a sad story.
+    /*
+        Why the hell does a QGraphicsItem also subclass QObject? It's a sad
+       story.
 
-    For some unknown reason simply calling update() after updating the image in 
-    updateFilter() results in the QGraphicsItem freezing after a while. The 
-    only solution I found that worked came from rqt_image_view commit e7c4c25, 
-    using signals and slots to separately queue the call to update(). To anyone 
-    who sees this, a cleaner solution that does not require subclassing QObject 
-    could reduce memory usage by up to 30% and is always welcome.
-*/
-Q_OBJECT
+        For some unknown reason simply calling update() after updating the image
+       in updateFilter() results in the QGraphicsItem freezing after a while.
+       The only solution I found that worked came from rqt_image_view commit
+       e7c4c25, using signals and slots to separately queue the call to
+       update(). To anyone who sees this, a cleaner solution that does not
+       require subclassing QObject could reduce memory usage by up to 30% and is
+       always welcome.
+    */
+    Q_OBJECT
 public:
-    enum {Type = UserType + 42};
+    enum
+    {
+        Type = UserType + 42
+    };
 
-    FilterGraphicsItem(QGraphicsItem * parent = nullptr);
+    FilterGraphicsItem(QGraphicsItem* parent = nullptr);
 
-    int type() const override {return Type;}
+    int type() const override
+    {
+        return Type;
+    }
 
     QRectF boundingRect(void) const override;
 
@@ -39,15 +47,14 @@ public:
     void setResizable(bool resizeable);
 
 protected:
+    void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
 
-    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
 
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
 
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
-
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
-               QWidget *widget = nullptr) override;
+    void paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
+               QWidget* widget = nullptr) override;
 
 public slots:
 
@@ -60,7 +67,6 @@ signals:
     void imgSizeChanged(QSize size);
 
 private:
-
     QPointF itemCenter(void);
 
     QImage img;
@@ -75,9 +81,8 @@ private:
 
     double initDist;
     double initScale;
-
 };
 
-} // namespace insitu
+}    // namespace insitu
 
-#endif // insitu_FILTER_GRAPHICS_ITEM_HPP
+#endif    // insitu_FILTER_GRAPHICS_ITEM_HPP

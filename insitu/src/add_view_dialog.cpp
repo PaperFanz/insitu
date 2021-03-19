@@ -1,10 +1,10 @@
 #include "add_view_dialog.hpp"
 
-namespace insitu {
-
-add_view_dialog::add_view_dialog(QWidget * parent) : QDialog(parent)
+namespace insitu
 {
-    tabmanager = (QTabWidget *)getNamedWidget("tabmanager");
+add_view_dialog::add_view_dialog(QWidget* parent) : QDialog(parent)
+{
+    tabmanager = (QTabWidget*)getNamedWidget("tabmanager");
     nameEdit = new QLineEdit;
     modeBox = new QComboBox();
     topicBox = new QComboBox();
@@ -34,21 +34,22 @@ add_view_dialog::add_view_dialog(QWidget * parent) : QDialog(parent)
 
 void add_view_dialog::AddView()
 {
-    if (modeBox->count() > 0) {
-        ModeContainer * container = (ModeContainer *) getNamedWidget(
-            "mode_" + modeBox->currentText().toStdString()
-        );
+    if (modeBox->count() > 0)
+    {
+        ModeContainer* container = (ModeContainer*)getNamedWidget(
+            "mode_" + modeBox->currentText().toStdString());
 
         QString name = nameEdit->text();
 
-        FilteredView * view = new FilteredView(
-            container->getNodeHandle(), name, topicBox->currentText()
-        );
+        FilteredView* view = new FilteredView(container->getNodeHandle(), name,
+                                              topicBox->currentText());
         view->setWindowTitle(name);
-        
+
         container->addView(view);
         addNamedWidget("view_" + name.toStdString(), view);
-    } else {
+    }
+    else
+    {
         // TODO, inform user mode box cannot be empty
     }
     accept();
@@ -70,10 +71,11 @@ QList<QString> add_view_dialog::getModeList()
 {
     QList<QString> modes;
     int modenum = tabmanager->count();
-    for (int i = 0; i < modenum; ++i) {
+    for (int i = 0; i < modenum; ++i)
+    {
         modes.append(tabmanager->tabText(i));
     }
     return modes;
 }
 
-} // END NAMESPACE INSITU
+}    // namespace insitu

@@ -20,120 +20,103 @@
 
 using namespace std::chrono_literals;
 
-namespace insitu {
-
+namespace insitu
+{
 class Filter;
 
 class FilterDialog : public QDialog
 {
-Q_OBJECT
+    Q_OBJECT
 protected:
-
-    insitu::Filter * parent;
+    insitu::Filter* parent;
 
 public:
-
-    FilterDialog(insitu::Filter * parent_)
+    FilterDialog(insitu::Filter* parent_)
     {
         parent = parent_;
     }
 
-}; // class FilterDialog
+};    // class FilterDialog
 
 class FilterWatchdog : public QObject
 {
-Q_OBJECT
+    Q_OBJECT
 private:
+    QGraphicsItem* graphicsItem;
 
-    QGraphicsItem * graphicsItem;
-    
 public:
-
-    FilterWatchdog(QGraphicsItem * item)
+    FilterWatchdog(QGraphicsItem* item)
     {
-        graphicsItem = item;  
+        graphicsItem = item;
     }
 
-    void
-    notify(const cv::Mat& update)
+    void notify(const cv::Mat& update)
     {
         emit filterUpdated(graphicsItem, update);
     }
 
-    QGraphicsItem *
-    getGraphicsItem(void)
+    QGraphicsItem* getGraphicsItem(void)
     {
         return graphicsItem;
     }
 
 signals:
 
-    void filterUpdated(QGraphicsItem * item, const cv::Mat& update);
+    void filterUpdated(QGraphicsItem* item, const cv::Mat& update);
 
-}; // class FilterWatchdog
+};    // class FilterWatchdog
 
 class Filter : public nodelet::Nodelet
 {
-
 private:
-
     cv::Mat filterBuf;
 
     std::promise<void> exitObj;
 
     std::thread filterThread;
 
-    FilterWatchdog * filterWatchdog;
+    FilterWatchdog* filterWatchdog;
 
 protected:
-
     // dialog box for editing settings
-    FilterDialog * settingsDialog;
+    FilterDialog* settingsDialog;
 
     // settings object
     Json::Value settings;
 
-    void
-    updateFilter(const cv::Mat& filter)
+    void updateFilter(const cv::Mat& filter)
     {
         filterBuf = filter.clone();
         filterWatchdog->notify(filterBuf);
     }
 
 public:
-
-    Filter () {};
+    Filter(){};
 
     /*
         @Filter implementors: reimplement this function to apply filter effects;
         this function MUST CALL updateFilter in its main loop, both to push
         changes in the filter to InSitu and to facilitate filter shutdown
     */
-    virtual const cv::Mat
-    apply (void)
+    virtual const cv::Mat apply(void)
     {
-        cv::Mat ret = cv::Mat(
-            settings.get("width", 300).asInt(),
-            settings.get("height", 300).asInt(),
-            CV_8UC4,
-            cv::Scalar(255, 255, 255, 0)
-        );
+        cv::Mat ret = cv::Mat(settings.get("width", 300).asInt(),
+                              settings.get("height", 300).asInt(), CV_8UC4,
+                              cv::Scalar(255, 255, 255, 0));
 
         return ret;
     }
 
     /*
-        @Filter implementors: reimplement this function to return true if your 
+        @Filter implementors: reimplement this function to return true if your
         filter has a custom settings dialog
     */
-    virtual bool
-    hasSettingEditor (void)
+    virtual bool hasSettingEditor(void)
     {
         return false;
     }
 
-    virtual Json::Value &
-    getSettingsValue (void)
+    virtual Json::Value& getSettingsValue(void)
     {
         return settings;
     }
@@ -141,25 +124,23 @@ public:
     /*
         called by Insitu
     */
-    virtual void
-    run (std::future<void> exitCond)
+    virtual void run(std::future<void> exitCond)
     {
-        while (exitCond.wait_for(1ms) == std::future_status::timeout) {
+        while (exitCond.wait_for(1ms) == std::future_status::timeout)
+        {
             updateFilter(apply());
             std::this_thread::sleep_for(10ms);
         }
     }
 
-    void
-    start (QGraphicsItem * item)
+    void start(QGraphicsItem* item)
     {
         std::future<void> exitCond = exitObj.get_future();
         filterWatchdog = new FilterWatchdog(item);
         filterThread = std::thread(&Filter::run, this, std::move(exitCond));
     }
 
-    void
-    stop (void)
+    void stop(void)
     {
         exitObj.set_value();
         filterThread.join();
@@ -167,42 +148,38 @@ public:
         delete settingsDialog;
     }
 
-    const std::string&
-    name (void)
+    const std::string& name(void)
     {
         return getName();
     }
 
-    void
-    openSettingEditor (void)
+    void openSettingEditor(void)
     {
-        if (settingsDialog != nullptr) settingsDialog->open();
+        if (settingsDialog != nullptr)
+            settingsDialog->open();
     }
 
-    FilterWatchdog *
-    getFilterWatchDog (void)
+    FilterWatchdog* getFilterWatchDog(void)
     {
         return filterWatchdog;
     }
 
-    QGraphicsItem *
-    getGraphicsItem(void)
+    QGraphicsItem* getGraphicsItem(void)
     {
         return filterWatchdog->getGraphicsItem();
     }
 
 private:
-
     /*
         @Filter implementors: reimplement this function with any initialization
-        required; the creating of data structures, global variables, etc. All 
+        required; the creating of data structures, global variables, etc. All
         initialization of the ROS infrastructure must be put into this function.
     */
-    virtual void
-    onInit (void)
+    virtual void onInit(void)
     {
         settingsDialog = new FilterDialog(this);
-        settingsDialog->setWindowTitle(QString::fromStdString(name()) + " Settings");
+        settingsDialog->setWindowTitle(QString::fromStdString(name()) +
+                                       " Settings");
 
         settings["width"] = 300;
         settings["height"] = 300;
@@ -212,11 +189,10 @@ private:
         @Filter implementors: reimplement this function to include any cleanup
         operations before filter shutdown
     */
-    virtual void
-    onDelete (void) {};
+    virtual void onDelete(void){};
 
-};  // class Filter
+};    // class Filter
 
-}   // namespace insitu
+}    // namespace insitu
 
 #endif

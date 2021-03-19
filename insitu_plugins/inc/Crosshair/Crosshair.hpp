@@ -4,15 +4,14 @@
 #include <pluginlib/class_list_macros.h>
 #include <insitu/filter.hpp>
 
-namespace insitu_plugins {
-
+namespace insitu_plugins
+{
 class Crosshair : public insitu::Filter
 {
-
 public:
     Crosshair(void);
 
-    const cv::Mat apply (void);
+    const cv::Mat apply(void);
 
     bool hasSettingEditor(void)
     {
@@ -26,8 +25,8 @@ private:
 
     int color = 0;
 
-}; // end class Crosshair
+};    // end class Crosshair
 
-} // end namespace insitu_plugins
+}    // end namespace insitu_plugins
 
-#endif // end insitu_plugins_Crosshair_HPP
+#endif    // end insitu_plugins_Crosshair_HPP

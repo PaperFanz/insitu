@@ -1,32 +1,30 @@
 #ifndef insitu_plugins_Transparent_HPP
-    #define insitu_plugins_Transparent_HPP
+#define insitu_plugins_Transparent_HPP
 
-    #include <pluginlib/class_list_macros.h>
-    #include <insitu/filter.hpp>
+#include <pluginlib/class_list_macros.h>
+#include <insitu/filter.hpp>
 
-    namespace insitu_plugins {
+namespace insitu_plugins
+{
+class Transparent : public insitu::Filter
+{
+public:
+    Transparent(void);
 
-    class Transparent : public insitu::Filter
+    const cv::Mat apply(void);
+
+    bool hasSettingEditor(void)
     {
+        return true;
+    }
 
-    public:
-        Transparent(void);
+private:
+    void onInit(void);
 
-        const cv::Mat apply (void);
+    void onDelete(void);
 
-        bool hasSettingEditor(void)
-        {
-            return true;
-        }
+};    // end class Transparent
 
-    private:
-        void onInit(void);
+}    // end namespace insitu_plugins
 
-        void onDelete(void);
-
-    }; // end class Transparent
-
-    } // end namespace insitu_plugins
-
-    #endif // end insitu_plugins_Transparent_HPP
-    
+#endif    // end insitu_plugins_Transparent_HPP

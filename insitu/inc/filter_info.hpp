@@ -7,20 +7,19 @@
 // insitu includes
 #include "insitu_utils.hpp"
 
-namespace insitu {
-
+namespace insitu
+{
 class FilterInfo : public QWidget
 {
-
-Q_OBJECT
+    Q_OBJECT
 private:
     // ui elements
-    QLabel * typeLabel;
-    QLabel * package;
-    QLabel * description;
+    QLabel* typeLabel;
+    QLabel* package;
+    QLabel* description;
 
     // layout element
-    QGridLayout * layout;
+    QGridLayout* layout;
 
     // data
     std::string name;
@@ -28,19 +27,16 @@ private:
 public Q_SLOTS:
 
 public:
-    FilterInfo(std::string name_, std::string type_, std::string package_, 
-               std::string description_, QWidget * parent = nullptr);
+    FilterInfo(std::string name_, std::string type_, std::string package_,
+               std::string description_, QWidget* parent = nullptr);
 
     ~FilterInfo(void);
 
-    const std::string& 
-    getFilterName(void);
+    const std::string& getFilterName(void);
 
-    std::string
-    getFilterType(void);
-
+    std::string getFilterType(void);
 };
 
-} // end namespace insitu
+}    // end namespace insitu
 
 #endif

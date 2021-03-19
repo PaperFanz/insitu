@@ -1,11 +1,11 @@
 #include "add_filter_dialog.hpp"
 
-namespace insitu {
-
+namespace insitu
+{
 /*
     Constructor
 */
-add_filter_dialog::add_filter_dialog(QWidget * parent) : QDialog(parent)
+add_filter_dialog::add_filter_dialog(QWidget* parent) : QDialog(parent)
 {
     filterLoader = new FilterFactory("insitu");
     activeView = nullptr;
@@ -28,7 +28,7 @@ add_filter_dialog::add_filter_dialog(QWidget * parent) : QDialog(parent)
     // callbacks
     QObject::connect(addBtn, SIGNAL(clicked()), SLOT(AddFilter()));
     QObject::connect(cancelBtn, SIGNAL(clicked()), SLOT(reject()));
-    QObject::connect(filterList, SIGNAL(itemSelectionChanged()), 
+    QObject::connect(filterList, SIGNAL(itemSelectionChanged()),
                      SLOT(onFilterChanged()));
 
     layout = new QGridLayout();
@@ -48,28 +48,33 @@ add_filter_dialog::add_filter_dialog(QWidget * parent) : QDialog(parent)
 */
 void add_filter_dialog::AddFilter()
 {
-    if (activeView != nullptr) {
-        if (filterList->currentItem() == nullptr) {
+    if (activeView != nullptr)
+    {
+        if (filterList->currentItem() == nullptr)
+        {
             errMsg->showMessage(tr("No loadable filter!"));
             reject();
         }
 
-        QListWidgetItem * item = filterList->currentItem();
-        FilterInfo * fi = (FilterInfo *) filterList->itemWidget(item);
+        QListWidgetItem* item = filterList->currentItem();
+        FilterInfo* fi = (FilterInfo*)filterList->itemWidget(item);
 
-        try {
+        try
+        {
             boost::shared_ptr<insitu::Filter> fl = filterLoader->loadFilter(
-                fi->getFilterName(),
-                nameEdit->text().toStdString()
-            );
+                fi->getFilterName(), nameEdit->text().toStdString());
             activeView->addFilter(fl);
-            activeView = nullptr; // reset so we don't segfault on a deleted view
+            activeView =
+                nullptr;    // reset so we don't segfault on a deleted view
             accept();
-        } catch (std::runtime_error e) {
-            errMsg->showMessage(QString::fromStdString(e.what()));
-            
         }
-    } else {
+        catch (std::runtime_error e)
+        {
+            errMsg->showMessage(QString::fromStdString(e.what()));
+        }
+    }
+    else
+    {
         errMsg->showMessage(tr("No selected view!"));
         reject();
     }
@@ -77,11 +82,10 @@ void add_filter_dialog::AddFilter()
 
 void add_filter_dialog::onFilterChanged(void)
 {
-    QListWidgetItem * item = filterList->currentItem();
-    FilterInfo * fi = (FilterInfo *) filterList->itemWidget(item);
-    QString name = QString::fromStdString(
-        activeView->getViewName() + "_" + fi->getFilterType()
-    );
+    QListWidgetItem* item = filterList->currentItem();
+    FilterInfo* fi = (FilterInfo*)filterList->itemWidget(item);
+    QString name = QString::fromStdString(activeView->getViewName() + "_" +
+                                          fi->getFilterType());
     nameEdit->setText(name);
 }
 
@@ -95,12 +99,12 @@ void add_filter_dialog::open()
     QDialog::open();
 }
 
-bool add_filter_dialog::unloadFilter(const std::string & name)
+bool add_filter_dialog::unloadFilter(const std::string& name)
 {
     return filterLoader->unloadFilter(name);
 }
 
-void add_filter_dialog::setActiveView(FilteredView * view)
+void add_filter_dialog::setActiveView(FilteredView* view)
 {
     activeView = view;
 }
@@ -113,20 +117,18 @@ void add_filter_dialog::refreshFilters(void)
     filterList->clear();
 
     auto classes = filterLoader->getFilterList();
-    for (auto it = classes.begin(); it != classes.end(); ++it) {
-        QListWidgetItem * item = new QListWidgetItem();
-        FilterInfo * fi = new FilterInfo(
-            *it,
-            filterLoader->getName(*it),
-            filterLoader->getClassPackage(*it),
-            filterLoader->getClassDescription(*it)
-        );
+    for (auto it = classes.begin(); it != classes.end(); ++it)
+    {
+        QListWidgetItem* item = new QListWidgetItem();
+        FilterInfo* fi = new FilterInfo(*it, filterLoader->getName(*it),
+                                        filterLoader->getClassPackage(*it),
+                                        filterLoader->getClassDescription(*it));
         item->setSizeHint(fi->sizeHint());
 
         filterList->addItem(item);
         filterList->setItemWidget(item, fi);
-        //qDebug("%s", it->c_str());
+        // qDebug("%s", it->c_str());
     }
 }
 
-} // END NAMESPACE INSITU
+}    // namespace insitu

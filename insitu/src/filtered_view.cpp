@@ -3,13 +3,14 @@
 #include "filter_card.hpp"
 #include "filter_graphics_item.hpp"
 
-namespace insitu {
-
+namespace insitu
+{
 /*
     Constructor / Destructor
 */
-FilteredView::FilteredView(const ros::NodeHandle& parent_, QString _name, 
-    QString _topic, QWidget * parent) : QWidget(parent)
+FilteredView::FilteredView(const ros::NodeHandle& parent_, QString _name,
+                           QString _topic, QWidget* parent)
+    : QWidget(parent)
 {
     // Topic name selector
     topicBox = new QComboBox();
@@ -77,11 +78,11 @@ FilteredView::FilteredView(const ros::NodeHandle& parent_, QString _name,
     connect(refreshTopicButton, SIGNAL(clicked()), SLOT(refreshTopics()));
     connect(addFilterButton, SIGNAL(clicked()), SLOT(openFilterDialog()));
     connect(rmFilterButton, SIGNAL(clicked()), SLOT(rmFilter()));
-    connect(showFilterPaneCheckBox, SIGNAL(stateChanged(int)), 
+    connect(showFilterPaneCheckBox, SIGNAL(stateChanged(int)),
             SLOT(onToggleFilterPane()));
-    connect(republishCheckBox, SIGNAL(stateChanged(int)), 
+    connect(republishCheckBox, SIGNAL(stateChanged(int)),
             SLOT(onToggleRepublish()));
-    connect(filterList, SIGNAL(itemSelectionChanged()), 
+    connect(filterList, SIGNAL(itemSelectionChanged()),
             SLOT(onFilterOrderChanged()));
 
     name = _name.toStdString();
@@ -95,8 +96,9 @@ FilteredView::FilteredView(const ros::NodeHandle& parent_, QString _name,
 
 FilteredView::~FilteredView(void)
 {
-    for (int i = filterList->count() - 1; i >= 0; --i) {
-        QListWidgetItem * item = filterList->item(i);
+    for (int i = filterList->count() - 1; i >= 0; --i)
+    {
+        QListWidgetItem* item = filterList->item(i);
         unloadFilter(item);
         delete item;
     }
@@ -121,7 +123,8 @@ void FilteredView::refreshTopics(void)
 
 void FilteredView::openFilterDialog(void)
 {
-    add_filter_dialog * afd = (add_filter_dialog *) getNamedWidget("add_filter_dialog");
+    add_filter_dialog* afd =
+        (add_filter_dialog*)getNamedWidget("add_filter_dialog");
     afd->setActiveView(this);
     afd->open();
 }
@@ -132,22 +135,26 @@ void FilteredView::onTopicChange(QString topic_transport)
     std::string topic = l.first().toStdString();
     std::string transport = l.length() == 2 ? l.last().toStdString() : "raw";
 
-    if (!topic.empty()) {
-        if(sub.getNumPublishers()) sub.shutdown();
-        
+    if (!topic.empty())
+    {
+        if (sub.getNumPublishers())
+            sub.shutdown();
+
         image_transport::ImageTransport it(*nh);
         image_transport::TransportHints hints(transport);
 
         topicChanged = true;
         sub = it.subscribe(topic, 1, &FilteredView::callbackImg, this, hints);
-    } else {
+    }
+    else
+    {
         // TODO error message
     }
 }
 
 void FilteredView::rmFilter(void)
 {
-    QListWidgetItem * item = filterList->currentItem();
+    QListWidgetItem* item = filterList->currentItem();
     unloadFilter(item);
     delete item;
 }
@@ -159,12 +166,15 @@ void FilteredView::onToggleFilterPane(void)
 
 void FilteredView::onToggleRepublish(void)
 {
-    if (republishCheckBox->isChecked()) {
+    if (republishCheckBox->isChecked())
+    {
         topicBox->setDisabled(true);
         filterView->setReplublishing(true);
         image_transport::ImageTransport it(*nh);
         pub = it.advertise("republish", 1);
-    } else {
+    }
+    else
+    {
         pub.shutdown();
         topicBox->setDisabled(false);
         filterView->setReplublishing(false);
@@ -174,10 +184,12 @@ void FilteredView::onToggleRepublish(void)
 
 void FilteredView::onFilterOrderChanged(void)
 {
-    for (int i = 0; i < filterList->count(); ++i) {
-        QListWidgetItem * item = filterList->item(i);
-        FilterCard * fc = (FilterCard *) filterList->itemWidget(item);
-        if (fc != nullptr) {
+    for (int i = 0; i < filterList->count(); ++i)
+    {
+        QListWidgetItem* item = filterList->item(i);
+        FilterCard* fc = (FilterCard*)filterList->itemWidget(item);
+        if (fc != nullptr)
+        {
             std::string filterName = fc->getFilterName();
             boost::shared_ptr<insitu::Filter> f = filters[filterName];
             f->getGraphicsItem()->setZValue(i);
@@ -185,9 +197,9 @@ void FilteredView::onFilterOrderChanged(void)
     }
 }
 
-void FilteredView::updateFilter(QGraphicsItem * item, const cv::Mat & update)
+void FilteredView::updateFilter(QGraphicsItem* item, const cv::Mat& update)
 {
-    ((FilterGraphicsItem *) item)->updateFilter(update);
+    ((FilterGraphicsItem*)item)->updateFilter(update);
 }
 
 /*
@@ -199,22 +211,22 @@ void FilteredView::addFilter(boost::shared_ptr<insitu::Filter> filter)
 
     filters[name] = filter;
 
-    QListWidgetItem * item = new QListWidgetItem();
-    FilterCard * fc = new FilterCard(name, filter);
+    QListWidgetItem* item = new QListWidgetItem();
+    FilterCard* fc = new FilterCard(name, filter);
     item->setSizeHint(fc->sizeHint());
 
     filterList->addItem(item);
     filterList->setItemWidget(item, fc);
 
-    FilterGraphicsItem * gi = new FilterGraphicsItem(rosImg);
+    FilterGraphicsItem* gi = new FilterGraphicsItem(rosImg);
     filter->start(gi);
     qRegisterMetaType<cv::Mat>("cv::Mat");
-    connect(filter->getFilterWatchDog(), 
-            SIGNAL(filterUpdated(QGraphicsItem *, const cv::Mat &)),
-            this, SLOT(updateFilter(QGraphicsItem *, const cv::Mat &)));
+    connect(filter->getFilterWatchDog(),
+            SIGNAL(filterUpdated(QGraphicsItem*, const cv::Mat&)), this,
+            SLOT(updateFilter(QGraphicsItem*, const cv::Mat&)));
 }
 
-const std::string & FilteredView::getViewName(void)
+const std::string& FilteredView::getViewName(void)
 {
     return name;
 }
@@ -232,43 +244,49 @@ void FilteredView::callbackImg(const sensor_msgs::Image::ConstPtr& msg)
     // track frames per second
     ros::Time now = ros::Time::now();
     ++frames;
-    if (now - lastFrameTime > ros::Duration(1)) {
+    if (now - lastFrameTime > ros::Duration(1))
+    {
         fpsLabel->setText(QString("FPS: %1").arg(frames));
         frames = 0;
         lastFrameTime = now;
     }
 
     // convert sensor_msgs::Image to cv matrix
-    try {
+    try
+    {
         cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::RGBA8);
-    } catch (cv_bridge::Exception& e) {
+    }
+    catch (cv_bridge::Exception& e)
+    {
         qWarning("Failed to convert image: %s", e.what());
         return;
     }
 
     rosImg->updateFilter(cv_ptr->image);
-    if (topicChanged) {
+    if (topicChanged)
+    {
         filterView->fitToRoot();
         topicChanged = false;
     }
 
     // republish
-    if (pub.getNumSubscribers() > 0) {
+    if (pub.getNumSubscribers() > 0)
+    {
         cv_bridge::CvImage repub;
         filteredImg = filterView->getImage().copy();
         repub.encoding = "rgba8";
-        repub.image = cv::Mat( filteredImg.height(), filteredImg.width(),
-                          CV_8UC4,
-                          const_cast<uchar*>(filteredImg.bits()),
-                          static_cast<size_t>(filteredImg.bytesPerLine()));     
+        repub.image = cv::Mat(filteredImg.height(), filteredImg.width(),
+                              CV_8UC4, const_cast<uchar*>(filteredImg.bits()),
+                              static_cast<size_t>(filteredImg.bytesPerLine()));
         pub.publish(repub.toImageMsg());
     }
 }
 
-void FilteredView::unloadFilter(QListWidgetItem * filterItem)
+void FilteredView::unloadFilter(QListWidgetItem* filterItem)
 {
-    if (filterItem == nullptr) return;
-    FilterCard * fc = (FilterCard *) filterList->itemWidget(filterItem);
+    if (filterItem == nullptr)
+        return;
+    FilterCard* fc = (FilterCard*)filterList->itemWidget(filterItem);
     std::string filterName = fc->getFilterName();
 
     delete fc;
@@ -278,8 +296,9 @@ void FilteredView::unloadFilter(QListWidgetItem * filterItem)
     f->stop();
     filters.erase(filterName);
 
-    add_filter_dialog * afd = (add_filter_dialog *) getNamedWidget("add_filter_dialog");
+    add_filter_dialog* afd =
+        (add_filter_dialog*)getNamedWidget("add_filter_dialog");
     afd->unloadFilter(filterName);
 }
 
-}
+}    // namespace insitu

@@ -22,57 +22,55 @@
 
 QT_BEGIN_NAMESPACE
 
-namespace ui {
-
-class main_window_design {
-
+namespace ui
+{
+class main_window_design
+{
 public:
-
     // menubar
-    QMenuBar * menubar;
-    QMenu * menuFile;
-    QMenu * menuEdit;
-    QMenu * menuHelp;
-    QMenu * menuDocs;
+    QMenuBar* menubar;
+    QMenu* menuFile;
+    QMenu* menuEdit;
+    QMenu* menuHelp;
+    QMenu* menuDocs;
 
     // menu options
-    QAction * actionQuit;
-    QAction * actionSave;
-    QAction * actionLoad;
-    QAction * actionRecent;
-    QAction * actionNewMode;
-    QAction * actionNewView;
-    QAction * actionNewFilter;
-    QAction * actionPreferences;
-    QAction * actionROSWiki;
-    QAction * actionReadme;
-    QAction * actionGithub;
-    QAction * actionWebsite;
-    QAction * actionAbout;
+    QAction* actionQuit;
+    QAction* actionSave;
+    QAction* actionLoad;
+    QAction* actionRecent;
+    QAction* actionNewMode;
+    QAction* actionNewView;
+    QAction* actionNewFilter;
+    QAction* actionPreferences;
+    QAction* actionROSWiki;
+    QAction* actionReadme;
+    QAction* actionGithub;
+    QAction* actionWebsite;
+    QAction* actionAbout;
 
     // dialog boxes
-    insitu::add_mode_dialog * add_mode_dialog;
-    insitu::add_view_dialog * add_view_dialog;
-    insitu::add_filter_dialog * add_filter_dialog;
+    insitu::add_mode_dialog* add_mode_dialog;
+    insitu::add_view_dialog* add_view_dialog;
+    insitu::add_filter_dialog* add_filter_dialog;
 
     // tab / mode interface
-    QTabWidget * tabmanager;
+    QTabWidget* tabmanager;
 
     // layout containers
-    QWidget * body;
-    QHBoxLayout * hbox;
+    QWidget* body;
+    QHBoxLayout* hbox;
 
     // ui functions
-    void setupUI(QMainWindow * mainwindow);
+    void setupUI(QMainWindow* mainwindow);
 
 private:
-
     // ui helpers
-    void setupShortcuts(QMainWindow * mainwindow);
+    void setupShortcuts(QMainWindow* mainwindow);
 
-}; // class main_window_design
+};    // class main_window_design
 
-} // namespace ui
+}    // namespace ui
 
 QT_END_NAMESPACE
 

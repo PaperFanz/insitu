@@ -4,15 +4,14 @@
 #include <pluginlib/class_list_macros.h>
 #include <insitu/filter.hpp>
 
-namespace insitu_plugins {
-
+namespace insitu_plugins
+{
 class Label : public insitu::Filter
 {
-
 public:
     Label(void);
 
-    const cv::Mat apply (void);
+    const cv::Mat apply(void);
 
     bool hasSettingEditor(void)
     {
@@ -24,8 +23,8 @@ private:
 
     void onDelete(void);
 
-}; // end class Label
+};    // end class Label
 
-} // end namespace insitu_plugins
+}    // end namespace insitu_plugins
 
-#endif // end insitu_plugins_Label_HPP
+#endif    // end insitu_plugins_Label_HPP

@@ -1,8 +1,8 @@
 #include <Crosshair/Crosshair.hpp>
 #include <Crosshair/Crosshair_dialog.hpp>
 
-namespace insitu_plugins {
-
+namespace insitu_plugins
+{
 /*
     Filter Implementation
 */
@@ -23,15 +23,11 @@ void Crosshair::onDelete(void)
     // TODO cleanup code
 }
 
-
-const cv::Mat Crosshair::apply (void)
+const cv::Mat Crosshair::apply(void)
 {
-    cv::Mat ret = cv::Mat(
-        settings.get("width", 300).asInt(),
-        settings.get("height", 300).asInt(),
-        CV_8UC4,
-        cv::Scalar(0, 0, 0, 0)
-    );
+    cv::Mat ret = cv::Mat(settings.get("width", 300).asInt(),
+                          settings.get("height", 300).asInt(), CV_8UC4,
+                          cv::Scalar(0, 0, 0, 0));
     color = (color + 1) % 256;
 
     cv::Scalar cvColor(color, color, color, 255);
@@ -42,6 +38,6 @@ const cv::Mat Crosshair::apply (void)
     return ret;
 }
 
-} // end namespace insitu_plugins
+}    // end namespace insitu_plugins
 
 PLUGINLIB_EXPORT_CLASS(insitu_plugins::Crosshair, insitu::Filter);

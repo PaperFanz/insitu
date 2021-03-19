@@ -9,49 +9,47 @@
 #include "filtered_view.hpp"
 #include "filter_info.hpp"
 
-namespace insitu {
-
+namespace insitu
+{
 class add_filter_dialog : public QDialog
 {
-
-Q_OBJECT
+    Q_OBJECT
 private:
     // ui elements
-    QListWidget * filterList;
-    QScrollArea * listScroll;
-    QLineEdit * nameEdit;
-    QLabel * nameLabel;
-    QPushButton * addBtn;
-    QPushButton * cancelBtn;
-    QErrorMessage * errMsg;
+    QListWidget* filterList;
+    QScrollArea* listScroll;
+    QLineEdit* nameEdit;
+    QLabel* nameLabel;
+    QPushButton* addBtn;
+    QPushButton* cancelBtn;
+    QErrorMessage* errMsg;
 
     // layout
-    QGridLayout * layout;
+    QGridLayout* layout;
 
     // loader
-    FilterFactory * filterLoader;
+    FilterFactory* filterLoader;
 
     // load destination
-    FilteredView * activeView;
-    
+    FilteredView* activeView;
+
 public Q_SLOTS:
     void AddFilter(void);
 
     void onFilterChanged(void);
 
 public:
-    add_filter_dialog(QWidget * parent = nullptr);
+    add_filter_dialog(QWidget* parent = nullptr);
 
-    void setActiveView(FilteredView * view);
+    void setActiveView(FilteredView* view);
 
-    bool unloadFilter(const std::string & name);
+    bool unloadFilter(const std::string& name);
 
     void open();
 
 private:
     void refreshFilters(void);
-
 };
 
-} // namespace insitu
+}    // namespace insitu
 #endif

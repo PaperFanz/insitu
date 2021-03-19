@@ -1,24 +1,24 @@
 #include "ros_image_frame.hpp"
 
-namespace insitu {
-
+namespace insitu
+{
 /*
     Constructor/Destructor
 */
-RosImageFrame::RosImageFrame(QWidget * parent) : QFrame(parent)
+RosImageFrame::RosImageFrame(QWidget* parent) : QFrame(parent)
 {
-    connect(this, SIGNAL(delayedUpdate()), this, SLOT(update()), Qt::QueuedConnection);
+    connect(this, SIGNAL(delayedUpdate()), this, SLOT(update()),
+            Qt::QueuedConnection);
 }
 
 RosImageFrame::~RosImageFrame(void)
 {
-
 }
 
 /*
     Public Functions
 */
-void RosImageFrame::setImage(const QImage & img_)
+void RosImageFrame::setImage(const QImage& img_)
 {
     img_mutex.lock();
     img = img_.copy();
@@ -29,13 +29,14 @@ void RosImageFrame::setImage(const QImage & img_)
 /*
     Protected Functions
 */
-void RosImageFrame::paintEvent(QPaintEvent * event)
+void RosImageFrame::paintEvent(QPaintEvent* event)
 {
     QPainter painter(this);
     img_mutex.lock();
 
-    if (!img.isNull()) {
-        QImage scaled = img.scaled(contentsRect().size(), Qt::KeepAspectRatio, 
+    if (!img.isNull())
+    {
+        QImage scaled = img.scaled(contentsRect().size(), Qt::KeepAspectRatio,
                                    Qt::SmoothTransformation);
         painter.drawImage(0, 0, scaled);
     }
@@ -43,4 +44,4 @@ void RosImageFrame::paintEvent(QPaintEvent * event)
     img_mutex.unlock();
 }
 
-} // namespace insitu
+}    // namespace insitu

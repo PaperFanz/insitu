@@ -2,14 +2,12 @@
 
 namespace insitu
 {
-
 /*
     Constructor
 */
-FilterGraphicsScene::FilterGraphicsScene(QObject * parent)
+FilterGraphicsScene::FilterGraphicsScene(QObject* parent)
     : QGraphicsScene(parent)
 {
-    
 }
 
-} // namespace insitu
+}    // namespace insitu
