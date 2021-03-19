@@ -19,7 +19,6 @@
 // insitu includes
 #include "insitu_utils.hpp"
 #include <insitu/filter.hpp>
-#include "ros_image_frame.hpp"
 #include "filter_graphics_view.hpp"
 
 namespace insitu
