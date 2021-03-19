@@ -95,6 +95,11 @@ FilteredView::FilteredView(const ros::NodeHandle& parent_, QString _name,
 
 FilteredView::~FilteredView(void)
 {
+    for (int i = filterList->count() - 1; i >= 0; --i) {
+        QListWidgetItem * item = filterList->item(i);
+        unloadFilter(item);
+        delete item;
+    }
     sub.shutdown();
     spinner->stop();
     delete spinner;
@@ -143,20 +148,8 @@ void FilteredView::onTopicChange(QString topic_transport)
 void FilteredView::rmFilter(void)
 {
     QListWidgetItem * item = filterList->currentItem();
-    if (item == nullptr) return;
-    FilterCard * fc = (FilterCard *) filterList->itemWidget(item);
-    std::string filterName = fc->getFilterName();
-
-    delete fc;
+    unloadFilter(item);
     delete item;
-
-    boost::shared_ptr<insitu::Filter> f = filters[filterName];
-    filterScene->removeItem(f->getGraphicsItem());
-    f->stop();
-    filters.erase(filterName);
-
-    add_filter_dialog * afd = (add_filter_dialog *) getNamedWidget("add_filter_dialog");
-    afd->unloadFilter(filterName);
 }
 
 void FilteredView::onToggleFilterPane(void)
@@ -270,6 +263,23 @@ void FilteredView::callbackImg(const sensor_msgs::Image::ConstPtr& msg)
                           static_cast<size_t>(filteredImg.bytesPerLine()));     
         pub.publish(repub.toImageMsg());
     }
+}
+
+void FilteredView::unloadFilter(QListWidgetItem * filterItem)
+{
+    if (filterItem == nullptr) return;
+    FilterCard * fc = (FilterCard *) filterList->itemWidget(filterItem);
+    std::string filterName = fc->getFilterName();
+
+    delete fc;
+
+    boost::shared_ptr<insitu::Filter> f = filters[filterName];
+    filterScene->removeItem(f->getGraphicsItem());
+    f->stop();
+    filters.erase(filterName);
+
+    add_filter_dialog * afd = (add_filter_dialog *) getNamedWidget("add_filter_dialog");
+    afd->unloadFilter(filterName);
 }
 
 }

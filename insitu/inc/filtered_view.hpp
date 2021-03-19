@@ -102,11 +102,11 @@ public:
 
     const ros::NodeHandle & getNodeHandle(void);
 
-    void applyFilters(void);
-
 private:
 
     void callbackImg(const sensor_msgs::Image::ConstPtr& msg);
+
+    void unloadFilter(QListWidgetItem * filterItem);
 
 };
 
