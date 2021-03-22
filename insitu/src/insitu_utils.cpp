@@ -1,7 +1,7 @@
 #include "insitu_utils.hpp"
 
-namespace insitu {
-
+namespace insitu
+{
 const QString IT_PREFIX = "image_transport/";
 
 QList<QString> getTopicList()
@@ -17,12 +17,15 @@ QList<QString> getTopicList()
     QList<QString> transports;
     image_transport::ImageTransport img_tpt(nh);
     std::vector<std::string> declared = img_tpt.getDeclaredTransports();
-    for (auto it = declared.begin(); it != declared.end(); it++) {
-        // qDebug("ImageView::updateTopicList() declared transport '%s'", it->c_str());
+    for (auto it = declared.begin(); it != declared.end(); it++)
+    {
+        // qDebug("ImageView::updateTopicList() declared transport '%s'",
+        // it->c_str());
         QString transport = it->c_str();
 
         // strip prefix from transport name
-        if (transport.startsWith(IT_PREFIX)) {
+        if (transport.startsWith(IT_PREFIX))
+        {
             transport = transport.mid(IT_PREFIX.length());
         }
         transports.append(transport);
@@ -32,35 +35,45 @@ QList<QString> getTopicList()
     ros::master::getTopics(topic_info);
 
     QSet<QString> all_topics;
-    for (auto it = topic_info.begin(); it != topic_info.end(); it++) {
+    for (auto it = topic_info.begin(); it != topic_info.end(); it++)
+    {
         all_topics.insert(it->name.c_str());
     }
 
     QSet<QString> topics;
-    for (auto it = topic_info.begin(); it != topic_info.end(); it++) {
-        if (message_types.contains(it->datatype.c_str())) {
+    for (auto it = topic_info.begin(); it != topic_info.end(); it++)
+    {
+        if (message_types.contains(it->datatype.c_str()))
+        {
             QString topic = it->name.c_str();
 
             // add raw topic
             topics.insert(topic);
-            //qDebug("ImageView::getTopics() raw topic '%s'", topic.toStdString().c_str());
+            // qDebug("ImageView::getTopics() raw topic '%s'",
+            // topic.toStdString().c_str());
 
             // add transport specific sub-topics
-            for (auto jt = transports.begin(); jt != transports.end(); jt++) {
-                if (all_topics.contains(topic + " " + *jt)) {
-                QString sub = topic + " " + *jt;
-                topics.insert(sub);
-                //qDebug("ImageView::getTopics() transport specific sub-topic '%s'", sub.toStdString().c_str());
+            for (auto jt = transports.begin(); jt != transports.end(); jt++)
+            {
+                if (all_topics.contains(topic + " " + *jt))
+                {
+                    QString sub = topic + " " + *jt;
+                    topics.insert(sub);
+                    // qDebug("ImageView::getTopics() transport specific
+                    // sub-topic '%s'", sub.toStdString().c_str());
                 }
             }
         }
-        if (message_sub_types.contains(it->datatype.c_str())) {
+        if (message_sub_types.contains(it->datatype.c_str()))
+        {
             QString topic = it->name.c_str();
             int index = topic.lastIndexOf("/");
-            if (index != -1) {
+            if (index != -1)
+            {
                 topic.replace(index, 1, " ");
                 topics.insert(topic);
-                //qDebug("ImageView::getTopics() transport specific sub-topic '%s'", topic.toStdString().c_str());
+                // qDebug("ImageView::getTopics() transport specific sub-topic
+                // '%s'", topic.toStdString().c_str());
             }
         }
     }
@@ -68,19 +81,22 @@ QList<QString> getTopicList()
     return topics.values();
 }
 
-static std::unordered_map<std::string, QWidget *> widgetMap;
+static std::unordered_map<std::string, QWidget*> widgetMap;
 
-void addNamedWidget(std::string name, QWidget * widget)
+void addNamedWidget(std::string name, QWidget* widget)
 {
     widgetMap[name] = widget;
 }
 
-QWidget * getNamedWidget(std::string name)
+QWidget* getNamedWidget(std::string name)
 {
     auto search = widgetMap.find(name);
-    if (search != widgetMap.end()) {
+    if (search != widgetMap.end())
+    {
         return search->second;
-    } else {
+    }
+    else
+    {
         return Q_NULLPTR;
     }
 }
@@ -89,15 +105,12 @@ void clearLayout(QLayout* layout)
 {
     while (QLayoutItem* item = layout->takeAt(0))
     {
-        if (QWidget* widget = item->widget())
-            widget->deleteLater();
+        if (QWidget* widget = item->widget()) widget->deleteLater();
 
-        if (QLayout* childLayout = item->layout())
-            clearLayout(childLayout);
-            
+        if (QLayout* childLayout = item->layout()) clearLayout(childLayout);
+
         delete item;
     }
 }
 
-} // END NAMESPACE INSITU
-
+}    // namespace insitu

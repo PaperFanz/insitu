@@ -1,13 +1,14 @@
 #include "filter_card.hpp"
 
-namespace insitu {
-
+namespace insitu
+{
 /*
     Constructor/Destructor
 */
-FilterCard::FilterCard(std::string name_, 
-    boost::shared_ptr<insitu::Filter> filter_, 
-    QWidget * parent) : QWidget(parent)
+FilterCard::FilterCard(std::string name_,
+                       boost::shared_ptr<insitu::Filter> filter_,
+                       QWidget* parent)
+    : QWidget(parent)
 {
     name = name_;
 
@@ -17,7 +18,8 @@ FilterCard::FilterCard(std::string name_,
     nameLabel = new QLabel(tr(name_.c_str()));
 
     editButton = new QPushButton(tr("Edit"));
-    if (!filter->hasSettingEditor()) {
+    if (!filter->hasSettingEditor())
+    {
         editButton->setDisabled(true);
     }
 
@@ -56,4 +58,4 @@ void FilterCard::showSettingsEditor(void)
     filter->openSettingEditor();
 }
 
-}
+}    // namespace insitu

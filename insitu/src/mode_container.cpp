@@ -1,11 +1,11 @@
 #include "mode_container.hpp"
 
-namespace insitu {
-
+namespace insitu
+{
 /*
     Constructor/Destructor
 */
-ModeContainer::ModeContainer(QString name, QWidget * parent) : QWidget(parent)
+ModeContainer::ModeContainer(QString name, QWidget* parent) : QWidget(parent)
 {
     // ui elements
     addViewButton = new QPushButton(tr("Add View"));
@@ -49,7 +49,7 @@ ModeContainer::~ModeContainer(void)
     delete nh;
 }
 
-void ModeContainer::addView(FilteredView * view)
+void ModeContainer::addView(FilteredView* view)
 {
     container->addSubWindow(view);
     view->show();
@@ -61,4 +61,4 @@ const ros::NodeHandle& ModeContainer::getNodeHandle(void)
     return *nh;
 }
 
-}
+}    // namespace insitu

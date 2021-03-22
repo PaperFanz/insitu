@@ -2,12 +2,12 @@
 <package format="2">
   <name>insitu_plugins</name>
   <version>0.0.0</version>
-  <description>The insitu_plugins package</description>
+  <description>editable text label</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->
   <!-- <maintainer email="jane.doe@example.com">Jane Doe</maintainer> -->
-  <maintainer email="sci@todo.todo">sci</maintainer>
+  <maintainer email="todo@todo.todo">todo</maintainer>
 
 
   <!-- One license tag required, multiple allowed, one license per tag -->
@@ -66,6 +66,6 @@
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>
-    <insitu plugin="${prefix}/insitu_plugins.xml"/>
+    <insitu plugin="${prefix}/plugins.xml"/>
   </export>
 </package>

@@ -12,175 +12,191 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/core/core.hpp>
 
-#include <unordered_map>
-#include <mutex>
-#include <boost/lexical_cast.hpp>
+// C++ includes
+#include <thread>
+#include <future>
+#include <chrono>
+#include <json/json.h>
 
-namespace insitu {
+using namespace std::chrono_literals;
 
-typedef enum SettingType {
-    BOOLEAN,
-    FLOAT,
-    INT,
-    STRING,
-    NUM_SETTING_TYPES
-} setting_t;
-
+namespace insitu
+{
 class Filter;
 
 class FilterDialog : public QDialog
 {
-Q_OBJECT
+    Q_OBJECT
 protected:
-
-    insitu::Filter * parent;
+    insitu::Filter* parent;
 
 public:
-
-    FilterDialog(insitu::Filter * parent_)
+    FilterDialog(insitu::Filter* parent_)
     {
         parent = parent_;
     }
 
-}; // class FilterDialog
+};    // class FilterDialog
+
+class FilterWatchdog : public QObject
+{
+    Q_OBJECT
+private:
+    QGraphicsItem* graphicsItem;
+
+public:
+    FilterWatchdog(QGraphicsItem* item)
+    {
+        graphicsItem = item;
+    }
+
+    void notify(const cv::Mat& update)
+    {
+        emit filterUpdated(graphicsItem, update);
+    }
+
+    QGraphicsItem* getGraphicsItem(void) const
+    {
+        return graphicsItem;
+    }
+
+signals:
+
+    void filterUpdated(QGraphicsItem* item, const cv::Mat& update);
+
+};    // class FilterWatchdog
 
 class Filter : public nodelet::Nodelet
 {
+private:
+    cv::Mat filterBuf;
+
+    std::promise<void> exitObj;
+
+    std::thread filterThread;
+
+    FilterWatchdog* filterWatchdog;
 
 protected:
-
     // dialog box for editing settings
-    FilterDialog * settingsDialog;
+    FilterDialog* settingsDialog;
 
-    // settings dictionary; load from ROS param server or configure through GUI
-    std::unordered_map<std::string, std::pair<setting_t, std::string>> settings;
+    // settings object
+    Json::Value settings;
 
-    // BEGIN settings getters
-    // not needed if filter doesn't also write to settings
-    // std::mutex settings_mutex;
-    
-    bool
-    getBoolSetting(std::string key)
+    void updateFilter(const cv::Mat& filter)
     {
-        // settings_mutex.lock();
-        bool b = boost::lexical_cast<bool>(settings[key].second);
-        // settings_mutex.unlock();
-        return b;
+        filterBuf = filter.clone();
+        filterWatchdog->notify(filterBuf);
     }
-
-    float
-    getFloatSetting(std::string key)
-    {
-        // settings_mutex.lock();
-        float f = boost::lexical_cast<float>(settings[key].second);
-        // settings_mutex.unlock();
-        return f;
-    }
-
-    int
-    getIntSetting(std::string key)
-    {
-        // settings_mutex.lock();
-        int i = boost::lexical_cast<int>(settings[key].second);
-        // settings_mutex.unlock();
-        return i;
-    }
-
-    std::string
-    getStringSetting(std::string key)
-    {
-        // settings_mutex.lock();
-        std::string s = settings[key].second;
-        // settings_mutex.unlock();
-        return s;
-    }
-    // END settings getters
 
 public:
-
-    Filter(){};
-
-    virtual void
-    rmFilter(){};
+    Filter(void){};
 
     /*
-        @Filter implementors: reimplement this function to apply filter effects;
-        this function is called during every image subscriber callback for the
-        view it is applied to
+        @Filter implementors: reimplement this function to apply filter effects
     */
-
-    virtual cv::Mat
-    apply(cv::Mat img)
+    virtual const cv::Mat apply(void)
     {
-        return img;
-    };
+        cv::Mat ret = cv::Mat(settings.get("width", 300).asInt(),
+                              settings.get("height", 300).asInt(), CV_8UC4,
+                              cv::Scalar(255, 255, 255, 0));
 
-    const std::string&
-    name(void)
-    {
-        return getName();
+        return ret;
     }
 
     /*
-        called by Insitu, can also be used to implement custom settings 
-        editing interface
+        @Filter implementors: reimplement this function to return true if your
+        filter has a custom settings dialog
     */
-    const std::unordered_map<std::string, std::pair<setting_t, std::string>>&
-    getSettings(void)
-    {
-        return settings;
-    }
-
-    /*
-        called by Insitu, do not reimplement [debug function]
-    */
-    bool
-    set(std::string key, std::string val)
-    {
-        auto it = settings.find(key);
-        if (it != settings.end()) {
-            it->second.second = val;
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /*
-        reimplement if providing a custom settings dialog
-    */
-    virtual bool
-    hasSettingEditor(void)
+    virtual bool hasSettingEditor(void)
     {
         return false;
     }
 
     /*
-        called by Insitu, do not reimplement
+        @Filter implementors: advanced filters may be limited by the interface
+        provided by the apply() function, therefore this run() function is left
+        virtual to allow users to implement their own threads. However, users
+        MUST wait on exitCond and call updateFilter(), or InSitu will not be
+        able to render or unload the filter.
     */
-    // TODO not virt
-    virtual void
-    openSettingEditor(void)
+    virtual void run(std::future<void> exitCond)
     {
-        settingsDialog->open();
+        while (exitCond.wait_for(1ms) == std::future_status::timeout)
+        {
+            updateFilter(apply());
+            std::this_thread::sleep_for(10ms);
+        }
     }
 
-private:
+    /*
+        called by Insitu
+    */
+    void start(QGraphicsItem* item)
+    {
+        std::future<void> exitCond = exitObj.get_future();
+        filterWatchdog = new FilterWatchdog(item);
+        filterThread = std::thread(&Filter::run, this, std::move(exitCond));
+    }
 
+    void stop(void)
+    {
+        exitObj.set_value();
+        filterThread.join();
+        onDelete();
+        delete settingsDialog;
+    }
+
+    Json::Value& getSettingsValue(void)
+    {
+        return settings;
+    }
+
+    const std::string& name(void) const
+    {
+        return getName();
+    }
+
+    void openSettingEditor(void)
+    {
+        if (settingsDialog != nullptr) settingsDialog->open();
+    }
+
+    FilterWatchdog* getFilterWatchDog(void) const
+    {
+        return filterWatchdog;
+    }
+
+    QGraphicsItem* getGraphicsItem(void) const
+    {
+        return filterWatchdog->getGraphicsItem();
+    }
+
+protected:
     /*
         @Filter implementors: reimplement this function with any initialization
-        required; the creating of data structures, global variables, etc. 
-        Called by Insitu upon filter load.
+        required; the creating of data structures, global variables, etc. All
+        initialization of the ROS infrastructure must be put into this function.
     */
-    virtual void
-    onInit()
+    virtual void onInit(void)
     {
         settingsDialog = new FilterDialog(this);
-        settingsDialog->setWindowTitle(QString::fromStdString(name()) + " Settings");
+        settingsDialog->setWindowTitle(QString::fromStdString(name()) +
+                                       " Settings");
+
+        settings["width"] = 300;
+        settings["height"] = 300;
     };
 
-};  // class Filter
+    /*
+        @Filter implementors: reimplement this function to include any cleanup
+        operations before filter shutdown
+    */
+    virtual void onDelete(void){};
 
-}   // namespace insitu
+};    // class Filter
+
+}    // namespace insitu
 
 #endif

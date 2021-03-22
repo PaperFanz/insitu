@@ -19,52 +19,51 @@
 // insitu includes
 #include "insitu_utils.hpp"
 #include <insitu/filter.hpp>
-#include "ros_image_frame.hpp"
+#include "filter_graphics_view.hpp"
 
-namespace insitu {
-
+namespace insitu
+{
 class FilteredView : public QWidget
 {
-
-Q_OBJECT
+    Q_OBJECT
 private:
     // UI elements
-    QComboBox * topicBox;
-    QPushButton * refreshTopicButton;
-    QPushButton * addFilterButton;
-    QPushButton * rmFilterButton;
-    QCheckBox * republishCheckBox;
-    QCheckBox * showFilterPaneCheckBox;
-    QListWidget * filterList;
-    RosImageFrame * imgFrame;
-    QLabel * imgLabel;
-    QLabel * fpsLabel;
-    QErrorMessage * errMsg;
+    QComboBox* topicBox;
+    QPushButton* refreshTopicButton;
+    QPushButton* addFilterButton;
+    QPushButton* rmFilterButton;
+    QCheckBox* republishCheckBox;
+    QCheckBox* showFilterPaneCheckBox;
+    QListWidget* filterList;
+    FilterGraphicsView* filterView;
+    QGraphicsScene* filterScene;
+    FilterGraphicsItem* rosImg;
+    QLabel* fpsLabel;
+    QErrorMessage* errMsg;
 
     // layout elements
-    QWidget * filterPaneWidget;
-    QGridLayout * filterPaneLayout;
-    QHBoxLayout * imagePane;
-    QGridLayout * layout;
+    QWidget* filterPaneWidget;
+    QGridLayout* filterPaneLayout;
+    QHBoxLayout* imagePane;
+    QGridLayout* layout;
 
     // ROS
-    ros::NodeHandle * nh;
-    /* Give each view its own callback queue 
+    ros::NodeHandle* nh;
+    /* Give each view its own callback queue
        and spinner thread to speed things up */
     ros::CallbackQueue viewQueue;
-    ros::AsyncSpinner * spinner;
+    ros::AsyncSpinner* spinner;
     ros::Time lastFrameTime;
     image_transport::Subscriber sub;
     image_transport::Publisher pub;
+    bool topicChanged;
 
     // OpenCV
     uint32_t frames;
-    cv::Mat imgMat;
-    QImage imgbuf;
+    cv_bridge::CvImageConstPtr cv_ptr;
+    QImage filteredImg;
 
     // Filter structs
-    std::string filterName;
-    int filterRow;
     std::unordered_map<std::string, boost::shared_ptr<insitu::Filter>> filters;
 
     // Housekeeping
@@ -84,33 +83,28 @@ public Q_SLOTS:
 
     void onToggleRepublish(void);
 
-    void onTimeoutError(const QString & filter);
+    void onFilterOrderChanged(void);
 
-signals:
-
-    void timeoutError(const QString & filter);
+    void updateFilter(QGraphicsItem* item, const cv::Mat& update);
 
 public:
-
-    FilteredView(const ros::NodeHandle& parent_, QString _name, QString _topic, 
-        QWidget * parent = nullptr);
+    FilteredView(const ros::NodeHandle& parent_, QString _name, QString _topic,
+                 QWidget* parent = nullptr);
 
     ~FilteredView(void);
 
     void addFilter(boost::shared_ptr<insitu::Filter> filter);
 
-    const std::string & getViewName(void);
+    const std::string& getViewName(void) const;
 
-    const ros::NodeHandle & getNodeHandle(void);
-
-    void applyFilters(void);
+    const ros::NodeHandle& getNodeHandle(void) const;
 
 private:
-
     void callbackImg(const sensor_msgs::Image::ConstPtr& msg);
 
+    void unloadFilter(QListWidgetItem* filterItem);
 };
 
-} // end namespace insitu
+}    // end namespace insitu
 
 #endif

@@ -6,29 +6,27 @@
 #include "insitu_utils.hpp"
 #include "mode_container.hpp"
 
-namespace insitu {
-
+namespace insitu
+{
 class AddModeDialog : public QDialog
 {
-
-Q_OBJECT
+    Q_OBJECT
 private:
-    QLineEdit * nameEdit;
-    QPushButton * createButton;
-    QPushButton * cancelButton;
+    QLineEdit* nameEdit;
+    QPushButton* createButton;
+    QPushButton* cancelButton;
 
-    QHBoxLayout * hbox;
-    QFormLayout * form;
+    QHBoxLayout* hbox;
+    QFormLayout* form;
 
-    QTabWidget * tabmanager;
+    QTabWidget* tabmanager;
 
 public Q_SLOTS:
     void AddMode(void);
 
 public:
-    AddModeDialog(QWidget * parent);
-
+    AddModeDialog(QWidget* parent);
 };
 
-} // namespace insitu
+}    // namespace insitu
 #endif

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(insitu_plugins)
 
-add_compile_options(-std=c++11 -fPIC)
+add_compile_options(-std=c++14 -fPIC)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -13,6 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
     roscpp
     insitu
 )
+find_package(jsoncpp REQUIRED)
 
 ## System dependencies are found with CMake's conventions
 find_package(Qt5 COMPONENTS Core Gui Widgets)
@@ -38,24 +39,35 @@ include_directories(
     ${Qt5Widgets_INCLUDE_DIRS}
 )
 
-set(insitu_plugin_HDRS
-    inc/${PROJECT_NAME}/text_filter.hpp
-    inc/${PROJECT_NAME}/crosshair.hpp
-    inc/${PROJECT_NAME}/crosshair_dialog.hpp
+set(insitu_plugins_HDRS
+    inc/Label/Label.hpp
+    inc/Label/Label_dialog.hpp
+
+    inc/Crosshair/Crosshair.hpp
+    inc/Crosshair/Crosshair_dialog.hpp
+
+    inc/Transparent/Transparent.hpp
+    inc/Transparent/Transparent_dialog.hpp
 )
 
-qt5_wrap_cpp(insitu_plugin_MOCS ${insitu_plugin_HDRS})
+qt5_wrap_cpp(insitu_plugins_MOCS ${insitu_plugins_HDRS})
 
 ## Declare a C++ library
 add_library(${PROJECT_NAME}
-    src/${PROJECT_NAME}/text_filter.cpp
-    src/${PROJECT_NAME}/crosshair.cpp
-    src/${PROJECT_NAME}/crosshair_dialog.cpp
+    src/Label/Label.cpp
+    src/Label/Label_dialog.cpp
 
-    ${insitu_plugin_MOCS}
+    src/Crosshair/Crosshair.cpp
+    src/Crosshair/Crosshair_dialog.cpp
+
+    src/Transparent/Transparent.cpp
+    src/Transparent/Transparent_dialog.cpp
+
+    ${insitu_plugins_MOCS}
 )
 
 target_link_libraries(${PROJECT_NAME} 
+    jsoncpp_lib
     Qt5::Core
     Qt5::Widgets
     ${catkin_LIBRARIES}
@@ -65,7 +77,7 @@ find_package(class_loader)
 class_loader_hide_library_symbols(${PROJECT_NAME})
 
 ## Install plugins
-install(FILES insitu_plugins.xml
+install(FILES plugins.xml
     DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 

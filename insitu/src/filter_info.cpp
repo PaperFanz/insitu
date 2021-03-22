@@ -1,13 +1,14 @@
 #include "filter_info.hpp"
 
-namespace insitu {
-
+namespace insitu
+{
 /*
     Constructor/Destructor
 */
-FilterInfo::FilterInfo(std::string name_, std::string type_, 
-                       std::string package_, std::string description_, 
-                       QWidget * parent) : QWidget(parent)
+FilterInfo::FilterInfo(std::string name_, std::string type_,
+                       std::string package_, std::string description_,
+                       QWidget* parent)
+    : QWidget(parent)
 {
     name = name_;
 
@@ -31,20 +32,19 @@ FilterInfo::FilterInfo(std::string name_, std::string type_,
 
 FilterInfo::~FilterInfo(void)
 {
-
 }
 
 /*
     Public Functions
 */
-const std::string& FilterInfo::getFilterName(void)
+const std::string& FilterInfo::getFilterName(void) const
 {
     return name;
 }
 
-std::string FilterInfo::getFilterType(void)
+const std::string FilterInfo::getFilterType(void) const
 {
     return typeLabel->text().toStdString();
 }
 
-}
+}    // namespace insitu

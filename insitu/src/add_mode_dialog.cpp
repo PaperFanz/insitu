@@ -1,11 +1,11 @@
-#include "addmodedialog.hpp"
+#include "add_mode_dialog.hpp"
 
-namespace insitu {
-
-AddModeDialog::AddModeDialog(QWidget * parent) : QDialog(parent)
+namespace insitu
 {
-    tabmanager = (QTabWidget *)getNamedWidget("tabmanager");
-    
+AddModeDialog::AddModeDialog(QWidget* parent) : QDialog(parent)
+{
+    tabmanager = (QTabWidget*)getNamedWidget("tabmanager");
+
     // mode name text input
     nameEdit = new QLineEdit();
 
@@ -35,9 +35,9 @@ AddModeDialog::AddModeDialog(QWidget * parent) : QDialog(parent)
 void AddModeDialog::AddMode()
 {
     QString name = nameEdit->text();
-    
+
     // create new tab with entered name
-    ModeContainer * mode = new ModeContainer(name);
+    ModeContainer* mode = new ModeContainer(name);
     tabmanager->addTab(mode, name);
 
     addNamedWidget("mode_" + name.toStdString(), mode);
@@ -46,4 +46,4 @@ void AddModeDialog::AddMode()
     accept();
 }
 
-}
+}    // namespace insitu

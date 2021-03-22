@@ -8,20 +8,19 @@
 #include "insitu_utils.hpp"
 #include <insitu/filter.hpp>
 
-namespace insitu {
-
+namespace insitu
+{
 class FilterCard : public QWidget
 {
-
-Q_OBJECT
+    Q_OBJECT
 private:
     // ui elements
-    QLabel * nameLabel;
+    QLabel* nameLabel;
 
-    QPushButton * editButton;
+    QPushButton* editButton;
 
     // layout element
-    QGridLayout * layout;
+    QGridLayout* layout;
 
     // data
     std::string name;
@@ -33,19 +32,16 @@ public Q_SLOTS:
     void showSettingsEditor(void);
 
 public:
-
-    FilterCard(std::string name_, boost::shared_ptr<insitu::Filter> filter_, 
-        QWidget * parent = nullptr);
+    FilterCard(std::string name_, boost::shared_ptr<insitu::Filter> filter_,
+               QWidget* parent = nullptr);
 
     ~FilterCard(void);
 
     const std::string& getFilterName(void);
 
 private:
-
-
 };
 
-} // end namespace insitu
+}    // end namespace insitu
 
 #endif

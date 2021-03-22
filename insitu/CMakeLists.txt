@@ -8,11 +8,13 @@ find_package(catkin REQUIRED COMPONENTS
     qt_build 
     roscpp
 )
+find_package(OpenCV 3.4.5 REQUIRED)
+find_package(jsoncpp REQUIRED)
 
 include_directories(${catkin_INCLUDE_DIRS})
 add_compile_options(-std=c++14 -fPIC)
 
-# specify the C++ standard
+# # specify the C++ standard
 set(CMAKE_CXX_COMPILER "/usr/bin/clang++-10")
 set(CMAKE_C_COMPILER "/usr/bin/clang-10")
 set(CMAKE_CXX_STANDARD 14)
@@ -57,30 +59,34 @@ include_directories(
 set(INSITU_SRC
     src/main.cpp
     src/main_window.cpp
-    src/mainwindowdesign.cpp
-    src/addmodedialog.cpp
-    src/addviewdialog.cpp
-    src/addfilterdialog.cpp
+    src/main_window_design.cpp
+    src/add_mode_dialog.cpp
+    src/add_view_dialog.cpp
+    src/add_filter_dialog.cpp
     src/insitu_utils.cpp
     src/mode_container.cpp
     src/filtered_view.cpp
     src/filter_factory.cpp
     src/filter_card.cpp
     src/filter_info.cpp
-    src/ros_image_frame.cpp
+    src/filter_graphics_item.cpp
+    src/filter_graphics_view.cpp
+    src/filter_graphics_scene.cpp
 
     inc/main_window.hpp
-    inc/mainwindowdesign.hpp
-    inc/addmodedialog.hpp
-    inc/addviewdialog.hpp
-    inc/addfilterdialog.hpp
+    inc/main_window_design.hpp
+    inc/add_mode_dialog.hpp
+    inc/add_view_dialog.hpp
+    inc/add_filter_dialog.hpp
     inc/insitu_utils.hpp
     inc/mode_container.hpp
     inc/filtered_view.hpp
     inc/filter_factory.hpp
     inc/filter_card.hpp
     inc/filter_info.hpp
-    inc/ros_image_frame.hpp
+    inc/filter_graphics_item.hpp
+    inc/filter_graphics_view.hpp
+    inc/filter_graphics_scene.hpp
 
     lib/insitu/filter.hpp
 )
@@ -93,8 +99,10 @@ add_executable(${PROJECT_NAME}
 )
 
 target_link_libraries(${PROJECT_NAME} 
+    jsoncpp_lib
     Qt5::Core
     Qt5::Widgets
+    ${OpenCV_LIBRARIES}
     ${catkin_LIBRARIES}
 )
 
@@ -108,4 +116,5 @@ install(DIRECTORY lib/${PROJECT_NAME}
 )
 
 catkin_install_python(PROGRAMS scripts/new_insitu_filter
-    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
