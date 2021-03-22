@@ -94,9 +94,7 @@ public:
     Filter(void){};
 
     /*
-        @Filter implementors: reimplement this function to apply filter effects;
-        this function MUST CALL updateFilter in its main loop, both to push
-        changes in the filter to InSitu and to facilitate filter shutdown
+        @Filter implementors: reimplement this function to apply filter effects
     */
     virtual const cv::Mat apply(void)
     {
@@ -175,7 +173,7 @@ public:
         return filterWatchdog->getGraphicsItem();
     }
 
-private:
+protected:
     /*
         @Filter implementors: reimplement this function with any initialization
         required; the creating of data structures, global variables, etc. All
