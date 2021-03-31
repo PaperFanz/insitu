@@ -8,4 +8,10 @@
   <class type="insitu_plugins::Transparent" base_class_type="insitu::Filter">
     <description>testing new transparency filters</description>
   </class>
+  <class type="insitu_plugins::Manipulation" base_class_type="insitu::Filter">
+    <description>manipulation filter</description>
+  </class>
+  <class type="insitu_plugins::ManipBoundary" base_class_type="insitu::Filter">
+    <description>manipulation boundary filter</description>
+  </class>
 </library>
