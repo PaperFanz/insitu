@@ -8,17 +8,13 @@ find_package(catkin REQUIRED COMPONENTS
     qt_build 
     roscpp
 )
-find_package(OpenCV 3.4.5 REQUIRED)
+find_package(OpenCV 3.2.0 REQUIRED)
 find_package(jsoncpp REQUIRED)
 
 include_directories(${catkin_INCLUDE_DIRS})
-add_compile_options(-std=c++14 -fPIC)
-
-# # specify the C++ standard
-set(CMAKE_CXX_COMPILER "/usr/bin/clang++-10")
-set(CMAKE_C_COMPILER "/usr/bin/clang-10")
+ 
 set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
+ 
 
 # QT ENVIRONMENT
 set(CMAKE_AUTOMOC ON)
