@@ -12,11 +12,8 @@ find_package(OpenCV 3.4.5 REQUIRED)
 find_package(jsoncpp REQUIRED)
 
 include_directories(${catkin_INCLUDE_DIRS})
-add_compile_options(-std=c++14 -fPIC)
 
 # # specify the C++ standard
-set(CMAKE_CXX_COMPILER "/usr/bin/clang++-10")
-set(CMAKE_C_COMPILER "/usr/bin/clang-10")
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
@@ -111,8 +108,9 @@ install(TARGETS ${PROJECT_NAME}
     RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
 )
 
-install(DIRECTORY lib/${PROJECT_NAME}
+install(DIRECTORY lib/insitu/
     DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+    FILES_MATCHING PATTERN "*.hpp"
 )
 
 catkin_install_python(PROGRAMS scripts/new_insitu_filter
