@@ -13,11 +13,17 @@ find_package(catkin REQUIRED COMPONENTS
     pluginlib
     roscpp
     insitu
+    tf2
+    tf2_msgs
+    tf2_ros
+    tf2_geometry_msgs
 )
 find_package(jsoncpp REQUIRED)
+find_package(Eigen3 REQUIRED)
 
 ## System dependencies are found with CMake's conventions
 find_package(Qt5 COMPONENTS Core Gui Widgets)
+find_package(Eigen3 REQUIRED)
 
 catkin_package(
 #  INCLUDE_DIRS include
@@ -39,6 +45,7 @@ include_directories(
     ${Qt5Gui_INCLUDE_DIRS}
     ${Qt5Widgets_INCLUDE_DIRS}
 )
+include_directories(SYSTEM ${EIGEN3_INCLUDE_DIRS})
 
 set(insitu_plugins_HDRS
     inc/Label/Label.hpp
@@ -49,6 +56,13 @@ set(insitu_plugins_HDRS
 
     inc/Transparent/Transparent.hpp
     inc/Transparent/Transparent_dialog.hpp
+
+    inc/Manipulation/Manipulation.hpp
+    inc/Manipulation/Manipulation_dialog.hpp
+
+    inc/Manip_boundary/Manip_boundary.hpp
+    inc/Manip_boundary/Manip_boundary_dialog.hpp
+
 )
 
 qt5_wrap_cpp(insitu_plugins_MOCS ${insitu_plugins_HDRS})
@@ -63,6 +77,13 @@ add_library(${PROJECT_NAME}
 
     src/Transparent/Transparent.cpp
     src/Transparent/Transparent_dialog.cpp
+
+    src/Manipulation/Manipulation.cpp
+    src/Manipulation/Manipulation_dialog.cpp
+
+    src/Manip_boundary/Manip_boundary.cpp
+    src/Manip_boundary/Manip_boundary_dialog.cpp
+
 
     ${insitu_plugins_MOCS}
 )
