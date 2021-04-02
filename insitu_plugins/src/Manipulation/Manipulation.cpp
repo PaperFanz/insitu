@@ -131,7 +131,7 @@ const cv::Mat Manipulation::apply(void)
     Eigen::Matrix3d warp_Rz2Ry2_pos2 = Rz2*trans_matrix_4*-Ry2*trans_matrix_3;
 
     cv::Mat warp_mat_Rz2Ry2_pos1; cv::Mat warp_mat_Rz2Ry2_neg1;
-    cv::Mat warp_mat_Rz2Ry2_neg2; cv::Mat warp_mat_Rz2Ry2_pos2;
+    cv::Mat warp_mat_Rz2Ry2_neg2, warp_mat_Rz2Ry2_pos2;
 
     cv::eigen2cv(warp_Rz2Ry2_pos1, warp_mat_Rz2Ry2_pos1);
     cv::eigen2cv(warp_Rz2Ry2_neg1, warp_mat_Rz2Ry2_neg1);
