@@ -14,7 +14,7 @@ find_package(jsoncpp REQUIRED)
 include_directories(${catkin_INCLUDE_DIRS})
  
 set(CMAKE_CXX_STANDARD 14)
- 
+ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # QT ENVIRONMENT
 set(CMAKE_AUTOMOC ON)
