@@ -9,14 +9,8 @@ class ManipBoundaryDialog : public insitu::FilterDialog
 {
     Q_OBJECT
 private:
-    QLabel* doubleLabel;
-    QDoubleSpinBox* doubleBox;
-    QLabel* redLabel;
-    QSlider* redSlider;
-    QLabel* greenLabel;
-    QSlider* greenSlider;
-    QLabel* blueLabel;
-    QSlider* blueSlider;
+    QSlider* areaSlider;
+    QLabel* areaLabel;
     QPushButton* okButton;
     QPushButton* cancelButton;
 
@@ -30,6 +24,5 @@ public:
     ManipBoundaryDialog(insitu::Filter* parent_);
 };
 
-}    // end namespace insitu_plugins
-
-#endif    // end insitu_plugins_Transparent_DIALOG_HPP
+}     
+#endif    

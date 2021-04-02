@@ -12,27 +12,24 @@ namespace insitu_plugins
 */
 ManipBoundary::ManipBoundary(void)
 {
-    // TODO instantiation code
+
 }
 
 void ManipBoundary::onInit(void)
 {
     settingsDialog = new ManipBoundaryDialog(this);
 
-    // TODO initialization code
 }
 
 
 void ManipBoundary::onDelete(void)
 {
-    // TODO cleanup code
-}
 
+}
 
 const cv::Mat ManipBoundary::apply(void)
 {
-    cv::Scalar colorGreen = cv::Scalar(255, 0, 0);
-
+     cv::Scalar colorGreen = cv::Scalar(255, 0, 0);
     /*
         Create a transparent image to construct your overlay on
     */
@@ -40,32 +37,31 @@ const cv::Mat ManipBoundary::apply(void)
                           settings.get("width", 1440).asInt(), CV_8UC4,
                                       cv::Scalar(0, 0, 0, 0));
                                       
-
     cv::Scalar cvColor(0, 255, 0, 255);
 
     int line_thickness = 5;
-    int nav_line_scale = 500;
+    int x = settings.get("area", 0).asInt();
 
     //scale lines: 2500 rows, 1360 cols
     double scale_x = 1920.0 / 2500.0;
     double scale_y = 1080.0 / 1300.0;
 
-    int pt_1x = (800 * scale_x);
-    int pt_1y = (1337 * scale_y);
-    int pt_2x = (1235 * scale_x);
-    int pt_2y = (1337 * scale_y);
-    int pt_3x = (1310 * scale_x);
-    int pt_3y = (800 * scale_y);
-    int pt_4x = (818 * scale_x);
-    int pt_4y = (510 * scale_y);
-    int pt_5x = (320 * scale_x);
-    int pt_5y = (522 * scale_y);
-    int pt_6x = (325 * scale_x);
-    int pt_6y = (808 * scale_y);
-    int pt_7x = (576 * scale_x);
-    int pt_7y = (927 * scale_y);
-    int pt_8x = (800 * scale_x);
-    int pt_8y = (1337 * scale_y);
+    int pt_1x = (800 * scale_x) - x;
+    int pt_1y = (1337 * scale_y)+ x;
+    int pt_2x = (1235 * scale_x)+ x;
+    int pt_2y = (1337 * scale_y)+ x;
+    int pt_3x = (1310 * scale_x)+ x;
+    int pt_3y = (800 * scale_y) - x;
+    int pt_4x = (818 * scale_x) + x;
+    int pt_4y = (510 * scale_y) - x;
+    int pt_5x = (320 * scale_x) - x;
+    int pt_5y = (522 * scale_y) - x;
+    int pt_6x = (325 * scale_x) - x;
+    int pt_6y = (808 * scale_y) + x;
+    int pt_7x = (576 * scale_x) + x;
+    int pt_7y = (927 * scale_y) + x;
+    int pt_8x = (800 * scale_x) - x;
+    int pt_8y = (1337 * scale_y)+ x;
 
     std::vector<Point> contour;
     int shift_y = 50;

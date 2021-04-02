@@ -24,8 +24,8 @@ private:
 
     void onDelete(void);
 
-};    // end class Transparent
+};     
 
-}    // end namespace insitu_plugins
+}     
 
-#endif    // end insitu_plugins_Transparent_HPP
+#endif     
