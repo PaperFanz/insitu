@@ -1,21 +1,26 @@
 #include "filter_graphics_item.hpp"
+#include <qgraphicsitem.h>
+#include <boost/smart_ptr/shared_ptr.hpp>
 
 namespace insitu
 {
 /*
     Constructor
 */
-FilterGraphicsItem::FilterGraphicsItem(QGraphicsItem* parent)
+FilterGraphicsItem::FilterGraphicsItem(boost::shared_ptr<insitu::Filter> filter, QGraphicsItem* parent)
     : QGraphicsItem(parent)
 {
+    this->filter = filter;
+    if (filter != nullptr) {
+        setFlag(QGraphicsItem::ItemIsSelectable, true);
+        setFlag(QGraphicsItem::ItemIsMovable, true);
+        setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
+    }
+
     isResizable = true;
     isResizing = false;
     img = QImage(1, 1, QImage::Format_RGBA8888);
-
-    setFlag(QGraphicsItem::ItemIsMovable, true);
-    setFlag(QGraphicsItem::ItemIsSelectable, true);
-    setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
-
+    
     // some jank shit, don't touch
     connect(this, SIGNAL(delayedUpdate()), this, SLOT(queuedUpdate()),
             Qt::QueuedConnection);
@@ -27,6 +32,11 @@ FilterGraphicsItem::FilterGraphicsItem(QGraphicsItem* parent)
 QSize FilterGraphicsItem::getImgSize(void) const
 {
     return imgSize;
+}
+
+boost::shared_ptr<insitu::Filter> FilterGraphicsItem::getFilter(void) const
+{
+    return filter;
 }
 
 /*
@@ -134,6 +144,7 @@ void FilterGraphicsItem::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
     else if (event->modifiers() != Qt::ShiftModifier)
     {
         QGraphicsItem::mouseReleaseEvent(event);
+        emit moved(pos());
     }
 }
 

@@ -37,6 +37,8 @@ public:
     */
     const QImage& getImage(void);
 
+    QSize getRootSize(void) const;
+
 public slots:
 
     void rootImgSizeChanged(QSize size);
@@ -57,3 +59,4 @@ private:
 }    // namespace insitu
 
 #endif    // insitu_FILTER_GRAPHICS_VIEW_HPP
+

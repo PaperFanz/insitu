@@ -28,13 +28,7 @@ FilteredView::FilteredView(const ros::NodeHandle& parent_, QString _name,
     republishCheckBox = new QCheckBox(tr("Republish"));
 
     // display statistics in lower status bar
-    fpsLabel = new QLabel();
-    fpsLabel->setText(tr("FPS: "));
-
-    // panel for filters
-    filterList = new QListWidget();
-    filterList->setDragDropMode(QAbstractItemView::DragDrop);
-    filterList->setDefaultDropAction(Qt::DropAction::MoveAction);
+    fpsLabel = new QLabel(tr("FPS: "), this);
 
     // graphics view for rendering filters
     filterScene = new QGraphicsScene(this);
@@ -44,11 +38,22 @@ FilteredView::FilteredView(const ros::NodeHandle& parent_, QString _name,
     filterScene->addItem(rosImg);
     filterView->setRootItem(rosImg);
 
+    // panel for filters
+    filterList = new QListWidget(this);
+    filterList->setDragDropMode(QAbstractItemView::DragDrop);
+    filterList->setDefaultDropAction(Qt::DropAction::MoveAction);
+    filterProps = new FilterProperties(filterView, this);
+    filterPaneSplitter = new QSplitter(Qt::Vertical);
+    filterPaneSplitter->setStyleSheet("QSplitter::handle { color: #000 }"); // TODO get a nice image for the splitter handle
+    filterPaneSplitter->addWidget(filterList);
+    filterPaneSplitter->addWidget(filterProps);
+    filterPaneSplitter->setStretchFactor(0, 10);
+
     // layout
     filterPaneLayout = new QGridLayout();
     filterPaneLayout->addWidget(addFilterButton, 0, 0);
     filterPaneLayout->addWidget(rmFilterButton, 0, 1);
-    filterPaneLayout->addWidget(filterList, 1, 0, 1, 2);
+    filterPaneLayout->addWidget(filterPaneSplitter, 1, 0, 1, 2);
     filterPaneWidget = new QWidget();
     filterPaneWidget->setLayout(filterPaneLayout);
 
@@ -217,7 +222,7 @@ void FilteredView::addFilter(boost::shared_ptr<insitu::Filter> filter)
     filterList->addItem(item);
     filterList->setItemWidget(item, fc);
 
-    FilterGraphicsItem* gi = new FilterGraphicsItem(rosImg);
+    FilterGraphicsItem* gi = new FilterGraphicsItem(filter, rosImg);
     filter->start(gi);
     qRegisterMetaType<cv::Mat>("cv::Mat");
     connect(filter->getFilterWatchDog(),

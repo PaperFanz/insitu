@@ -5,8 +5,12 @@
 #include <QtWidgets>
 
 // OpenCV includes
+#include <boost/smart_ptr/shared_ptr.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/core/core.hpp>
+
+/* insitu includes */
+#include "lib/insitu/filter.hpp"
 
 namespace insitu
 {
@@ -31,7 +35,7 @@ public:
         Type = UserType + 42
     };
 
-    FilterGraphicsItem(QGraphicsItem* parent = nullptr);
+    FilterGraphicsItem(boost::shared_ptr<insitu::Filter> filter = nullptr, QGraphicsItem* parent = nullptr);
 
     int type(void) const override
     {
@@ -45,6 +49,8 @@ public:
     void updateFilter(const cv::Mat& filter);
 
     void setResizable(bool resizeable);
+
+    boost::shared_ptr<insitu::Filter> getFilter(void) const;
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
@@ -66,7 +72,11 @@ signals:
 
     void imgSizeChanged(QSize size);
 
+    void moved(QPointF pos);
+
 private:
+    boost::shared_ptr<insitu::Filter> filter;
+
     QPointF itemCenter(void) const;
 
     QImage img;

@@ -20,6 +20,7 @@
 #include "insitu_utils.hpp"
 #include <insitu/filter.hpp>
 #include "filter_graphics_view.hpp"
+#include "filter_properties.hpp"
 
 namespace insitu
 {
@@ -28,20 +29,30 @@ class FilteredView : public QWidget
     Q_OBJECT
 private:
     // UI elements
+    
+    /* top bar */
     QComboBox* topicBox;
     QPushButton* refreshTopicButton;
     QPushButton* addFilterButton;
     QPushButton* rmFilterButton;
     QCheckBox* republishCheckBox;
     QCheckBox* showFilterPaneCheckBox;
+    
+    /* side bar */
     QListWidget* filterList;
+    FilterProperties* filterProps;
+    
+    /* main view */
     FilterGraphicsView* filterView;
     QGraphicsScene* filterScene;
     FilterGraphicsItem* rosImg;
+    
+    /* bottom bar */
     QLabel* fpsLabel;
     QErrorMessage* errMsg;
 
     // layout elements
+    QSplitter* filterPaneSplitter;
     QWidget* filterPaneWidget;
     QGridLayout* filterPaneLayout;
     QHBoxLayout* imagePane;

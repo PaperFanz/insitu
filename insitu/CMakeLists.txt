@@ -8,7 +8,7 @@ find_package(catkin REQUIRED COMPONENTS
     qt_build 
     roscpp
 )
-find_package(OpenCV 3.4.5 REQUIRED)
+find_package(OpenCV 3.2 REQUIRED)
 find_package(jsoncpp REQUIRED)
 
 include_directories(${catkin_INCLUDE_DIRS})
@@ -66,6 +66,7 @@ set(INSITU_SRC
     src/filter_factory.cpp
     src/filter_card.cpp
     src/filter_info.cpp
+    src/filter_properties.cpp
     src/filter_graphics_item.cpp
     src/filter_graphics_view.cpp
     src/filter_graphics_scene.cpp
@@ -81,6 +82,7 @@ set(INSITU_SRC
     inc/filter_factory.hpp
     inc/filter_card.hpp
     inc/filter_info.hpp
+    inc/filter_properties.hpp
     inc/filter_graphics_item.hpp
     inc/filter_graphics_view.hpp
     inc/filter_graphics_scene.hpp
