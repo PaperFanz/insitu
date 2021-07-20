@@ -1,6 +1,7 @@
 #include "filter_properties.hpp"
 #include <cfloat>
 #include <climits>
+#include <cmath>
 
 namespace insitu
 {
@@ -77,8 +78,14 @@ FilterProperties::FilterProperties(FilterGraphicsView* filterView, QWidget* pare
     connect(ySpinBox, SIGNAL(valueChanged(qreal)),
             this, SLOT(onYChanged(qreal)));
 
+    connect(aspectRatioCheckBox, SIGNAL(stateChanged(int)),
+            this, SLOT(onAspectRatioChanged(int)));
+
     connect(setImageSizeCheckBox, SIGNAL(stateChanged(int)),
             this, SLOT(onSetImageSizeChanged(int)));
+
+    connect(lockFilterCheckBox, SIGNAL(stateChanged(int)),
+            this, SLOT(onLockFilterChanged(int)));
 
     setDisabled();
 }
@@ -93,6 +100,7 @@ void FilterProperties::onSelectionChanged(void)
     if (!sel.isEmpty()) {
         activeFilterItem = (FilterGraphicsItem *) sel.first();
         boost::shared_ptr<insitu::Filter> filter = activeFilterItem->getFilter();
+        savedSize = filter->getSize();
         widthSpinBox->setValue(filter->width());
         heightSpinBox->setValue(filter->height());
         xSpinBox->setValue(activeFilterItem->x());
@@ -106,11 +114,10 @@ void FilterProperties::onSelectionChanged(void)
 void FilterProperties::onWidthChanged(int w)
 {
     if (aspectRatioCheckBox->isChecked()) {
-        QSize s(lastWidth, lastHeight);
-        s.scale(w, 0, Qt::KeepAspectRatioByExpanding);
-        activeFilterItem->getFilter()->setSize(s);
-        lastHeight = s.height();
-        heightSpinBox->setValue(s.height());
+        int nextHeight = round(w/aspectRatio);
+        activeFilterItem->getFilter()->setSize(QSize(w, nextHeight));
+        lastHeight = nextHeight;
+        heightSpinBox->setValue(nextHeight);
     } else {
         activeFilterItem->getFilter()->setWidth(w);
     }
@@ -120,11 +127,10 @@ void FilterProperties::onWidthChanged(int w)
 void FilterProperties::onHeightChanged(int h)
 {
     if (aspectRatioCheckBox->isChecked()) {
-        QSize s(lastWidth, lastHeight);
-        s.scale(0, h, Qt::KeepAspectRatioByExpanding);
-        activeFilterItem->getFilter()->setSize(s);
-        lastWidth = s.width();
-        widthSpinBox->setValue(s.width());
+        int nextWidth = round(h*aspectRatio);
+        activeFilterItem->getFilter()->setSize(QSize(nextWidth, h));
+        lastWidth = nextWidth;
+        widthSpinBox->setValue(nextWidth);
     } else {
         activeFilterItem->getFilter()->setHeight(h);
     }
@@ -146,16 +152,28 @@ void FilterProperties::onFilterMoved(QPointF pos) {
     ySpinBox->setValue(pos.y());
 }
 
+void FilterProperties::onAspectRatioChanged(int state)
+{
+    if (aspectRatioCheckBox->isChecked()) {
+        aspectRatio = double(widthSpinBox->value())/double(heightSpinBox->value());
+    }
+}
+
 void FilterProperties::onSetImageSizeChanged(int state)
 {
     bool setImageSize = setImageSizeCheckBox->isChecked();
+    boost::shared_ptr<insitu::Filter> filter = activeFilterItem->getFilter();
     if (setImageSize) {
         aspectRatioCheckBox->setChecked(false);
-        boost::shared_ptr<insitu::Filter> filter = activeFilterItem->getFilter();
+        savedSize = filter->getSize();
         filter->setSize(filterView->getRootSize());
         widthSpinBox->setValue(filter->width());
         heightSpinBox->setValue(filter->height());
         activeFilterItem->setPos(QPointF(0,0));
+    } else {
+        filter->setSize(savedSize);
+        widthSpinBox->setValue(savedSize.width());
+        heightSpinBox->setValue(savedSize.height());
     }
     widthSpinBox->setDisabled(setImageSize);
     heightSpinBox->setDisabled(setImageSize);
@@ -164,7 +182,20 @@ void FilterProperties::onSetImageSizeChanged(int state)
 
 void FilterProperties::onLockFilterChanged(int state)
 {
+    bool locked = lockFilterCheckBox->isChecked();
+    bool setImageSize = setImageSizeCheckBox->isChecked();
     
+    /* disable filter interaction as needed */
+    activeFilterItem->setFlag(QGraphicsItem::ItemIsMovable, !locked);
+    activeFilterItem->setFlag(QGraphicsItem::ItemSendsGeometryChanges, !locked);
+    
+    /* disable ui elements as needed */
+    widthSpinBox->setDisabled(locked || setImageSize);
+    heightSpinBox->setDisabled(locked || setImageSize);
+    aspectRatioCheckBox->setDisabled(locked || setImageSize);
+    setImageSizeCheckBox->setDisabled(locked);
+    xSpinBox->setDisabled(locked);
+    ySpinBox->setDisabled(locked);
 }
 
 /*

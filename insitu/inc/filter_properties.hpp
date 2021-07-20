@@ -41,6 +41,10 @@ private:
     FilterGraphicsView * filterView;
     FilterGraphicsItem * activeFilterItem;
 
+    QSize savedSize;
+
+    double aspectRatio; // width/height
+
     int lastWidth;
     int lastHeight;
 
@@ -56,6 +60,8 @@ private Q_SLOTS:
     void onYChanged(qreal y);
 
     void onFilterMoved(QPointF pos);
+
+    void onAspectRatioChanged(int state);
 
     void onSetImageSizeChanged(int state);
 
