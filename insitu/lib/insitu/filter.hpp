@@ -17,6 +17,7 @@
 #include <future>
 #include <chrono>
 #include <json/json.h>
+#include <qsize.h>
 
 using namespace std::chrono_literals;
 
@@ -77,6 +78,8 @@ private:
 
     FilterWatchdog* filterWatchdog;
 
+    QSize size;
+
 protected:
     // dialog box for editing settings
     FilterDialog* settingsDialog;
@@ -98,8 +101,8 @@ public:
     */
     virtual const cv::Mat apply(void)
     {
-        cv::Mat ret = cv::Mat(settings.get("width", 300).asInt(),
-                              settings.get("height", 300).asInt(), CV_8UC4,
+        cv::Mat ret = cv::Mat(width(),
+                              height(), CV_8UC4,
                               cv::Scalar(255, 255, 255, 0));
 
         return ret;
@@ -158,6 +161,36 @@ public:
         return getName();
     }
 
+    QSize getSize(void) const
+    {
+        return size;
+    }
+
+    int width(void) const
+    {
+        return size.width();
+    }
+
+    int height(void) const
+    {
+        return size.height();
+    }
+
+    void setSize(QSize size)
+    {
+        this->size = size;
+    }
+
+    void setWidth(int w)
+    {
+        size.setWidth(w);
+    }
+
+    void setHeight(int h)
+    {
+        size.setHeight(h);
+    }
+
     void openSettingEditor(void)
     {
         if (settingsDialog != nullptr) settingsDialog->open();
@@ -184,9 +217,7 @@ protected:
         settingsDialog = new FilterDialog(this);
         settingsDialog->setWindowTitle(QString::fromStdString(name()) +
                                        " Settings");
-
-        settings["width"] = 300;
-        settings["height"] = 300;
+        size = QSize(300,300);
     };
 
     /*

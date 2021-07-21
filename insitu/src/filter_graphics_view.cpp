@@ -59,6 +59,11 @@ const QImage& FilterGraphicsView::getImage(void)
     return imgBuf;
 }
 
+QSize FilterGraphicsView::getRootSize(void) const
+{
+    return imgBuf.size();
+}
+
 /*
     Public Slots
 */
@@ -77,3 +82,4 @@ void FilterGraphicsView::resizeEvent(QResizeEvent* event)
 }
 
 }    // namespace insitu
+

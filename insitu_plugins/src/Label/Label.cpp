@@ -14,6 +14,7 @@ Label::Label(void)
 void Label::onInit(void)
 {
     settingsDialog = new LabelDialog(this);
+    setSize(QSize(300, 100));
 
     // TODO initialization code
 }
@@ -47,8 +48,8 @@ void drawtorect(cv::Mat& mat, cv::Rect target, const std::string& str,
 
 const cv::Mat Label::apply(void)
 {
-    cv::Mat ret = cv::Mat(settings.get("height", 100).asInt(),
-                          settings.get("width", 300).asInt(), CV_8UC4,
+    cv::Mat ret = cv::Mat(height(),
+                          width(), CV_8UC4,
                           cv::Scalar(255, 255, 255, 0));
 
     drawtorect(ret, cv::Rect(0, 0, ret.cols, ret.rows),
@@ -60,3 +61,4 @@ const cv::Mat Label::apply(void)
 }    // end namespace insitu_plugins
 
 PLUGINLIB_EXPORT_CLASS(insitu_plugins::Label, insitu::Filter);
+
