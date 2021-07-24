@@ -40,8 +40,6 @@ void AddModeDialog::AddMode()
     ModeContainer* mode = new ModeContainer(name);
     tabmanager->addTab(mode, name);
 
-    addNamedWidget("mode_" + name.toStdString(), mode);
-
     // accept and exit modal
     accept();
 }

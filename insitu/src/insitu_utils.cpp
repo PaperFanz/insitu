@@ -101,6 +101,11 @@ QWidget* getNamedWidget(std::string name)
     }
 }
 
+void clearNamedWidgets(void)
+{
+    widgetMap.clear();
+}
+
 void clearLayout(QLayout* layout)
 {
     while (QLayoutItem* item = layout->takeAt(0))

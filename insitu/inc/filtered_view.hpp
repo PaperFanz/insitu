@@ -22,6 +22,9 @@
 #include "filter_graphics_view.hpp"
 #include "filter_properties.hpp"
 
+// C++ includes
+#include <json/json.h>
+
 namespace insitu
 {
 class FilteredView : public QWidget
@@ -102,6 +105,8 @@ public:
     FilteredView(const ros::NodeHandle& parent_, QString _name, QString _topic,
                  QWidget* parent = nullptr);
 
+    FilteredView(const ros::NodeHandle& parent_, const Json::Value& json, QWidget* parent = nullptr);
+
     ~FilteredView(void);
 
     void addFilter(boost::shared_ptr<insitu::Filter> filter);
@@ -109,6 +114,10 @@ public:
     const std::string& getViewName(void) const;
 
     const ros::NodeHandle& getNodeHandle(void) const;
+
+    void save(Json::Value& json) const;
+
+    void restore(const Json::Value& json);
 
 private:
     void callbackImg(const sensor_msgs::Image::ConstPtr& msg);

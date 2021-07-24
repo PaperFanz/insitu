@@ -156,6 +156,11 @@ public:
         return settings;
     }
 
+    void setSettingsValue(Json::Value& restore)
+    {
+        settings = restore;
+    }
+
     const std::string& name(void) const
     {
         return getName();

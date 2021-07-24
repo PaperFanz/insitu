@@ -43,10 +43,8 @@ void AddViewDialog::AddView()
 
         FilteredView* view = new FilteredView(container->getNodeHandle(), name,
                                               topicBox->currentText());
-        view->setWindowTitle(name);
 
         container->addView(view);
-        addNamedWidget("view_" + name.toStdString(), view);
     }
     else
     {

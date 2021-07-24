@@ -12,6 +12,9 @@ FilteredView::FilteredView(const ros::NodeHandle& parent_, QString _name,
                            QString _topic, QWidget* parent)
     : QWidget(parent)
 {
+    /* decorations */
+    setWindowTitle(_name);
+
     // Topic name selector
     topicBox = new QComboBox();
     topicBox->addItems(getTopicList());
@@ -91,12 +94,19 @@ FilteredView::FilteredView(const ros::NodeHandle& parent_, QString _name,
             SLOT(onFilterOrderChanged()));
 
     name = _name.toStdString();
+    addNamedWidget("view_" + name, this);
     nh = new ros::NodeHandle(parent_, name);
     nh->setCallbackQueue(&viewQueue);
     spinner = new ros::AsyncSpinner(1, &viewQueue);
     spinner->start();
 
     onTopicChange(topicBox->currentText());
+}
+
+FilteredView::FilteredView(const ros::NodeHandle& parent_, const Json::Value& json, QWidget* parent)
+    : FilteredView(parent_, QString::fromStdString(json.get("name", "").asString()), QString::fromStdString(json.get("topic", "").asString()), parent)
+{
+    restore(json);
 }
 
 FilteredView::~FilteredView(void)
@@ -238,6 +248,24 @@ const std::string& FilteredView::getViewName(void) const
 const ros::NodeHandle& FilteredView::getNodeHandle(void) const
 {
     return *nh;
+}
+
+void FilteredView::save(Json::Value &json) const
+{
+    json["name"] = name;
+    json["topic"] = topicBox->currentText().toStdString();
+    json["republish"] = republishCheckBox->isChecked();
+    json["showFilterPane"] = showFilterPaneCheckBox->isChecked();
+
+    // TODO save filters
+}
+
+void FilteredView::restore(const Json::Value &json)
+{
+    republishCheckBox->setChecked(json.get("republish", false).asBool());
+    showFilterPaneCheckBox->setChecked(json.get("showFilterPane", false).asBool());
+
+    // TODO restore filters
 }
 
 /*
