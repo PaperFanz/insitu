@@ -17,8 +17,8 @@
 #include <opencv2/core/core.hpp>
 
 // insitu includes
-#include "insitu_utils.hpp"
 #include <insitu/filter.hpp>
+#include "filter_factory.hpp"
 #include "filter_graphics_view.hpp"
 #include "filter_properties.hpp"
 
@@ -78,6 +78,7 @@ private:
     QImage filteredImg;
 
     // Filter structs
+    FilterFactory* filterFactory;
     std::unordered_map<std::string, boost::shared_ptr<insitu::Filter>> filters;
 
     // Housekeeping

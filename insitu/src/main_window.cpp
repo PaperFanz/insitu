@@ -63,7 +63,10 @@ void MainWindow::on_actionSave_triggered()
     std::ofstream file;
     file.open(QFileDialog::getSaveFileName(this, tr("Save File"), QDir::currentPath(), tr("JSON (*.json)")).toStdString());
     if (file.is_open()) {
-        file << json;
+        Json::StreamWriterBuilder sb;
+        sb["indentation"] = "    ";
+        auto writer = sb.newStreamWriter();
+        writer->write(json, &file);
         file.close();
     }
 }
@@ -77,15 +80,21 @@ void MainWindow::on_actionLoad_triggered()
     std::ifstream file;
     file.open(QFileDialog::getOpenFileName(this, tr("Open File"), QDir::currentPath(), tr("JSON (*.json)")).toStdString());
     if (file.is_open() && Json::parseFromStream(rb, file, &json, &errs)) {
+        /* clear current task view */
         QTabWidget* tabmanager = (QTabWidget*)getNamedWidget("tabmanager");
+        for (int i = 0; i < tabmanager->count(); ++i) {
+            delete tabmanager->widget(i);
+        }
         tabmanager->clear();
+
+        /* repopulate task view */
         if (json.isMember("modes")) {
             for (int i = 0; i < json["modes"].size(); ++i) {
                 Json::Value modejson = json["modes"][i];
                 tabmanager->addTab(new ModeContainer(modejson, this), QString::fromStdString(modejson.get("name", "").asString()));
             }
         }
-        tabmanager->setCurrentIndex(json.get("currentMode").asInt());
+        tabmanager->setCurrentIndex(json.get("currentMode", 0).asInt());
     }
 }
 

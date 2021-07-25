@@ -7,7 +7,6 @@
 
 // insitu includes
 #include <insitu/filter.hpp>
-#include "insitu_utils.hpp"
 
 namespace insitu
 {
@@ -29,7 +28,7 @@ private:
     create_instance(const std::string& lookup_name);
 
 public:
-    FilterFactory(const std::string& pkg);
+    FilterFactory();
 
     ~FilterFactory(void);
 
