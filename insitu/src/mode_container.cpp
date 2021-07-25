@@ -5,14 +5,14 @@ namespace insitu
 /*
     Constructor/Destructor
 */
-ModeContainer::ModeContainer(QString name, QWidget* parent) : QWidget(parent)
+ModeContainer::ModeContainer(QString _name, QWidget* parent) : QWidget(parent)
 {
     // ui elements
-    addViewButton = new QPushButton(tr("Add View"));
-    tileButton = new QPushButton(tr("Tile Windows"));
-    cascadeButton = new QPushButton(tr("Cascade Windows"));
+    addViewButton = new QPushButton(tr("Add View"), this);
+    tileButton = new QPushButton(tr("Tile Windows"), this);
+    cascadeButton = new QPushButton(tr("Cascade Windows"), this);
 
-    container = new QMdiArea();
+    container = new QMdiArea(this);
     container->setActivationOrder(QMdiArea::ActivationHistoryOrder);
 
     // callbacks
@@ -20,7 +20,7 @@ ModeContainer::ModeContainer(QString name, QWidget* parent) : QWidget(parent)
     QObject::connect(cascadeButton, SIGNAL(clicked()), SLOT(cascade()));
 
     // layout
-    layout = new QGridLayout();
+    layout = new QGridLayout(this);
     layout->addWidget(addViewButton, 0, 0);
     layout->addWidget(tileButton, 0, 2);
     layout->addWidget(cascadeButton, 0, 3);
@@ -29,11 +29,26 @@ ModeContainer::ModeContainer(QString name, QWidget* parent) : QWidget(parent)
 
     layout->setColumnStretch(0, 1);
 
-    nh = new ros::NodeHandle(name.toStdString());
+    /* data */
+    name = _name.toStdString();
+    addNamedWidget("mode_" + name, this);
+    nh = new ros::NodeHandle(name);
 
     setLayout(layout);
 }
 
+ModeContainer::ModeContainer(const Json::Value& json, QWidget* parent)
+    : ModeContainer(QString::fromStdString(json.get("name", "").asString()), parent)
+{
+    restore(json);
+}
+
+ModeContainer::~ModeContainer(void)
+{
+    delete nh;
+}
+
+/* public slots */
 void ModeContainer::tile(void)
 {
     container->tileSubWindows();
@@ -44,11 +59,7 @@ void ModeContainer::cascade(void)
     container->cascadeSubWindows();
 }
 
-ModeContainer::~ModeContainer(void)
-{
-    delete nh;
-}
-
+/* public functions */
 void ModeContainer::addView(FilteredView* view)
 {
     container->addSubWindow(view);
@@ -61,4 +72,28 @@ const ros::NodeHandle& ModeContainer::getNodeHandle(void)
     return *nh;
 }
 
+void ModeContainer::save(Json::Value &json) const
+{
+    json["name"] = name;
+    QList<QMdiSubWindow*> viewList = container->subWindowList(QMdiArea::StackingOrder);
+    for (int i = 0; i < viewList.size(); ++i) {
+        FilteredView* view = static_cast<FilteredView*>(viewList[i]->widget());
+        Json::Value viewJson;
+        view->save(viewJson);
+        json["views"].append(viewJson);
+    }
+}
+
+void ModeContainer::restore(const Json::Value &json)
+{
+    name = json.get("name", "").asString();
+    if (json.isMember("views")) {
+        for (int i = 0; i < json["views"].size(); ++i) {
+            // qDebug(("Adding " + json["views"].get(i, "").asString()).c_str());
+            addView(new FilteredView(getNodeHandle(), json["views"][i], this));
+        }
+    }
+}
+
 }    // namespace insitu
+

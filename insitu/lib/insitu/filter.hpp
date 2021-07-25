@@ -80,6 +80,8 @@ private:
 
     QSize size;
 
+    std::string type;
+
 protected:
     // dialog box for editing settings
     FilterDialog* settingsDialog;
@@ -156,9 +158,28 @@ public:
         return settings;
     }
 
+    void save(Json::Value& json)
+    {
+        json = settings;
+    }
+
+    void restore(Json::Value& json)
+    {
+        settings = json;
+    }
+
     const std::string& name(void) const
     {
         return getName();
+    }
+
+    const std::string& getType(void) const
+    {
+        return type;
+    }
+
+    void setType(const std::string& type) {
+        this->type = type;
     }
 
     QSize getSize(void) const

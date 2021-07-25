@@ -11,6 +11,9 @@
 #include "insitu_utils.hpp"
 #include "filtered_view.hpp"
 
+// C++ includes
+#include <json/json.h>
+
 namespace insitu
 {
 class ModeContainer : public QWidget
@@ -29,18 +32,27 @@ private:
     // ROS
     ros::NodeHandle* nh;
 
+    /* data */
+    std::string name;
+
 public Q_SLOTS:
     void tile(void);
     void cascade(void);
 
 public:
-    ModeContainer(QString name, QWidget* parent = nullptr);
+    ModeContainer(QString _name, QWidget* parent = nullptr);
+
+    ModeContainer(const Json::Value& json, QWidget* parent = nullptr);
 
     ~ModeContainer(void);
 
     void addView(FilteredView* view);
 
     const ros::NodeHandle& getNodeHandle(void);
+
+    void save(Json::Value& json) const;
+
+    void restore(const Json::Value& json);
 };
 
 }    // end namespace insitu

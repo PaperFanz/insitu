@@ -25,6 +25,8 @@ void addNamedWidget(std::string name, QWidget* widget);
 
 QWidget* getNamedWidget(std::string name);
 
+void clearNamedWidgets(void);
+
 void clearLayout(QLayout* layout);
 
 }    // namespace insitu

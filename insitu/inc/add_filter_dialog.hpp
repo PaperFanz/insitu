@@ -41,6 +41,8 @@ public Q_SLOTS:
 public:
     AddFilterDialog(QWidget* parent = nullptr);
 
+    ~AddFilterDialog(void);
+
     void setActiveView(FilteredView* view);
 
     bool unloadFilter(const std::string& name);

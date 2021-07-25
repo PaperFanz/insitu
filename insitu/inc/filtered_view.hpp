@@ -17,10 +17,13 @@
 #include <opencv2/core/core.hpp>
 
 // insitu includes
-#include "insitu_utils.hpp"
 #include <insitu/filter.hpp>
+#include "filter_factory.hpp"
 #include "filter_graphics_view.hpp"
 #include "filter_properties.hpp"
+
+// C++ includes
+#include <json/json.h>
 
 namespace insitu
 {
@@ -75,6 +78,7 @@ private:
     QImage filteredImg;
 
     // Filter structs
+    FilterFactory* filterFactory;
     std::unordered_map<std::string, boost::shared_ptr<insitu::Filter>> filters;
 
     // Housekeeping
@@ -102,6 +106,8 @@ public:
     FilteredView(const ros::NodeHandle& parent_, QString _name, QString _topic,
                  QWidget* parent = nullptr);
 
+    FilteredView(const ros::NodeHandle& parent_, const Json::Value& json, QWidget* parent = nullptr);
+
     ~FilteredView(void);
 
     void addFilter(boost::shared_ptr<insitu::Filter> filter);
@@ -109,6 +115,10 @@ public:
     const std::string& getViewName(void) const;
 
     const ros::NodeHandle& getNodeHandle(void) const;
+
+    void save(Json::Value& json) const;
+
+    void restore(const Json::Value& json);
 
 private:
     void callbackImg(const sensor_msgs::Image::ConstPtr& msg);
