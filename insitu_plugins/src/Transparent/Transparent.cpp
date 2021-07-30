@@ -11,7 +11,7 @@ Transparent::Transparent(void)
     // TODO instantiation code
 }
 
-void Transparent::onInit(void)
+void Transparent::filterInit(void)
 {
     settingsDialog = new TransparentDialog(this);
 

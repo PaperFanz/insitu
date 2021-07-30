@@ -117,10 +117,6 @@ protected:
     }
 
 public:
-    void init (const std::string& name, const nodelet::M_string& argm, const nodelet::V_string& argv)
-    {
-        filterWatchdog.setImageTopic(argv[0]);
-    }
 
     /*
         @Filter implementors: reimplement this function to apply filter effects
@@ -255,19 +251,22 @@ public:
         return filterWatchdog.getGraphicsItem();
     }
 
+    void onInit(void)
+    {
+        nodelet::V_string argv = getMyArgv();
+        filterWatchdog.setImageTopic(argv[0]);
+        size = QSize(0,0);
+
+        filterInit();
+    }
+
 protected:
     /*
-        @Filter implementors: reimplement this function with any initialization
+        @Filter implementors:  must override this function with any initialization
         required; the creating of data structures, global variables, etc. All
         initialization of the ROS infrastructure must be put into this function.
     */
-    virtual void onInit(void)
-    {
-        settingsDialog = new FilterDialog(this);
-        settingsDialog->setWindowTitle(QString::fromStdString(name()) +
-                                       " Settings");
-        size = QSize(300,300);
-    };
+    virtual void filterInit(void) = 0;
 
     /*
         @Filter implementors: reimplement this function to include any cleanup

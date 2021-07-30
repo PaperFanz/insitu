@@ -11,7 +11,7 @@ Crosshair::Crosshair(void)
     // TODO instantiation code
 }
 
-void Crosshair::onInit(void)
+void Crosshair::filterInit(void)
 {
     settingsDialog = new CrosshairDialog(this);
 
