@@ -13,6 +13,7 @@
 #include <opencv2/core/core.hpp>
 
 // C++ includes
+#include <string>
 #include <thread>
 #include <future>
 #include <chrono>
@@ -44,16 +45,26 @@ class FilterWatchdog : public QObject
     Q_OBJECT
 private:
     QGraphicsItem* graphicsItem;
+    
+    std::string baseImageTopic;
 
 public:
     FilterWatchdog(QGraphicsItem* item)
-    {
-        graphicsItem = item;
-    }
+        : graphicsItem(item) {}
 
     void notify(const cv::Mat& update)
     {
         emit filterUpdated(graphicsItem, update);
+    }
+
+    void setImageTopic(const std::string& topic)
+    {
+        baseImageTopic = topic;
+    }
+
+    const std::string& imageTopic(void) const
+    {
+        return baseImageTopic;
     }
 
     QGraphicsItem* getGraphicsItem(void) const
@@ -64,6 +75,13 @@ public:
 signals:
 
     void filterUpdated(QGraphicsItem* item, const cv::Mat& update);
+
+public Q_SLOTS:
+
+    void onTopicChanged(const QString& topic)
+    {
+        baseImageTopic = topic.toStdString();
+    }
 
 };    // class FilterWatchdog
 
@@ -220,6 +238,11 @@ public:
     FilterWatchdog* getFilterWatchDog(void) const
     {
         return filterWatchdog;
+    }
+
+    const std::string& imageTopic(void) const
+    {
+        return filterWatchdog->imageTopic();
     }
 
     QGraphicsItem* getGraphicsItem(void) const

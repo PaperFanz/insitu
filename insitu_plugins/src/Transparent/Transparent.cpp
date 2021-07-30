@@ -15,7 +15,7 @@ void Transparent::onInit(void)
 {
     settingsDialog = new TransparentDialog(this);
 
-    // TODO initialization code
+    setSize(QSize(300, 300));
 }
 
 void Transparent::onDelete(void)
@@ -29,8 +29,7 @@ const cv::Mat Transparent::apply(void)
         Create a transparent image to construct your overlay on
     */
     double alpha = settings.get("alpha", 0.5).asDouble();
-    cv::Mat ret = cv::Mat(settings.get("height", 300).asInt(),
-                          settings.get("width", 300).asInt(), CV_8UC4,
+    cv::Mat ret = cv::Mat(height(), width(), CV_8UC4,
                           cv::Scalar(settings.get("red", 255).asInt(),
                                      settings.get("green", 255).asInt(),
                                      settings.get("blue", 255).asInt(),

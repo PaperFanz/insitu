@@ -238,9 +238,18 @@ void FilteredView::addFilter(boost::shared_ptr<insitu::Filter> filter)
     FilterGraphicsItem* gi = new FilterGraphicsItem(filter, rosImg);
     filter->start(gi);
     qRegisterMetaType<cv::Mat>("cv::Mat");
-    connect(filter->getFilterWatchDog(),
-            SIGNAL(filterUpdated(QGraphicsItem*, const cv::Mat&)), this,
-            SLOT(updateFilter(QGraphicsItem*, const cv::Mat&)));
+
+    /* ebedded Q_OBJECT to leverage QT slots and signals */
+    FilterWatchdog * wd = filter->getFilterWatchDog();
+    wd->setImageTopic(sub.getTopic());
+
+    /* async filter updates independent of main ui thread */
+    connect(wd, SIGNAL(filterUpdated(QGraphicsItem*, const cv::Mat&)), 
+            this, SLOT(updateFilter(QGraphicsItem*, const cv::Mat&)));
+
+    /* forward topic changes to filters that subscribe to the same base image topic */
+    connect(topicBox, SIGNAL(currentIndexChanged(const QString&)),
+            wd, SLOT(onTopicChanged(const QString&)));
 }
 
 const std::string& FilteredView::getViewName(void) const
