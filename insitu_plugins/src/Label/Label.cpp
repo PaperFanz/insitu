@@ -17,6 +17,8 @@ void Label::onInit(void)
     setSize(QSize(300, 100));
 
     // TODO initialization code
+    
+    imageTopic();
 }
 
 void Label::onDelete(void)
@@ -53,7 +55,7 @@ const cv::Mat Label::apply(void)
                           cv::Scalar(255, 255, 255, 0));
 
     drawtorect(ret, cv::Rect(0, 0, ret.cols, ret.rows),
-               settings.get("text", "default").asString());
+               imageTopic());
 
     return ret;
 }

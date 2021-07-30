@@ -110,6 +110,8 @@ public:
 
     ~FilteredView(void);
 
+    std::string getViewTopic(void) const;
+
     void addFilter(boost::shared_ptr<insitu::Filter> filter);
 
     const std::string& getViewName(void) const;

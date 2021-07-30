@@ -30,10 +30,10 @@ std::vector<std::string> FilterFactory::getFilterList(void)
 }
 
 boost::shared_ptr<insitu::Filter>
-FilterFactory::loadFilter(const std::string& filter, const std::string& name)
+FilterFactory::loadFilter(const std::string& filter, const std::string& name, const std::string& topic)
 {
     nodelet::M_string rmap_;
-    nodelet::V_string argv_;
+    nodelet::V_string argv_ = {topic};
 
     instance_.reset();
 

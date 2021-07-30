@@ -49,8 +49,6 @@ private:
     std::string baseImageTopic;
 
 public:
-    FilterWatchdog(QGraphicsItem* item)
-        : graphicsItem(item) {}
 
     void notify(const cv::Mat& update)
     {
@@ -65,6 +63,11 @@ public:
     const std::string& imageTopic(void) const
     {
         return baseImageTopic;
+    }
+
+    void setGraphicsItem(QGraphicsItem* item)
+    {
+        graphicsItem = item;
     }
 
     QGraphicsItem* getGraphicsItem(void) const
@@ -94,7 +97,7 @@ private:
 
     std::thread filterThread;
 
-    FilterWatchdog* filterWatchdog;
+    FilterWatchdog filterWatchdog;
 
     QSize size;
 
@@ -110,19 +113,21 @@ protected:
     void updateFilter(const cv::Mat& filter)
     {
         filterBuf = filter.clone();
-        filterWatchdog->notify(filterBuf);
+        filterWatchdog.notify(filterBuf);
     }
 
 public:
-    Filter(void){};
+    void init (const std::string& name, const nodelet::M_string& argm, const nodelet::V_string& argv)
+    {
+        filterWatchdog.setImageTopic(argv[0]);
+    }
 
     /*
         @Filter implementors: reimplement this function to apply filter effects
     */
     virtual const cv::Mat apply(void)
     {
-        cv::Mat ret = cv::Mat(width(),
-                              height(), CV_8UC4,
+        cv::Mat ret = cv::Mat(width(), height(), CV_8UC4,
                               cv::Scalar(255, 255, 255, 0));
 
         return ret;
@@ -158,8 +163,8 @@ public:
     */
     void start(QGraphicsItem* item)
     {
+        filterWatchdog.setGraphicsItem(item);
         std::future<void> exitCond = exitObj.get_future();
-        filterWatchdog = new FilterWatchdog(item);
         filterThread = std::thread(&Filter::run, this, std::move(exitCond));
     }
 
@@ -235,19 +240,19 @@ public:
         if (settingsDialog != nullptr) settingsDialog->open();
     }
 
-    FilterWatchdog* getFilterWatchDog(void) const
+    FilterWatchdog* getFilterWatchDog(void)
     {
-        return filterWatchdog;
+        return &filterWatchdog;
     }
 
     const std::string& imageTopic(void) const
     {
-        return filterWatchdog->imageTopic();
+        return filterWatchdog.imageTopic();
     }
 
     QGraphicsItem* getGraphicsItem(void) const
     {
-        return filterWatchdog->getGraphicsItem();
+        return filterWatchdog.getGraphicsItem();
     }
 
 protected:
