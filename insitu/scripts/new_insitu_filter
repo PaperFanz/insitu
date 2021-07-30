@@ -26,7 +26,7 @@ def makeHeaders(path):
         }}
 
     private:
-        void onInit(void);
+        void filterInit(void);
 
         void onDelete(void);
 
@@ -88,11 +88,12 @@ def makeSources(path):
         // TODO instantiation code
     }}
 
-    void {1}::onInit(void)
+    void {1}::filterInit(void)
     {{
         settingsDialog = new {1}Dialog(this);
+        size = QSize(300, 300);
 
-        // TODO initialization code
+        // TODO ROS initialization code
     }}
 
     void {1}::onDelete(void)
@@ -107,8 +108,8 @@ def makeSources(path):
             Create a transparent image to construct your overlay on
         */
         cv::Mat ret = cv::Mat(
-            settings.get("height", 300).asInt(),
-            settings.get("width", 300).asInt(),
+            height(),
+            width(),
             CV_8UC4,
             cv::Scalar(255, 255, 255, 0)
         );
@@ -371,3 +372,4 @@ makePackage(folderlist[0] + "/package.xml")
 
 os.system("tree " + pkg_name)
 print("\nDone\n")
+

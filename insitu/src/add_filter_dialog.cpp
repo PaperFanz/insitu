@@ -67,10 +67,12 @@ void AddFilterDialog::AddFilter()
         try
         {
             auto filter = filterLoader->loadFilter(
-                fi->getFilterName(), nameEdit->text().toStdString());
+                fi->getFilterName(), nameEdit->text().toStdString(), activeView->getViewTopic());
             activeView->addFilter(filter);
-            activeView =
-                nullptr;    // reset so we don't segfault on a deleted view
+
+            // reset so we don't segfault on a deleted view
+            activeView = nullptr;
+            
             accept();
         }
         catch (std::runtime_error e)

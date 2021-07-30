@@ -1,4 +1,5 @@
 #include "filtered_view.hpp"
+#include <string>
 #include "add_filter_dialog.hpp"
 #include "filter_card.hpp"
 #include "filter_graphics_item.hpp"
@@ -223,6 +224,11 @@ void FilteredView::updateFilter(QGraphicsItem* item, const cv::Mat& update)
 /*
     Public Functions
 */
+std::string FilteredView::getViewTopic(void) const
+{
+    return sub.getTopic();
+}
+
 void FilteredView::addFilter(boost::shared_ptr<insitu::Filter> filter)
 {
     std::string name = filter->name();
@@ -238,9 +244,18 @@ void FilteredView::addFilter(boost::shared_ptr<insitu::Filter> filter)
     FilterGraphicsItem* gi = new FilterGraphicsItem(filter, rosImg);
     filter->start(gi);
     qRegisterMetaType<cv::Mat>("cv::Mat");
-    connect(filter->getFilterWatchDog(),
-            SIGNAL(filterUpdated(QGraphicsItem*, const cv::Mat&)), this,
-            SLOT(updateFilter(QGraphicsItem*, const cv::Mat&)));
+
+    /* ebedded Q_OBJECT to leverage QT slots and signals */
+    FilterWatchdog * wd = filter->getFilterWatchDog();
+    wd->setImageTopic(sub.getTopic());
+
+    /* async filter updates independent of main ui thread */
+    connect(wd, SIGNAL(filterUpdated(QGraphicsItem*, const cv::Mat&)), 
+            this, SLOT(updateFilter(QGraphicsItem*, const cv::Mat&)));
+
+    /* forward topic changes to filters that subscribe to the same base image topic */
+    connect(topicBox, SIGNAL(currentIndexChanged(const QString&)),
+            wd, SLOT(onTopicChanged(const QString&)));
 }
 
 const std::string& FilteredView::getViewName(void) const
@@ -290,7 +305,7 @@ void FilteredView::restore(const Json::Value &json)
             errMsg->showMessage(QString::fromStdString("Filter must have type, skipping " + std::to_string(i) + " of " + std::to_string(json["filters"].size())));
             continue;
         }
-        auto filter = filterFactory->loadFilter(filterjson.get("type", "").asString(), filterjson.get("name", "").asString());
+        auto filter = filterFactory->loadFilter(filterjson.get("type", "").asString(), filterjson.get("name", "").asString(), sub.getTopic());
         addFilter(filter);
         if (filterjson.isMember("properties") && !filterjson["properties"].isNull()) {
             FilterGraphicsItem * fgitem = (FilterGraphicsItem*) filter->getGraphicsItem();

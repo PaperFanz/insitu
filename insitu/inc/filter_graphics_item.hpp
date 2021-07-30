@@ -48,26 +48,16 @@ public:
 
     void updateFilter(const cv::Mat& filter);
 
-    void setResizable(bool resizeable);
-
     boost::shared_ptr<insitu::Filter> getFilter(void) const;
 
 protected:
-    void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
-
-    void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
-
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
-
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
                QWidget* widget = nullptr) override;
 
 public slots:
-
     void queuedUpdate(void);
 
 signals:
-
     void delayedUpdate(void);
 
     void imgSizeChanged(QSize size);
@@ -85,12 +75,6 @@ private:
 
     mutable QMutex img_mutex;
 
-    bool isResizable;
-
-    bool isResizing;
-
-    double initDist;
-    double initScale;
 };
 
 }    // namespace insitu

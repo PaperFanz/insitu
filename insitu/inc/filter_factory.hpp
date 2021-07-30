@@ -35,7 +35,8 @@ public:
     std::vector<std::string> getFilterList(void);
 
     boost::shared_ptr<insitu::Filter> loadFilter(const std::string& filter,
-                                                 const std::string& name);
+                                                 const std::string& name,
+                                                 const std::string& topic);
 
     bool unloadFilter(const std::string& name);
 

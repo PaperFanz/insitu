@@ -19,7 +19,7 @@ public:
     }
 
 private:
-    void onInit(void);
+    void filterInit(void);
 
     void onDelete(void);
 

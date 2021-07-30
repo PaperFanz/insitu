@@ -17,8 +17,6 @@ FilterGraphicsItem::FilterGraphicsItem(boost::shared_ptr<insitu::Filter> filter,
         setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
     }
 
-    isResizable = true;
-    isResizing = false;
     img = QImage(1, 1, QImage::Format_RGBA8888);
     
     // some jank shit, don't touch
@@ -63,11 +61,6 @@ void FilterGraphicsItem::queuedUpdate(void)
     update(boundingRect());
 }
 
-void FilterGraphicsItem::setResizable(bool resizable)
-{
-    isResizable = resizable;
-}
-
 /*
     Protected
 */
@@ -75,77 +68,6 @@ void FilterGraphicsItem::setResizable(bool resizable)
 QRectF FilterGraphicsItem::boundingRect(void) const
 {
     return img.rect();
-}
-
-void FilterGraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent* event)
-{
-    if (event->button() == Qt::LeftButton)
-    {
-        if (event->modifiers() == Qt::ShiftModifier)
-        {
-            // add the item to the selection
-            setSelected(true);
-        }
-        else if (event->modifiers() == Qt::AltModifier)
-        {
-            // resize the item
-            QPointF center = itemCenter();
-            QPointF pos = event->scenePos();
-
-            double distx = abs(center.x() - pos.x());
-            double disty = abs(center.y() - pos.y());
-            if (distx > 0.4 * boundingRect().width() ||
-                disty > 0.4 * boundingRect().height())
-            {
-                initDist = sqrt(pow(distx, 2) + pow(disty, 2));
-                initScale = scale();
-                isResizing = true;
-            }
-            else
-            {
-                isResizing = false;
-            }
-        }
-        else
-        {
-            QGraphicsItem::mousePressEvent(event);
-            event->accept();
-        }
-    }
-    else if (event->button() == Qt::RightButton)
-    {
-        event->ignore();
-    }
-}
-
-void FilterGraphicsItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
-{
-    if (event->modifiers() == Qt::AltModifier && isResizing && isResizable)
-    {
-        QPointF center = itemCenter();
-        QPointF pos = event->scenePos();
-        double dist = sqrt(pow((center.x() - pos.x()), 2) +
-                           pow((center.y() - pos.y()), 2));
-        setTransformOriginPoint(center);
-        setScale(initScale * dist / initDist);
-    }
-    else if (event->modifiers() != Qt::AltModifier)
-    {
-        QGraphicsItem::mouseMoveEvent(event);
-    }
-}
-
-void FilterGraphicsItem::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
-{
-    if (event->modifiers() == Qt::AltModifier && isResizing)
-    {
-        isResizing = false;
-    }
-    else if (event->modifiers() != Qt::ShiftModifier)
-    {
-        QGraphicsItem::mouseReleaseEvent(event);
-        emit moved(pos());
-    }
 }
 
 void FilterGraphicsItem::paint(QPainter* painter,

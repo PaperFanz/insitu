@@ -22,7 +22,6 @@ void FilterGraphicsView::setRootItem(FilterGraphicsItem* item)
     root->setFlag(QGraphicsItem::ItemIsMovable, false);
     root->setFlag(QGraphicsItem::ItemIsSelectable, false);
     root->setFlag(QGraphicsItem::ItemSendsGeometryChanges, false);
-    root->setResizable(false);
 
     connect(root, SIGNAL(imgSizeChanged(QSize)), this,
             SLOT(rootImgSizeChanged(QSize)));
