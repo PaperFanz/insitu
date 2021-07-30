@@ -17,8 +17,6 @@ void Label::filterInit(void)
     setSize(QSize(300, 100));
 
     // TODO initialization code
-    
-    qDebug(imageTopic().c_str());
 }
 
 void Label::onDelete(void)
@@ -55,7 +53,7 @@ const cv::Mat Label::apply(void)
                           cv::Scalar(255, 255, 255, 0));
 
     drawtorect(ret, cv::Rect(0, 0, ret.cols, ret.rows),
-               imageTopic());
+               getSettingsValue().get("text", "text not set").asString());
 
     return ret;
 }
