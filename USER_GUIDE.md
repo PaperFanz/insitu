@@ -41,7 +41,9 @@ source devel/setup.bash
 2. Git clone this repo into your source folder 
 ```sh
 cd ~/catkin_ws/src
-git clone https://github.com/UTNuclearRobotics/inSitu_VB.git
+git clone https://github.com/PaperFanz/insitu.git
+or
+git clone git@github.com:PaperFanz/insitu.git
 ```
 
 3. Install and initialize rosdep
@@ -75,6 +77,7 @@ cd ~/catkin_ws/src
 git clone https://github.com/stonier/qt_ros.git
 
 #delete qt_tutorials folder due to errors in build
+cd qt_ros
 rm -r qt_tutorials
 ```
 
