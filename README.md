@@ -1,27 +1,99 @@
 # Insitu
 
-Hardware agnostic situational awareness
-
-## Quick Links
-
-[User Guide](USER_GUIDE.md)
-
-[Creating a filter](FILTERS.md)
-
-[Contributing to Insitu](CONTRIBUTING.md)
+<!-- TODO add GIF of InSitu in action -->
 
 ## Description
 
-<!-- TODO add images -->
+InSitu is an extensible situational awareness platform that organizes ROS image
+streams in a grid layout and applys overlays to create complex HUD interfaces
+for robot teleoperation and supervision. These overlays are created through 
+user-created plugins called `filters`, but first time users are encouraged to
+check out the list of [Available Filters](##Available Filters) to get started 
+without needing to write any code themselves. InSitu was inspired by [Guy 
+Zaidner's work](https://www.youtube.com/watch?v=QCgzkMhAX68) at the 
+[Nuclear and Applied Robotics Group](https://robotics.me.utexas.edu/) at the 
+University of Texas at Austin and built on ROS pluginlib, Qt5, OpenCV, and 
+jsoncpp.
 
-Most ROS users are likely very familiar with RVIZ and RQT, and the plugin functionality that these two tools bring. Between RVIZ and RQT, most GUI requirements, 3D or 2D, can be satisfied with little effort other than selecting the appropriate plugins from the massive collection of GUI tools available.
+## Quick Start
 
-However, as robotics development advances, the complexity of the interfaces used in teleoperation and monitoring increases as well. Guy Zaidner's work in situational awareness at the University of Texas at Austin's Nuclear and Applied Robotics Group demonstrated the utility of dynamic HUD overlays in robotic teleoperation. The HUD composed multiple camera streams and ROS sensor data into a unified user interface, a marked improvement over referring to dials and charts in another window (or raw data from a terminal).
+InSitu is not packaged for ROS yet so new users will have to build from
+from source. 
 
-Insitu is a continuation of Guy's work in overlays and aims to provide the same plugin support for camera overlays as RQT and RVIZ did for 2D and 3D GUIs. In essence, Insitu provides a common interface for composing multiple filters on a ROS image stream. The filters are implemented as ROS nodelets and can range in complexity from static crosshairs to full computer vision applications, as long as they implement the Insitu filter interface.
+### Building From Source
+First, ensure that you've installed ROS Melodic and `rosdep` 
+following the [ROS wiki](http://wiki.ros.org/melodic/Installation). Then, 
+create a new catkin workspace and clone the repository into the `src` 
+directory.
 
-## Structure
+```sh
+mkdir -p catkin_ws/src && cd catkin_ws
+catkin build
+source devel/setup.bash
+cd src
+git clone git@github.com:PaperFanz/insitu.git
+```
 
-Insitu has three levels of organization: modes, views, and filters. Modes are containers for related views. For example, the navigation mode might contain camera views from front and rear mounted cameras, whereas the manipulation mode might contain camera views from the end effectors of arms mounted on the robot. Views themselves are rather simple, and display a single ROS image stream. The real power of Insitu comes from the filter plugins, which can be loaded, applied, and dynamically configured for any view.
+Next, install any dependencies by running the following from the top directory
+of your catkin workspace:
 
-Common filters can be implemented to take configurations at runtime and shared with other users, drastically reducing the amount of time needed to create a complex HUD interface.
+```sh
+# in catkin_ws:
+rosdep install --from-paths src --ignore-src -r -y
+```
+
+Finally, build the packages:
+
+```sh
+catkin build
+```
+
+### Running InSitu
+
+To run InSitu, start `roscore` in a separate terminal and start some nodes that
+publish image topics, such as [usb\_cam](http://wiki.ros.org/usb_cam). Then, 
+run InSitu using `rosrun insitu insitu`. 
+
+<!-- TODO gifs and basic demo guide -->
+
+### User Guide
+
+For a comprehensive list of InSitu functions and configuration options, please
+refer to the [USER\_GUIDE.md](docs/USER_GUIDE.md).
+
+## Available Filters
+
+Curated list of tested, publicly available filter packages for InSitu.
+
+- [insitu\_plugins](insitu_plugins): a set of filters included with InSitu 
+    that provides some out-of-box functionality
+- [iort\_filters](https://github.com/PaperFanz/iort_filters): overlays for IoT 
+    data streamed using [iort\_lib](https://github.com/PaperFanz/iort_lib)
+
+## Contribute
+
+There are two ways to contribute to the InSitu project, creating new filters
+to add custom functionality or modifying InSitu core to fix bugs and develop
+new features.
+
+### Creating Custom Filters
+
+Those interested in creating their own filters should refer to 
+[FILTERS.md](docs/FILTERS.md) to get started with the filter creation script
+that generates the necessary boilerplate and explains the basic operation of
+a filter.
+
+### Modifying InSitu Core
+
+Found a bug or want to see your custom feature merged into InSitu core? Fork
+the repository, make your changes, and open a pull request. Please refer to
+[CONTRIBUTING.md](docs/CONTRIBUTING.md) for an explanation of InSitu's program
+structure and more detailed contribution guidelines.
+
+## Related Work
+
+While InSitu was functionally inspired by Guy Zaider's work referenced in the
+description, its implementation was heavily based on RQT and RVIZ, two existing
+giants in the ROS Visualization application sphere. InSitu's plugin architecture
+is modeled after the great work that went into these related projects.
+
