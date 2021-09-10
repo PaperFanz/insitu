@@ -1,5 +1,19 @@
 # Insitu
 
+- [Insitu](#insitu)
+  * [Description](#description)
+  * [Quick Start](#quick-start)
+    + [Building From Source](#building-from-source)
+    + [Running InSitu](#running-insitu)
+    + [User Guide](#user-guide)
+  * [Available Filters](#available-filters)
+  * [Contribute](#contribute)
+    + [Creating Custom Filters](#creating-custom-filters)
+    + [Modifying InSitu Core](#modifying-insitu-core)
+  * [Related Work](#related-work)
+
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
+
 <!-- TODO add GIF of InSitu in action -->
 
 ## Description
