@@ -1,0 +1,6 @@
+<library path="lib/lib{0}">
+    <class type="{0}::{1}" base_class_type="insitu::Filter">
+        <description>{2}</description>
+    </class>
+</library>
+
