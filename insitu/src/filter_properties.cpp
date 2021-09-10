@@ -66,6 +66,9 @@ FilterProperties::FilterProperties(FilterGraphicsView* filterView, QWidget* pare
     connect(filterView->scene(), SIGNAL(selectionChanged()), 
             this, SLOT(onSelectionChanged()));
 
+    connect(filterView, SIGNAL(mouseMoved()), 
+            this, SLOT(onMouseMove()));
+
     connect(widthSpinBox, SIGNAL(valueChanged(int)),
             this, SLOT(onWidthChanged(int)));
 
@@ -108,6 +111,14 @@ void FilterProperties::onSelectionChanged(void)
 
         connect(activeFilterItem, SIGNAL(moved(QPointF)),
                 this, SLOT(onFilterMoved(QPointF)));
+    }
+}
+
+void FilterProperties::onMouseMove(void)
+{
+    if (isEnabled()) {
+        xSpinBox->setValue(activeFilterItem->x());
+        ySpinBox->setValue(activeFilterItem->y());
     }
 }
 

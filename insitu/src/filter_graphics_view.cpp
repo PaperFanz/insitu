@@ -80,5 +80,11 @@ void FilterGraphicsView::resizeEvent(QResizeEvent* event)
     fitToRoot();
 }
 
+void FilterGraphicsView::mouseMoveEvent(QMouseEvent* event)
+{
+    QGraphicsView::mouseMoveEvent(event);
+    emit mouseMoved();
+}
+
 }    // namespace insitu
 
