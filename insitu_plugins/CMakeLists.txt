@@ -15,6 +15,7 @@ find_package(catkin REQUIRED COMPONENTS
     roscpp
     insitu
 )
+find_package(OpenCV 4.2 REQUIRED)
 find_package(jsoncpp REQUIRED)
 
 ## System dependencies are found with CMake's conventions
@@ -72,6 +73,7 @@ target_link_libraries(${PROJECT_NAME}
     jsoncpp_lib
     Qt5::Core
     Qt5::Widgets
+    ${OpenCV_LIBRARIES}
     ${catkin_LIBRARIES}
 )
 

@@ -2,20 +2,21 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(insitu)
 
+# specify the C++ standard
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
 # CATKIN
 # qt_build provides the qt cmake glue, roscpp the comms for a default talker
 find_package(catkin REQUIRED COMPONENTS 
     qt_build 
     roscpp
 )
-find_package(OpenCV 3.2 REQUIRED)
+
+find_package(OpenCV 4.2 REQUIRED)
 find_package(jsoncpp REQUIRED)
 
 include_directories(${catkin_INCLUDE_DIRS})
-
-# # specify the C++ standard
-set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # QT ENVIRONMENT
 set(CMAKE_AUTOMOC ON)
