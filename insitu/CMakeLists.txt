@@ -12,7 +12,6 @@ find_package(catkin REQUIRED COMPONENTS
     qt_build 
     roscpp
 )
-
 find_package(OpenCV 4.2 REQUIRED)
 find_package(jsoncpp REQUIRED)
 
@@ -119,3 +118,4 @@ install(DIRECTORY lib/insitu/
 catkin_install_python(PROGRAMS scripts/new_insitu_filter
     DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
+
