@@ -1,32 +1,32 @@
-#include <{1}/{1}.hpp>
-#include <{1}/{1}_dialog.hpp>
+#include <Notify/Notify.hpp>
+#include <Notify/Notify_dialog.hpp>
 
-namespace {0} {{
+namespace insitu_plugins {
 
 /*
     Filter Implementation
 */
-{1}::{1}(void)
-{{
+Notify::Notify(void)
+{
     // TODO instantiation code
-}}
+}
 
-void {1}::filterInit(void)
-{{
-    settingsDialog = new {1}Dialog(this);
+void Notify::filterInit(void)
+{
+    settingsDialog = new NotifyDialog(this);
     setSize(QSize(300, 300));
 
     // TODO ROS initialization code
-}}
+}
 
-void {1}::onDelete(void)
-{{
+void Notify::onDelete(void)
+{
     // TODO cleanup code
-}}
+}
 
 
-const cv::Mat {1}::apply (void)
-{{
+const cv::Mat Notify::apply (void)
+{
     /*
         Create a transparent image to construct your overlay on
     */
@@ -41,9 +41,9 @@ const cv::Mat {1}::apply (void)
     // e.g. settings.get("key", defaultValue).asType()
 
     return ret;
-}}
+}
 
-}} // end namespace {0}
+} // end namespace insitu_plugins
 
-PLUGINLIB_EXPORT_CLASS({0}::{1}, insitu::Filter);
+PLUGINLIB_EXPORT_CLASS(insitu_plugins::Notify, insitu::Filter);
 

@@ -8,4 +8,7 @@
   <class type="insitu_plugins::Transparent" base_class_type="insitu::Filter">
     <description>testing new transparency filters</description>
   </class>
+  <class type="insitu_plugins::Notify" base_class_type="insitu::Filter">
+    <description>display scrolling notifications</description>
+  </class>
 </library>
