@@ -8,7 +8,13 @@ find_package(catkin REQUIRED COMPONENTS
     qt_build 
     roscpp
 )
-find_package(OpenCV 3.2 REQUIRED)
+
+# We should be using this but QImage to ROS image conversion does not work with
+# OpenCV 3.2, which is required by cv_bridge. This will no longer be an issue 
+# in ROS Noetic+ as the default OpenCV version will be OpenCV 4
+# find_package(OpenCV 3.2 EXACT REQUIRED) 
+
+find_package(OpenCV 3 REQUIRED)
 find_package(jsoncpp REQUIRED)
 
 include_directories(${catkin_INCLUDE_DIRS})
@@ -42,6 +48,7 @@ find_package(catkin REQUIRED COMPONENTS
 
 catkin_package(
     INCLUDE_DIRS inc lib
+    DEPENDS OpenCV
 )
 
 include_directories(

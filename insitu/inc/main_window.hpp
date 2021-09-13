@@ -40,6 +40,17 @@ public Q_SLOTS:
 
 private:
     ui::main_window_design ui;
+
+    QString lastLoadedFile;
+
+    QStringList recentFiles;
+
+    void save(Json::Value& json);
+
+    void restore(Json::Value& json);
+
+    void restore(QString filename);
+
 };
 
 }    // namespace insitu
