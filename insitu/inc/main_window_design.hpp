@@ -34,11 +34,12 @@ public:
     QMenu* menuHelp;
     QMenu* menuDocs;
 
+    QMenu* menuRecents;
+
     // menu options
     QAction* actionQuit;
     QAction* actionSave;
     QAction* actionLoad;
-    QAction* actionRecent;
     QAction* actionNewMode;
     QAction* actionNewView;
     QAction* actionNewFilter;

@@ -42,6 +42,7 @@ find_package(catkin REQUIRED COMPONENTS
 
 catkin_package(
     INCLUDE_DIRS inc lib
+    DEPENDS OpenCV
 )
 
 include_directories(

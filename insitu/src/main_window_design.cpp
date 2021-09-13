@@ -25,9 +25,6 @@ void main_window_design::setupUI(QMainWindow* mainwindow)
     actionLoad = new QAction(mainwindow);
     actionLoad->setObjectName(QStringLiteral("actionLoad"));
     actionLoad->setText(QStringLiteral("Load"));
-    actionRecent = new QAction(mainwindow);
-    actionRecent->setObjectName(QStringLiteral("actionRecent"));
-    actionRecent->setText(QStringLiteral("Recent"));
     actionNewMode = new QAction(mainwindow);
     actionNewMode->setObjectName(QStringLiteral("actionNewMode"));
     actionNewMode->setText(QStringLiteral("New Mode"));
@@ -99,12 +96,16 @@ void main_window_design::setupUI(QMainWindow* mainwindow)
     menuDocs->setObjectName(QStringLiteral("menuDocs"));
     menuDocs->setTitle(QStringLiteral("Docs"));
 
+    menuRecents = new QMenu(menuFile);
+    menuRecents->setObjectName(QStringLiteral("menuRecents"));
+    menuRecents->setTitle(QStringLiteral("Recents"));
+
     menubar->addAction(menuFile->menuAction());
     menubar->addAction(menuEdit->menuAction());
     menubar->addAction(menuHelp->menuAction());
     menuFile->addAction(actionSave);
     menuFile->addAction(actionLoad);
-    menuFile->addAction(actionRecent);
+    menuFile->addMenu(menuRecents);
     menuFile->addSeparator();
     menuFile->addAction(actionQuit);
     menuEdit->addAction(actionNewMode);
