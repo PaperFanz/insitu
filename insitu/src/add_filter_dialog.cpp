@@ -7,7 +7,7 @@ namespace insitu
 */
 AddFilterDialog::AddFilterDialog(QWidget* parent) : QDialog(parent)
 {
-    filterLoader = new FilterFactory("insitu");
+    filterLoader = new FilterFactory();
     activeView = nullptr;
 
     addBtn = new QPushButton(tr("Add"));
@@ -43,6 +43,11 @@ AddFilterDialog::AddFilterDialog(QWidget* parent) : QDialog(parent)
     setWindowTitle(tr("Add Filter"));
 }
 
+AddFilterDialog::~AddFilterDialog(void)
+{
+    delete filterLoader;
+}
+
 /*
     Slots
 */
@@ -61,11 +66,13 @@ void AddFilterDialog::AddFilter()
 
         try
         {
-            boost::shared_ptr<insitu::Filter> fl = filterLoader->loadFilter(
-                fi->getFilterName(), nameEdit->text().toStdString());
-            activeView->addFilter(fl);
-            activeView =
-                nullptr;    // reset so we don't segfault on a deleted view
+            auto filter = filterLoader->loadFilter(
+                fi->getFilterName(), nameEdit->text().toStdString(), activeView->getViewTopic());
+            activeView->addFilter(filter);
+
+            // reset so we don't segfault on a deleted view
+            activeView = nullptr;
+            
             accept();
         }
         catch (std::runtime_error e)

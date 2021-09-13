@@ -11,11 +11,11 @@ Crosshair::Crosshair(void)
     // TODO instantiation code
 }
 
-void Crosshair::onInit(void)
+void Crosshair::filterInit(void)
 {
     settingsDialog = new CrosshairDialog(this);
 
-    // TODO initialization code
+    setSize(QSize(300,300));
 }
 
 void Crosshair::onDelete(void)
@@ -25,9 +25,7 @@ void Crosshair::onDelete(void)
 
 const cv::Mat Crosshair::apply(void)
 {
-    cv::Mat ret = cv::Mat(settings.get("width", 300).asInt(),
-                          settings.get("height", 300).asInt(), CV_8UC4,
-                          cv::Scalar(0, 0, 0, 0));
+    cv::Mat ret = cv::Mat(width(), height(), CV_8UC4, cv::Scalar(0, 0, 0, 0));
     color = (color + 1) % 256;
 
     cv::Scalar cvColor(color, color, color, 255);

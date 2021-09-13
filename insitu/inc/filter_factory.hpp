@@ -7,7 +7,6 @@
 
 // insitu includes
 #include <insitu/filter.hpp>
-#include "insitu_utils.hpp"
 
 namespace insitu
 {
@@ -29,14 +28,15 @@ private:
     create_instance(const std::string& lookup_name);
 
 public:
-    FilterFactory(const std::string& pkg);
+    FilterFactory();
 
     ~FilterFactory(void);
 
     std::vector<std::string> getFilterList(void);
 
     boost::shared_ptr<insitu::Filter> loadFilter(const std::string& filter,
-                                                 const std::string& name);
+                                                 const std::string& name,
+                                                 const std::string& topic);
 
     bool unloadFilter(const std::string& name);
 

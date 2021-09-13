@@ -19,7 +19,7 @@ public:
     }
 
 private:
-    void onInit(void);
+    void filterInit(void);
 
     void onDelete(void);
 
@@ -28,3 +28,4 @@ private:
 }    // end namespace insitu_plugins
 
 #endif    // end insitu_plugins_Label_HPP
+

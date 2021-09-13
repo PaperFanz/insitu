@@ -10,3 +10,8 @@ InSitu by itself is nothing more than a platform; its real utility comes when us
 - [x] 'Edit filter' interface (assignee @PaperFanz)
 - [x] script for creating filter templates (assignee @PaperFanz)
 - [x] optionally republish filtered image stream (assignee @PaperFanz)
+
+## Contribution Guide
+
+Under Construction!
+

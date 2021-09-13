@@ -22,7 +22,6 @@ void FilterGraphicsView::setRootItem(FilterGraphicsItem* item)
     root->setFlag(QGraphicsItem::ItemIsMovable, false);
     root->setFlag(QGraphicsItem::ItemIsSelectable, false);
     root->setFlag(QGraphicsItem::ItemSendsGeometryChanges, false);
-    root->setResizable(false);
 
     connect(root, SIGNAL(imgSizeChanged(QSize)), this,
             SLOT(rootImgSizeChanged(QSize)));
@@ -59,6 +58,11 @@ const QImage& FilterGraphicsView::getImage(void)
     return imgBuf;
 }
 
+QSize FilterGraphicsView::getRootSize(void) const
+{
+    return imgBuf.size();
+}
+
 /*
     Public Slots
 */
@@ -76,4 +80,11 @@ void FilterGraphicsView::resizeEvent(QResizeEvent* event)
     fitToRoot();
 }
 
+void FilterGraphicsView::mouseMoveEvent(QMouseEvent* event)
+{
+    QGraphicsView::mouseMoveEvent(event);
+    emit mouseMoved();
+}
+
 }    // namespace insitu
+

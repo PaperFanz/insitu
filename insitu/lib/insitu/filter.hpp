@@ -13,10 +13,12 @@
 #include <opencv2/core/core.hpp>
 
 // C++ includes
+#include <string>
 #include <thread>
 #include <future>
 #include <chrono>
 #include <json/json.h>
+#include <qsize.h>
 
 using namespace std::chrono_literals;
 
@@ -43,16 +45,29 @@ class FilterWatchdog : public QObject
     Q_OBJECT
 private:
     QGraphicsItem* graphicsItem;
+    
+    std::string baseImageTopic;
 
 public:
-    FilterWatchdog(QGraphicsItem* item)
-    {
-        graphicsItem = item;
-    }
 
     void notify(const cv::Mat& update)
     {
         emit filterUpdated(graphicsItem, update);
+    }
+
+    void setImageTopic(const std::string& topic)
+    {
+        baseImageTopic = topic;
+    }
+
+    const std::string& imageTopic(void) const
+    {
+        return baseImageTopic;
+    }
+
+    void setGraphicsItem(QGraphicsItem* item)
+    {
+        graphicsItem = item;
     }
 
     QGraphicsItem* getGraphicsItem(void) const
@@ -63,6 +78,13 @@ public:
 signals:
 
     void filterUpdated(QGraphicsItem* item, const cv::Mat& update);
+
+public Q_SLOTS:
+
+    void onTopicChanged(const QString& topic)
+    {
+        baseImageTopic = topic.toStdString();
+    }
 
 };    // class FilterWatchdog
 
@@ -75,7 +97,11 @@ private:
 
     std::thread filterThread;
 
-    FilterWatchdog* filterWatchdog;
+    FilterWatchdog filterWatchdog;
+
+    QSize size;
+
+    std::string type;
 
 protected:
     // dialog box for editing settings
@@ -87,19 +113,17 @@ protected:
     void updateFilter(const cv::Mat& filter)
     {
         filterBuf = filter.clone();
-        filterWatchdog->notify(filterBuf);
+        filterWatchdog.notify(filterBuf);
     }
 
 public:
-    Filter(void){};
 
     /*
         @Filter implementors: reimplement this function to apply filter effects
     */
     virtual const cv::Mat apply(void)
     {
-        cv::Mat ret = cv::Mat(settings.get("width", 300).asInt(),
-                              settings.get("height", 300).asInt(), CV_8UC4,
+        cv::Mat ret = cv::Mat(width(), height(), CV_8UC4,
                               cv::Scalar(255, 255, 255, 0));
 
         return ret;
@@ -135,8 +159,8 @@ public:
     */
     void start(QGraphicsItem* item)
     {
+        filterWatchdog.setGraphicsItem(item);
         std::future<void> exitCond = exitObj.get_future();
-        filterWatchdog = new FilterWatchdog(item);
         filterThread = std::thread(&Filter::run, this, std::move(exitCond));
     }
 
@@ -153,9 +177,58 @@ public:
         return settings;
     }
 
+    void save(Json::Value& json)
+    {
+        json = settings;
+    }
+
+    void restore(Json::Value& json)
+    {
+        settings = json;
+    }
+
     const std::string& name(void) const
     {
         return getName();
+    }
+
+    const std::string& getType(void) const
+    {
+        return type;
+    }
+
+    void setType(const std::string& type) {
+        this->type = type;
+    }
+
+    QSize getSize(void) const
+    {
+        return size;
+    }
+
+    int width(void) const
+    {
+        return size.width();
+    }
+
+    int height(void) const
+    {
+        return size.height();
+    }
+
+    void setSize(QSize size)
+    {
+        this->size = size;
+    }
+
+    void setWidth(int w)
+    {
+        size.setWidth(w);
+    }
+
+    void setHeight(int h)
+    {
+        size.setHeight(h);
     }
 
     void openSettingEditor(void)
@@ -163,31 +236,37 @@ public:
         if (settingsDialog != nullptr) settingsDialog->open();
     }
 
-    FilterWatchdog* getFilterWatchDog(void) const
+    FilterWatchdog* getFilterWatchDog(void)
     {
-        return filterWatchdog;
+        return &filterWatchdog;
+    }
+
+    const std::string& imageTopic(void) const
+    {
+        return filterWatchdog.imageTopic();
     }
 
     QGraphicsItem* getGraphicsItem(void) const
     {
-        return filterWatchdog->getGraphicsItem();
+        return filterWatchdog.getGraphicsItem();
+    }
+
+    void onInit(void)
+    {
+        nodelet::V_string argv = getMyArgv();
+        filterWatchdog.setImageTopic(argv[0]);
+        size = QSize(0,0);
+
+        filterInit();
     }
 
 protected:
     /*
-        @Filter implementors: reimplement this function with any initialization
+        @Filter implementors:  must override this function with any initialization
         required; the creating of data structures, global variables, etc. All
         initialization of the ROS infrastructure must be put into this function.
     */
-    virtual void onInit(void)
-    {
-        settingsDialog = new FilterDialog(this);
-        settingsDialog->setWindowTitle(QString::fromStdString(name()) +
-                                       " Settings");
-
-        settings["width"] = 300;
-        settings["height"] = 300;
-    };
+    virtual void filterInit(void) = 0;
 
     /*
         @Filter implementors: reimplement this function to include any cleanup

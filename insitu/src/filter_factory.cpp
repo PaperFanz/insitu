@@ -2,17 +2,26 @@
 
 namespace insitu
 {
-FilterFactory::FilterFactory(const std::string& pkg)
+
+FilterFactory::FilterFactory()
 {
     nLoader = new nodelet::Loader(
         boost::bind(&FilterFactory::create_instance, this, _1));
-    pLoader = new pluginlib::ClassLoader<insitu::Filter>(pkg, "insitu::Filter");
+    pLoader = new pluginlib::ClassLoader<insitu::Filter>("insitu", "insitu::Filter");
 }
 
 FilterFactory::~FilterFactory(void)
 {
-    if (nLoader) delete nLoader;
-    if (pLoader) delete pLoader;
+    if (nLoader != nullptr) delete nLoader;
+
+    /* 
+        not freeing here is definitely a memory leak but leaving it results in a
+        class_loader warning that I'm not sure how to get rid of
+
+        from https://github.com/ros-planning/moveit/pull/281 this seems to be an
+        issue with class_loader itself
+    */
+    // if (pLoader != nullptr) delete pLoader;
 }
 
 std::vector<std::string> FilterFactory::getFilterList(void)
@@ -21,28 +30,22 @@ std::vector<std::string> FilterFactory::getFilterList(void)
 }
 
 boost::shared_ptr<insitu::Filter>
-FilterFactory::loadFilter(const std::string& filter, const std::string& name)
+FilterFactory::loadFilter(const std::string& filter, const std::string& name, const std::string& topic)
 {
     nodelet::M_string rmap_;
-    nodelet::V_string argv_;
+    nodelet::V_string argv_ = {topic};
 
     instance_.reset();
 
     /* this will call create_instance and set instance_ */
-    bool loaded = nLoader->load(name, filter, rmap_, argv_);
-
-    if (loaded)
+    if (!nLoader->load(name, filter, rmap_, argv_))
     {
-        // TODO track
-    }
-    else
-    {
-        // TODO error
         throw std::runtime_error("Failed to load Filter: " + filter);
     }
 
     // pass ownership off to the caller
     boost::shared_ptr<insitu::Filter> instance = instance_;
+    instance->setType(filter);
     instance_.reset();
     return instance;
 }

@@ -17,9 +17,13 @@
 #include <opencv2/core/core.hpp>
 
 // insitu includes
-#include "insitu_utils.hpp"
 #include <insitu/filter.hpp>
+#include "filter_factory.hpp"
 #include "filter_graphics_view.hpp"
+#include "filter_properties.hpp"
+
+// C++ includes
+#include <json/json.h>
 
 namespace insitu
 {
@@ -28,20 +32,30 @@ class FilteredView : public QWidget
     Q_OBJECT
 private:
     // UI elements
+    
+    /* top bar */
     QComboBox* topicBox;
     QPushButton* refreshTopicButton;
     QPushButton* addFilterButton;
     QPushButton* rmFilterButton;
     QCheckBox* republishCheckBox;
     QCheckBox* showFilterPaneCheckBox;
+    
+    /* side bar */
     QListWidget* filterList;
+    FilterProperties* filterProps;
+    
+    /* main view */
     FilterGraphicsView* filterView;
     QGraphicsScene* filterScene;
     FilterGraphicsItem* rosImg;
+    
+    /* bottom bar */
     QLabel* fpsLabel;
     QErrorMessage* errMsg;
 
     // layout elements
+    QSplitter* filterPaneSplitter;
     QWidget* filterPaneWidget;
     QGridLayout* filterPaneLayout;
     QHBoxLayout* imagePane;
@@ -64,6 +78,7 @@ private:
     QImage filteredImg;
 
     // Filter structs
+    FilterFactory* filterFactory;
     std::unordered_map<std::string, boost::shared_ptr<insitu::Filter>> filters;
 
     // Housekeeping
@@ -91,13 +106,21 @@ public:
     FilteredView(const ros::NodeHandle& parent_, QString _name, QString _topic,
                  QWidget* parent = nullptr);
 
+    FilteredView(const ros::NodeHandle& parent_, const Json::Value& json, QWidget* parent = nullptr);
+
     ~FilteredView(void);
+
+    std::string getViewTopic(void) const;
 
     void addFilter(boost::shared_ptr<insitu::Filter> filter);
 
     const std::string& getViewName(void) const;
 
     const ros::NodeHandle& getNodeHandle(void) const;
+
+    void save(Json::Value& json) const;
+
+    void restore(const Json::Value& json);
 
 private:
     void callbackImg(const sensor_msgs::Image::ConstPtr& msg);

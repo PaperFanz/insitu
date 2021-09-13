@@ -37,14 +37,19 @@ public:
     */
     const QImage& getImage(void);
 
+    QSize getRootSize(void) const;
+
 public slots:
 
     void rootImgSizeChanged(QSize size);
 
 signals:
+    void mouseMoved(void);
 
 protected:
     void resizeEvent(QResizeEvent* event) override;
+
+    void mouseMoveEvent(QMouseEvent* event) override;
 
 private:
     FilterGraphicsItem* root;
@@ -57,3 +62,4 @@ private:
 }    // namespace insitu
 
 #endif    // insitu_FILTER_GRAPHICS_VIEW_HPP
+

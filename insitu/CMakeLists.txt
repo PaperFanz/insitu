@@ -2,23 +2,20 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(insitu)
 
+# specify the C++ standard
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
 # CATKIN
 # qt_build provides the qt cmake glue, roscpp the comms for a default talker
 find_package(catkin REQUIRED COMPONENTS 
     qt_build 
     roscpp
 )
-find_package(OpenCV 3.4.5 REQUIRED)
+find_package(OpenCV 4.2 REQUIRED)
 find_package(jsoncpp REQUIRED)
 
 include_directories(${catkin_INCLUDE_DIRS})
-add_compile_options(-std=c++14 -fPIC)
-
-# # specify the C++ standard
-set(CMAKE_CXX_COMPILER "/usr/bin/clang++-10")
-set(CMAKE_C_COMPILER "/usr/bin/clang-10")
-set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # QT ENVIRONMENT
 set(CMAKE_AUTOMOC ON)
@@ -69,6 +66,7 @@ set(INSITU_SRC
     src/filter_factory.cpp
     src/filter_card.cpp
     src/filter_info.cpp
+    src/filter_properties.cpp
     src/filter_graphics_item.cpp
     src/filter_graphics_view.cpp
     src/filter_graphics_scene.cpp
@@ -84,6 +82,7 @@ set(INSITU_SRC
     inc/filter_factory.hpp
     inc/filter_card.hpp
     inc/filter_info.hpp
+    inc/filter_properties.hpp
     inc/filter_graphics_item.hpp
     inc/filter_graphics_view.hpp
     inc/filter_graphics_scene.hpp
@@ -111,10 +110,12 @@ install(TARGETS ${PROJECT_NAME}
     RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
 )
 
-install(DIRECTORY lib/${PROJECT_NAME}
+install(DIRECTORY lib/insitu/
     DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+    FILES_MATCHING PATTERN "*.hpp"
 )
 
 catkin_install_python(PROGRAMS scripts/new_insitu_filter
     DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
+

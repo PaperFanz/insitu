@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(insitu_plugins)
 
-add_compile_options(-std=c++14 -fPIC)
+# specify the C++ standard
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -13,16 +15,16 @@ find_package(catkin REQUIRED COMPONENTS
     roscpp
     insitu
 )
+find_package(OpenCV 4.2 REQUIRED)
 find_package(jsoncpp REQUIRED)
 
 ## System dependencies are found with CMake's conventions
 find_package(Qt5 COMPONENTS Core Gui Widgets)
 
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES insitu_plugins
-#  CATKIN_DEPENDS nodelet pluginlib roscpp
-#  DEPENDS system_lib
+  LIBRARIES insitu_plugins
+  CATKIN_DEPENDS nodelet pluginlib roscpp insitu 
+  DEPENDS OpenCV
 )
 
 ###########
@@ -70,6 +72,7 @@ target_link_libraries(${PROJECT_NAME}
     jsoncpp_lib
     Qt5::Core
     Qt5::Widgets
+    ${OpenCV_LIBRARIES}
     ${catkin_LIBRARIES}
 )
 
