@@ -37,7 +37,7 @@ FilteredView::FilteredView(const ros::NodeHandle& parent_, QString _name,
 
     // graphics view for rendering filters
     filterScene = new QGraphicsScene(this);
-    filterScene->setBackgroundBrush(QBrush(Qt::lightGray));
+    filterScene->setBackgroundBrush(QBrush(Qt::black));
     filterView = new FilterGraphicsView(filterScene, this);
     rosImg = new FilterGraphicsItem();
     filterScene->addItem(rosImg);
@@ -149,6 +149,9 @@ void FilteredView::openFilterDialog(void)
     afd->open();
 }
 
+// Initialize static variable to access class member outside function
+std::string FilteredView::topic_ref_ = "";
+
 void FilteredView::onTopicChange(QString topic_transport)
 {
     QList<QString> l = topic_transport.split(" ");
@@ -169,6 +172,8 @@ void FilteredView::onTopicChange(QString topic_transport)
     {
         // TODO error message
     }
+    
+    topic_ref_ = topic;
 }
 
 void FilteredView::rmFilter(void)
@@ -327,6 +332,9 @@ void FilteredView::restore(const Json::Value &json)
 /*
     Private Functions
 */
+// Initialize static variable to access class member outside function
+std::vector<int> FilteredView::img_dim_{ 0, 0 };
+
 void FilteredView::callbackImg(const sensor_msgs::Image::ConstPtr& msg)
 {
     // track frames per second
@@ -368,6 +376,9 @@ void FilteredView::callbackImg(const sensor_msgs::Image::ConstPtr& msg)
                               static_cast<size_t>(filteredImg.bytesPerLine()));
         pub.publish(repub.toImageMsg());
     }
+
+    std::vector<int> filter_dim{ (cv_ptr->image).cols, (cv_ptr->image).rows };
+    img_dim_ = filter_dim;
 }
 
 void FilteredView::unloadFilter(QListWidgetItem* filterItem)

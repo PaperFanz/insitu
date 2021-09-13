@@ -122,6 +122,11 @@ public:
 
     void restore(const Json::Value& json);
 
+    // Access selected topic and image dimensions outside insitu core
+    static std::string topic_ref_;
+
+    static std::vector<int> img_dim_;
+
 private:
     void callbackImg(const sensor_msgs::Image::ConstPtr& msg);
 
