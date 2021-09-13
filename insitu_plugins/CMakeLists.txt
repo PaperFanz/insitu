@@ -15,6 +15,7 @@ find_package(catkin REQUIRED COMPONENTS
     roscpp
     insitu
 )
+find_package(OpenCV 3.2 REQUIRED)
 find_package(jsoncpp REQUIRED)
 
 ## System dependencies are found with CMake's conventions
@@ -22,9 +23,9 @@ find_package(Qt5 COMPONENTS Core Gui Widgets)
 
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES insitu_plugins
-#  CATKIN_DEPENDS nodelet pluginlib roscpp
-#  DEPENDS system_lib
+  LIBRARIES insitu_plugins
+  CATKIN_DEPENDS nodelet pluginlib roscpp insitu
+  DEPENDS OpenCV
 )
 
 ###########
