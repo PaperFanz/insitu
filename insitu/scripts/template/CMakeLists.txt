@@ -22,10 +22,9 @@ find_package(jsoncpp REQUIRED)
 find_package(Qt5 COMPONENTS Core Gui Widgets)
 
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES {0}
-#  CATKIN_DEPENDS nodelet pluginlib roscpp
-#  DEPENDS system_lib
+  LIBRARIES {0}
+  CATKIN_DEPENDS nodelet pluginlib roscpp insitu
+  DEPENDS OpenCV
 )
 
 ###########
