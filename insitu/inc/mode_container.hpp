@@ -37,7 +37,10 @@ private:
 
 public Q_SLOTS:
     void tile(void);
+
     void cascade(void);
+
+    void openViewDialog(void);
 
 public:
     ModeContainer(QString _name, QWidget* parent = nullptr);
@@ -58,3 +61,4 @@ public:
 }    // end namespace insitu
 
 #endif
+

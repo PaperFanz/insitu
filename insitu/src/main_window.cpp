@@ -77,7 +77,7 @@ void MainWindow::ReadSettings()
     restoreGeometry(settings.value("geometry").toByteArray());
     restoreState(settings.value("windowState").toByteArray());
     if (settings.contains("loadfile")) {
-        qDebug("restore from last loaded file");
+        // qDebug("restore from last loaded file");
         restore(settings.value("loadfile").toString());
     }
     if (settings.contains("recent")) {
@@ -97,7 +97,7 @@ void MainWindow::WriteSettings()
     settings.setValue("windowState", saveState());
     settings.setValue("recent", recentFiles);
     if (!lastLoadedFile.isEmpty()) {
-        qDebug("writing last loaded file");
+        // qDebug("writing last loaded file");
         settings.setValue("loadfile", lastLoadedFile);
     }
 }
