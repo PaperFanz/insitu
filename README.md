@@ -35,8 +35,8 @@ InSitu is not packaged for ROS yet so new users will have to build from
 from source. 
 
 ### Building From Source
-First, ensure that you've installed ROS Melodic and `rosdep` 
-following the [ROS wiki](http://wiki.ros.org/melodic/Installation). Then, 
+First, ensure that you've installed ROS Noetic and `rosdep` 
+following the [ROS wiki](http://wiki.ros.org/noetic/Installation/Ubuntu). Then, 
 create a new catkin workspace and clone the repository into the `src` 
 directory.
 
@@ -53,7 +53,7 @@ of your catkin workspace:
 
 ```sh
 # in catkin_ws:
-rosdep install --from-paths src --ignore-src -r -y
+rosdep install --from-paths . --ignore-src -r -y
 ```
 
 Finally, build the packages:
