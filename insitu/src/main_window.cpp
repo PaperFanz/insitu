@@ -17,6 +17,8 @@ MainWindow::MainWindow(int argc, char** argv, QWidget* parent)
     ui.setupUI(this);
     setWindowIcon(QIcon(":/images/icon.png"));
     ui.tabmanager->setCurrentIndex(0);
+    QObject::connect(ui.tabmanager, SIGNAL(tabCloseRequested(int)),
+            this, SLOT(modeClose(int)));
     ReadSettings();
 }
 
@@ -24,6 +26,9 @@ MainWindow::~MainWindow()
 {
 }
 
+/*
+    Public Slots
+*/
 void MainWindow::on_actionAbout_triggered()
 {
     QMessageBox::about(this, tr("About ..."),
@@ -69,6 +74,12 @@ void MainWindow::on_actionLoad_triggered()
     if (!recentFiles.contains(lastLoadedFile)) {
         recentFiles.append(lastLoadedFile);
     }
+}
+
+void MainWindow::modeClose(int index)
+{
+    delete ui.tabmanager->widget(index);
+    ui.tabmanager->removeTab(index);
 }
 
 void MainWindow::ReadSettings()
