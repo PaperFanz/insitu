@@ -139,6 +139,15 @@ public:
     }
 
     /*
+        @Filter implementors: reimplement this function to return true if your
+        filter needs to match the image topic size on startup
+    */
+    virtual bool lockToImageSize(void)
+    {
+        return false;
+    }
+
+    /*
         @Filter implementors: advanced filters may be limited by the interface
         provided by the apply() function, therefore this run() function is left
         virtual to allow users to implement their own threads. However, users

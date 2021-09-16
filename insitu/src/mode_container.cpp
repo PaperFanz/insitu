@@ -1,4 +1,5 @@
 #include "mode_container.hpp"
+#include "add_view_dialog.hpp"
 
 namespace insitu
 {
@@ -16,6 +17,7 @@ ModeContainer::ModeContainer(QString _name, QWidget* parent) : QWidget(parent)
     container->setActivationOrder(QMdiArea::ActivationHistoryOrder);
 
     // callbacks
+    QObject::connect(addViewButton, SIGNAL(clicked()), SLOT(openViewDialog()));
     QObject::connect(tileButton, SIGNAL(clicked()), SLOT(tile()));
     QObject::connect(cascadeButton, SIGNAL(clicked()), SLOT(cascade()));
 
@@ -57,6 +59,12 @@ void ModeContainer::tile(void)
 void ModeContainer::cascade(void)
 {
     container->cascadeSubWindows();
+}
+
+void ModeContainer::openViewDialog(void)
+{
+    AddViewDialog* avd = (AddViewDialog*)getNamedWidget("add_view_dialog");
+    avd->open();
 }
 
 /* public functions */
