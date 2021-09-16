@@ -51,6 +51,9 @@ set(insitu_plugins_HDRS
 
     inc/Transparent/Transparent.hpp
     inc/Transparent/Transparent_dialog.hpp
+
+    inc/Notify/Notify.hpp
+    inc/Notify/Notify_dialog.hpp
 )
 
 qt5_wrap_cpp(insitu_plugins_MOCS ${insitu_plugins_HDRS})
@@ -66,6 +69,9 @@ add_library(${PROJECT_NAME}
     src/Transparent/Transparent.cpp
     src/Transparent/Transparent_dialog.cpp
 
+    src/Notify/Notify.cpp
+    src/Notify/Notify_dialog.cpp
+
     ${insitu_plugins_MOCS}
 )
 
@@ -73,6 +79,7 @@ target_link_libraries(${PROJECT_NAME}
     jsoncpp_lib
     Qt5::Core
     Qt5::Widgets
+    ${OpenCV_LIBRARIES}
     ${catkin_LIBRARIES}
 )
 
@@ -87,3 +94,4 @@ install(FILES plugins.xml
 install(TARGETS ${PROJECT_NAME}
     LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 )
+

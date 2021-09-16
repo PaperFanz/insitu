@@ -66,7 +66,7 @@ FilteredView::FilteredView(const ros::NodeHandle& parent_, QString _name,
     imagePane->addWidget(filterView, 1);
     imagePane->addWidget(filterPaneWidget);
 
-    errMsg = new QErrorMessage();
+    errMsg = new QErrorMessage(this);
 
     layout = new QGridLayout();
     layout->addWidget(topicBox, 0, 0);
@@ -167,7 +167,7 @@ void FilteredView::onTopicChange(QString topic_transport)
     }
     else
     {
-        // TODO error message
+        errMsg->showMessage(QString::fromStdString("Topic cannot be empty!"));
     }
 }
 

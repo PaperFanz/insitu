@@ -2,26 +2,20 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(insitu)
 
+# specify the C++ standard
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
 # CATKIN
 # qt_build provides the qt cmake glue, roscpp the comms for a default talker
 find_package(catkin REQUIRED COMPONENTS 
     qt_build 
     roscpp
 )
-
-# We should be using this but QImage to ROS image conversion does not work with
-# OpenCV 3.2, which is required by cv_bridge. This will no longer be an issue 
-# in ROS Noetic+ as the default OpenCV version will be OpenCV 4
-# find_package(OpenCV 3.2 EXACT REQUIRED) 
-
-find_package(OpenCV 3 REQUIRED)
+find_package(OpenCV 4.2 REQUIRED)
 find_package(jsoncpp REQUIRED)
 
 include_directories(${catkin_INCLUDE_DIRS})
-
-# # specify the C++ standard
-set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # QT ENVIRONMENT
 set(CMAKE_AUTOMOC ON)
@@ -125,3 +119,4 @@ install(DIRECTORY lib/insitu/
 catkin_install_python(PROGRAMS scripts/new_insitu_filter
     DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
+

@@ -51,6 +51,8 @@ private:
 private Q_SLOTS:
     void onSelectionChanged(void);
 
+    void onMouseMove(void);
+
     void onWidthChanged(int w);
 
     void onHeightChanged(int h);
