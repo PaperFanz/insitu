@@ -11,6 +11,12 @@ class HeartbeatDialog : public insitu::FilterDialog
 private:
     QPushButton* okButton;
     QPushButton* cancelButton;
+    QLineEdit* nameEdit;
+    QLabel* nameLabel;
+    QLineEdit* topicEdit;
+    QLabel* topicLabel;
+    QLineEdit* rateEdit;
+    QLabel* rateLabel;
 
     QGridLayout* layout;
 

@@ -27,12 +27,10 @@ private:
 
     void onDelete(void);
 
-    void shapeShifterCB(const topic_tools::ShapeShifter::ConstPtr& msg);
-    void topicCallback(const topic_tools::ShapeShifter::ConstPtr& msg,
-                       const std::string& topic_name,
-                       RosIntrospection::Parser& parser);
-
-    void testCB(const std_msgs::Bool::ConstPtr& msg);
+    void topicCB(const topic_tools::ShapeShifter::ConstPtr& msg);
+    void handleCallback(const topic_tools::ShapeShifter::ConstPtr& msg,
+                        const std::string& topic_name,
+                        RosIntrospection::Parser& parser);
 
     std::string topic_name_;
     ros::Subscriber topic_subscriber_;
