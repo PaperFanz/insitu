@@ -22,6 +22,8 @@ public:
         return true;
     }
 
+    void onTopicChange(const std::string& new_topic);
+
 private:
     void filterInit(void);
 
@@ -31,6 +33,8 @@ private:
     void handleCallback(const topic_tools::ShapeShifter::ConstPtr& msg,
                         const std::string& topic_name,
                         RosIntrospection::Parser& parser);
+
+    ros::NodeHandle nh_;
 
     std::string topic_name_;
     ros::Subscriber topic_subscriber_;

@@ -42,12 +42,13 @@ void Heartbeat::filterInit(void)
     settingsDialog = new HeartbeatDialog(this);
     setSize(QSize(50, 50));
 
-    auto nh = getNodeHandle();
+    nh_ = getNodeHandle();
     parser_ = RosIntrospection::Parser();
 
     topic_name_ = getSettingsValue().get("topic", "heartbeat_topic").asString();
 
-    topic_subscriber_ = nh.subscribe(topic_name_, 1, &Heartbeat::topicCB, this);
+    topic_subscriber_ =
+        nh_.subscribe(topic_name_, 1, &Heartbeat::topicCB, this);
 }
 
 void Heartbeat::onDelete(void)
@@ -61,8 +62,16 @@ const cv::Mat Heartbeat::apply(void)
         cv::Mat(height(), width(), CV_8UC4, cv::Scalar(255, 255, 255, 0));
 
     // TODO probably try-catch this
-    double expected_hz =
-        std::stod(getSettingsValue().get("rate", "1.0").asString());
+    double expected_hz;
+    try
+    {
+        expected_hz =
+            std::stod(getSettingsValue().get("rate", "1.0").asString());
+    }
+    catch (const std::invalid_argument& e)
+    {
+        expected_hz = 1.0;
+    }
 
     cv::Scalar cvColor;
     if ((ros::Time::now() - last_msg_received_).toSec() > 2 / expected_hz)
@@ -96,6 +105,12 @@ void Heartbeat::handleCallback(const topic_tools::ShapeShifter::ConstPtr& msg,
     last_msg_received_ = ros::Time::now();
 }
 
+void Heartbeat::onTopicChange(const std::string& new_topic)
+{
+    topic_name_ = new_topic;
+    topic_subscriber_ =
+        nh_.subscribe(topic_name_, 1, &Heartbeat::topicCB, this);
+}
 }    // end namespace insitu_plugins
 
 PLUGINLIB_EXPORT_CLASS(insitu_plugins::Heartbeat, insitu::Filter);

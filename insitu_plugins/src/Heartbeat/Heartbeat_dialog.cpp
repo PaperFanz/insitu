@@ -1,4 +1,5 @@
 #include <Heartbeat/Heartbeat_dialog.hpp>
+#include <Heartbeat/Heartbeat.hpp>
 
 namespace insitu_plugins
 {
@@ -41,6 +42,10 @@ void HeartbeatDialog::onOK(void)
     settings["name"] = nameEdit->text().toStdString();
     settings["topic"] = topicEdit->text().toStdString();
     settings["rate"] = rateEdit->text().toStdString();
+
+    insitu_plugins::Heartbeat* heartbeat_parent =
+        static_cast<insitu_plugins::Heartbeat*>(parent);
+    heartbeat_parent->onTopicChange(topicEdit->text().toStdString());
 
     accept();
 }
