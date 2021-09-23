@@ -1,5 +1,5 @@
-#ifndef adam_filter_package_Heartbeat_HPP
-#define adam_filter_package_Heartbeat_HPP
+#ifndef insitu_plugins_Heartbeat_HPP
+#define insitu_plugins_Heartbeat_HPP
 
 #include <pluginlib/class_list_macros.h>
 #include <insitu/filter.hpp>
@@ -8,7 +8,7 @@
 #include <topic_tools/shape_shifter.h>
 #include "std_msgs/Bool.h"
 
-namespace adam_filter_package
+namespace insitu_plugins
 {
 class Heartbeat : public insitu::Filter
 {
@@ -41,6 +41,6 @@ private:
 
 };    // end class Heartbeat
 
-}    // end namespace adam_filter_package
+}    // end namespace insitu_plugins
 
-#endif    // end adam_filter_package_Heartbeat_HPP
+#endif    // end insitu_plugins_Heartbeat_HPP

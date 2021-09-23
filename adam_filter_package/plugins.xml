@@ -1,6 +1,0 @@
-<library path="lib/libadam_filter_package">
-    <class type="adam_filter_package::Heartbeat" base_class_type="insitu::Filter">
-        <description>Check to see if a topic is published</description>
-    </class>
-</library>
-

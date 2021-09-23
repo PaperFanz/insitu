@@ -1,6 +1,6 @@
 #include <Heartbeat/Heartbeat_dialog.hpp>
 
-namespace adam_filter_package
+namespace insitu_plugins
 {
 HeartbeatDialog::HeartbeatDialog(insitu::Filter* parent_)
     : FilterDialog(parent_)
@@ -45,4 +45,4 @@ void HeartbeatDialog::onOK(void)
     accept();
 }
 
-}    // end namespace adam_filter_package
+}    // end namespace insitu_plugins

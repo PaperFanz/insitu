@@ -1,9 +1,9 @@
-#ifndef adam_filter_package_Heartbeat_DIALOG_HPP
-#define adam_filter_package_Heartbeat_DIALOG_HPP
+#ifndef insitu_plugins_Heartbeat_DIALOG_HPP
+#define insitu_plugins_Heartbeat_DIALOG_HPP
 
 #include <insitu/filter.hpp>
 
-namespace adam_filter_package
+namespace insitu_plugins
 {
 class HeartbeatDialog : public insitu::FilterDialog
 {
@@ -28,6 +28,6 @@ public:
     HeartbeatDialog(insitu::Filter* parent_);
 };
 
-}    // end namespace adam_filter_package
+}    // end namespace insitu_plugins
 
-#endif    // end adam_filter_package_Heartbeat_DIALOG_HPP
+#endif    // end insitu_plugins_Heartbeat_DIALOG_HPP
