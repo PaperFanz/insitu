@@ -6,7 +6,6 @@
 #include "ros_type_introspection/ros_introspection.hpp"
 #include <ros/ros.h>
 #include <topic_tools/shape_shifter.h>
-#include "std_msgs/Bool.h"
 
 namespace insitu_plugins
 {

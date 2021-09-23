@@ -1,6 +1,8 @@
 #include <Heartbeat/Heartbeat_dialog.hpp>
 #include <Heartbeat/Heartbeat.hpp>
 
+using namespace heartbeat_filter;
+
 namespace insitu_plugins
 {
 HeartbeatDialog::HeartbeatDialog(insitu::Filter* parent_)
@@ -8,17 +10,17 @@ HeartbeatDialog::HeartbeatDialog(insitu::Filter* parent_)
 {
     layout = new QGridLayout();
 
-    nameEdit = new QLineEdit();
+    nameEdit = new QLineEdit(QString::fromStdString(DEFAULT_NAME));
     nameLabel = new QLabel(tr("Name: "), nameEdit);
     layout->addWidget(nameLabel, 0, 0);
     layout->addWidget(nameEdit, 0, 1);
 
-    topicEdit = new QLineEdit();
+    topicEdit = new QLineEdit(QString::fromStdString(DEFAULT_TOPIC));
     topicLabel = new QLabel(tr("Topic: "), topicEdit);
     layout->addWidget(topicLabel, 1, 0);
     layout->addWidget(topicEdit, 1, 1);
 
-    rateEdit = new QLineEdit();
+    rateEdit = new QLineEdit(QString::fromStdString(DEFAULT_RATE));
     rateLabel = new QLabel(tr("Expected Rate: "), rateEdit);
     layout->addWidget(rateLabel, 2, 0);
     layout->addWidget(rateEdit, 2, 1);
@@ -40,12 +42,21 @@ void HeartbeatDialog::onOK(void)
     Json::Value& settings = parent->getSettingsValue();
 
     settings["name"] = nameEdit->text().toStdString();
-    settings["topic"] = topicEdit->text().toStdString();
-    settings["rate"] = rateEdit->text().toStdString();
 
-    insitu_plugins::Heartbeat* heartbeat_parent =
-        static_cast<insitu_plugins::Heartbeat*>(parent);
-    heartbeat_parent->onTopicChange(topicEdit->text().toStdString());
+    static_cast<insitu_plugins::Heartbeat*>(parent)->onTopicChange(
+        topicEdit->text().toStdString());
+    settings["topic"] = topicEdit->text().toStdString();
+
+    double expected_hz;
+    try
+    {
+        expected_hz = std::stod(rateEdit->text().toStdString());
+    }
+    catch (const std::invalid_argument& e)
+    {
+        expected_hz = std::stod(DEFAULT_RATE);
+    }
+    settings["rate"] = expected_hz;
 
     accept();
 }

@@ -3,6 +3,13 @@
 
 #include <insitu/filter.hpp>
 
+namespace heartbeat_filter
+{
+const std::string DEFAULT_NAME = "Heartbeat";
+const std::string DEFAULT_TOPIC = "heartbeat_topic";
+const std::string DEFAULT_RATE = "1.0";
+}    // end namespace heartbeat_filter
+
 namespace insitu_plugins
 {
 class HeartbeatDialog : public insitu::FilterDialog

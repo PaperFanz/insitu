@@ -1,6 +1,8 @@
 #include <Heartbeat/Heartbeat.hpp>
 #include <Heartbeat/Heartbeat_dialog.hpp>
 
+using namespace heartbeat_filter;
+
 namespace temp_insitu_utils
 {
 // TODO: include from Label instead of copying
@@ -45,7 +47,7 @@ void Heartbeat::filterInit(void)
     nh_ = getNodeHandle();
     parser_ = RosIntrospection::Parser();
 
-    topic_name_ = getSettingsValue().get("topic", "heartbeat_topic").asString();
+    topic_name_ = getSettingsValue().get("topic", DEFAULT_TOPIC).asString();
 
     topic_subscriber_ =
         nh_.subscribe(topic_name_, 1, &Heartbeat::topicCB, this);
@@ -61,17 +63,8 @@ const cv::Mat Heartbeat::apply(void)
     cv::Mat ret =
         cv::Mat(height(), width(), CV_8UC4, cv::Scalar(255, 255, 255, 0));
 
-    // TODO probably try-catch this
-    double expected_hz;
-    try
-    {
-        expected_hz =
-            std::stod(getSettingsValue().get("rate", "1.0").asString());
-    }
-    catch (const std::invalid_argument& e)
-    {
-        expected_hz = 1.0;
-    }
+    double expected_hz =
+        getSettingsValue().get("rate", std::stod(DEFAULT_RATE)).asDouble();
 
     cv::Scalar cvColor;
     if ((ros::Time::now() - last_msg_received_).toSec() > 2 / expected_hz)
@@ -88,7 +81,7 @@ const cv::Mat Heartbeat::apply(void)
 
     temp_insitu_utils::drawtorect(
         ret, cv::Rect(0, 0, ret.cols, ret.rows / 5),
-        getSettingsValue().get("name", "Heartbeat").asString());
+        getSettingsValue().get("name", DEFAULT_NAME).asString());
 
     return ret;
 }
