@@ -12,7 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
     qt_build 
     roscpp
 )
-find_package(OpenCV 4.2 REQUIRED)
+find_package(OpenCV 3.2 REQUIRED)
 find_package(jsoncpp REQUIRED)
 
 include_directories(${catkin_INCLUDE_DIRS})
