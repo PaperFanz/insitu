@@ -4,20 +4,20 @@ import os
 template_dir = os.path.join(os.path.dirname(__file__),'template')
 
 def makeHeaders(path):
-    headertemplate = open(os.path.join(template_dir, 'filter.hpp'), "r")
+    headertemplate = open(os.path.join(template_dir, 'filter_hdr.template'), "r")
     header = open(path, "w")
     header.write(headertemplate.read().format(pkg_name, filter_name))
 
-    headertemplate = open(os.path.join(template_dir, 'dialog.hpp'), "r")
+    headertemplate = open(os.path.join(template_dir, 'dialog_hdr.template'), "r")
     header = open(folderlist[2] + "/" + filter_name + "_dialog.hpp", "w")
     header.write(headertemplate.read().format(pkg_name, filter_name))
 
 def makeSources(path):
-    sourcetemplate = open(os.path.join(template_dir, 'filter.cpp'), "r")
+    sourcetemplate = open(os.path.join(template_dir, 'filter_src.template'), "r")
     source = open(path, "w")
     source.write(sourcetemplate.read().format(pkg_name, filter_name))
 
-    sourcetemplate = open(os.path.join(template_dir, 'dialog.cpp'), "r")
+    sourcetemplate = open(os.path.join(template_dir, 'dialog_src.template'), "r")
     source = open(folderlist[4] + "/" + filter_name + "_dialog.cpp", "w")
     source.write(sourcetemplate.read().format(pkg_name, filter_name))
 
