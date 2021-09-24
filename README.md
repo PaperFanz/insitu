@@ -1,5 +1,7 @@
 # Insitu
 
+![InSitu Logo](docs/insitu-icon-block.png)
+
 - [Insitu](#insitu)
   * [Description](#description)
   * [Quick Start](#quick-start)

@@ -15,7 +15,7 @@ MainWindow::MainWindow(int argc, char** argv, QWidget* parent)
     : QMainWindow(parent)
 {
     ui.setupUI(this);
-    setWindowIcon(QIcon(":/images/icon.png"));
+    setWindowIcon(QIcon(":/images/insitu-icon.png"));
     ui.tabmanager->setCurrentIndex(0);
     QObject::connect(ui.tabmanager, SIGNAL(tabCloseRequested(int)),
             this, SLOT(modeClose(int)));
