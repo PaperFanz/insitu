@@ -26,3 +26,4 @@ private:
 }    // namespace insitu
 
 #endif    // insitu_FILTER_GRAPHICS_SCENE_HPP
+

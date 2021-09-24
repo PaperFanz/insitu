@@ -38,6 +38,8 @@ public Q_SLOTS:
     
     void on_actionLoad_triggered(void);
 
+    void modeClose(int index);
+
 private:
     ui::main_window_design ui;
 

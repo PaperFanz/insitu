@@ -54,6 +54,9 @@ set(insitu_plugins_HDRS
 
     inc/Notify/Notify.hpp
     inc/Notify/Notify_dialog.hpp
+
+    inc/Stats/Stats.hpp
+    inc/Stats/Stats_dialog.hpp
 )
 
 qt5_wrap_cpp(insitu_plugins_MOCS ${insitu_plugins_HDRS})
@@ -71,6 +74,9 @@ add_library(${PROJECT_NAME}
 
     src/Notify/Notify.cpp
     src/Notify/Notify_dialog.cpp
+
+    src/Stats/Stats.cpp
+    src/Stats/Stats_dialog.cpp
 
     ${insitu_plugins_MOCS}
 )
