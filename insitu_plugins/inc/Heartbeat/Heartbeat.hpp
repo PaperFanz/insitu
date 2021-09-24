@@ -40,7 +40,7 @@ private:
 
     RosIntrospection::Parser parser_;
 
-    ros::Time last_msg_received_ = ros::Time(0.);
+    ros::Time last_msg_received_;
 
 };    // end class Heartbeat
 

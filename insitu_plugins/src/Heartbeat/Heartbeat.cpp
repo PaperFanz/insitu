@@ -34,7 +34,7 @@ namespace insitu_plugins
 /*
     Filter Implementation
 */
-Heartbeat::Heartbeat(void)
+Heartbeat::Heartbeat(void) : last_msg_received_(ros::Time::now())
 {
     // TODO instantiation code
 }
@@ -66,15 +66,10 @@ const cv::Mat Heartbeat::apply(void)
     double expected_hz =
         getSettingsValue().get("rate", std::stod(DEFAULT_RATE)).asDouble();
 
-    cv::Scalar cvColor;
-    if ((ros::Time::now() - last_msg_received_).toSec() > 2 / expected_hz)
-    {
-        cvColor = cv::Scalar(255, 0, 0, 255);
-    }
-    else
-    {
-        cvColor = cv::Scalar(0, 255, 0, 255);
-    }
+    double time_since_last_received =
+        (ros::Time::now() - last_msg_received_).toSec();
+    int grad = std::max(0.0, time_since_last_received * expected_hz * 255.0);
+    cv::Scalar cvColor(2 * grad, 2 * (255 - grad), 0, 255);
 
     int radius = std::min(width(), height()) / 2;
     cv::circle(ret, cv::Point(width() / 2, height() / 2), radius, cvColor, -10);

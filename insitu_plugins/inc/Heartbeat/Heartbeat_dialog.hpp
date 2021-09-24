@@ -27,6 +27,8 @@ private:
 
     QGridLayout* layout;
 
+    QErrorMessage* error_msg;
+
 public Q_SLOTS:
 
     void onOK(void);

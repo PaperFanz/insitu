@@ -10,6 +10,8 @@ HeartbeatDialog::HeartbeatDialog(insitu::Filter* parent_)
 {
     layout = new QGridLayout();
 
+    error_msg = new QErrorMessage();
+
     nameEdit = new QLineEdit(QString::fromStdString(DEFAULT_NAME));
     nameLabel = new QLabel(tr("Name: "), nameEdit);
     layout->addWidget(nameLabel, 0, 0);
@@ -55,6 +57,8 @@ void HeartbeatDialog::onOK(void)
     catch (const std::invalid_argument& e)
     {
         expected_hz = std::stod(DEFAULT_RATE);
+        error_msg->showMessage(
+            "Unable to read Rate value, using 1.0 as a default");
     }
     settings["rate"] = expected_hz;
 
