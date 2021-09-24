@@ -45,11 +45,10 @@ class FilterWatchdog : public QObject
     Q_OBJECT
 private:
     QGraphicsItem* graphicsItem;
-    
+
     std::string baseImageTopic;
 
 public:
-
     void notify(const cv::Mat& update)
     {
         emit filterUpdated(graphicsItem, update);
@@ -117,14 +116,13 @@ protected:
     }
 
 public:
-
     /*
         @Filter implementors: reimplement this function to apply filter effects
     */
     virtual const cv::Mat apply(void)
     {
-        cv::Mat ret = cv::Mat(width(), height(), CV_8UC4,
-                              cv::Scalar(255, 255, 255, 0));
+        cv::Mat ret =
+            cv::Mat(width(), height(), CV_8UC4, cv::Scalar(255, 255, 255, 0));
 
         return ret;
     }
@@ -206,7 +204,8 @@ public:
         return type;
     }
 
-    void setType(const std::string& type) {
+    void setType(const std::string& type)
+    {
         this->type = type;
     }
 
@@ -264,16 +263,17 @@ public:
     {
         nodelet::V_string argv = getMyArgv();
         filterWatchdog.setImageTopic(argv[0]);
-        size = QSize(0,0);
+        size = QSize(0, 0);
 
         filterInit();
     }
 
 protected:
     /*
-        @Filter implementors:  must override this function with any initialization
-        required; the creating of data structures, global variables, etc. All
-        initialization of the ROS infrastructure must be put into this function.
+        @Filter implementors:  must override this function with any
+       initialization required; the creating of data structures, global
+       variables, etc. All initialization of the ROS infrastructure must be put
+       into this function.
     */
     virtual void filterInit(void) = 0;
 

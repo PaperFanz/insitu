@@ -3,23 +3,22 @@
 
 #include <insitu/filter.hpp>
 
-namespace insitu_plugins {
-
+namespace insitu_plugins
+{
 class StatsDialog : public insitu::FilterDialog
 {
-Q_OBJECT
+    Q_OBJECT
 private:
+    QCheckBox* cpuCBox;
+    QCheckBox* memCBox;
+    QCheckBox* diskCBox;
+    QColorDialog* colorDiag;
+    QPushButton* colorBtn;
 
-    QCheckBox * cpuCBox;
-    QCheckBox * memCBox;
-    QCheckBox * diskCBox;
-    QColorDialog * colorDiag;
-    QPushButton * colorBtn;
+    QPushButton* okButton;
+    QPushButton* cancelButton;
 
-    QPushButton * okButton;
-    QPushButton * cancelButton;
-
-    QGridLayout * layout;
+    QGridLayout* layout;
 
 public Q_SLOTS:
 
@@ -28,11 +27,9 @@ public Q_SLOTS:
     void onColor(void);
 
 public:
-    StatsDialog(insitu::Filter * parent_);
-
+    StatsDialog(insitu::Filter* parent_);
 };
 
-} // end namespace insitu_plugins
+}    // end namespace insitu_plugins
 
-#endif // end insitu_plugins_Stats_DIALOG_HPP
-
+#endif    // end insitu_plugins_Stats_DIALOG_HPP

@@ -17,8 +17,8 @@ MainWindow::MainWindow(int argc, char** argv, QWidget* parent)
     ui.setupUI(this);
     setWindowIcon(QIcon(":/images/insitu-icon.png"));
     ui.tabmanager->setCurrentIndex(0);
-    QObject::connect(ui.tabmanager, SIGNAL(tabCloseRequested(int)),
-            this, SLOT(modeClose(int)));
+    QObject::connect(ui.tabmanager, SIGNAL(tabCloseRequested(int)), this,
+                     SLOT(modeClose(int)));
     ReadSettings();
 }
 
@@ -57,8 +57,12 @@ void MainWindow::on_actionSave_triggered()
     save(json);
 
     std::ofstream file;
-    file.open(QFileDialog::getSaveFileName(this, tr("Save File"), QDir::currentPath(), tr("JSON (*.json)")).toStdString());
-    if (file.is_open()) {
+    file.open(QFileDialog::getSaveFileName(this, tr("Save File"),
+                                           QDir::currentPath(),
+                                           tr("JSON (*.json)"))
+                  .toStdString());
+    if (file.is_open())
+    {
         Json::StreamWriterBuilder sb;
         sb["indentation"] = "    ";
         auto writer = sb.newStreamWriter();
@@ -69,9 +73,11 @@ void MainWindow::on_actionSave_triggered()
 
 void MainWindow::on_actionLoad_triggered()
 {
-    lastLoadedFile = QFileDialog::getOpenFileName(this, tr("Open File"), QDir::currentPath(), tr("JSON (*.json)"));
+    lastLoadedFile = QFileDialog::getOpenFileName(
+        this, tr("Open File"), QDir::currentPath(), tr("JSON (*.json)"));
     restore(lastLoadedFile);
-    if (!recentFiles.contains(lastLoadedFile)) {
+    if (!recentFiles.contains(lastLoadedFile))
+    {
         recentFiles.append(lastLoadedFile);
     }
 }
@@ -87,14 +93,17 @@ void MainWindow::ReadSettings()
     QSettings settings("Qt-Ros Package", "insitu");
     restoreGeometry(settings.value("geometry").toByteArray());
     restoreState(settings.value("windowState").toByteArray());
-    if (settings.contains("loadfile")) {
+    if (settings.contains("loadfile"))
+    {
         // qDebug("restore from last loaded file");
         restore(settings.value("loadfile").toString());
     }
-    if (settings.contains("recent")) {
+    if (settings.contains("recent"))
+    {
         recentFiles.append(settings.value("recent").toStringList());
         ui.menuRecents->clear();
-        for (int i = 0; i < recentFiles.size(); ++i) {
+        for (int i = 0; i < recentFiles.size(); ++i)
+        {
             QAction* recent = new QAction(recentFiles[i], ui.menuRecents);
             ui.menuRecents->addAction(recent);
         }
@@ -107,7 +116,8 @@ void MainWindow::WriteSettings()
     settings.setValue("geometry", saveGeometry());
     settings.setValue("windowState", saveState());
     settings.setValue("recent", recentFiles);
-    if (!lastLoadedFile.isEmpty()) {
+    if (!lastLoadedFile.isEmpty())
+    {
         // qDebug("writing last loaded file");
         settings.setValue("loadfile", lastLoadedFile);
     }
@@ -122,7 +132,8 @@ void MainWindow::closeEvent(QCloseEvent* event)
 void MainWindow::save(Json::Value& json)
 {
     QTabWidget* tabmanager = (QTabWidget*)getNamedWidget("tabmanager");
-    for (int i = 0; i < tabmanager->count(); ++i) {
+    for (int i = 0; i < tabmanager->count(); ++i)
+    {
         ModeContainer* mode = (ModeContainer*)tabmanager->widget(i);
         Json::Value modejson;
         mode->save(modejson);
@@ -135,16 +146,21 @@ void MainWindow::restore(Json::Value& json)
 {
     /* clear current task view */
     QTabWidget* tabmanager = (QTabWidget*)getNamedWidget("tabmanager");
-    for (int i = 0; i < tabmanager->count(); ++i) {
+    for (int i = 0; i < tabmanager->count(); ++i)
+    {
         delete tabmanager->widget(i);
     }
     tabmanager->clear();
 
     /* repopulate task view */
-    if (json.isMember("modes")) {
-        for (int i = 0; i < json["modes"].size(); ++i) {
+    if (json.isMember("modes"))
+    {
+        for (int i = 0; i < json["modes"].size(); ++i)
+        {
             Json::Value modejson = json["modes"][i];
-            tabmanager->addTab(new ModeContainer(modejson, this), QString::fromStdString(modejson.get("name", "").asString()));
+            tabmanager->addTab(
+                new ModeContainer(modejson, this),
+                QString::fromStdString(modejson.get("name", "").asString()));
         }
     }
     tabmanager->setCurrentIndex(json.get("currentMode", 0).asInt());
@@ -155,13 +171,13 @@ void MainWindow::restore(QString filename)
     Json::CharReaderBuilder rb;
     Json::Value json;
     JSONCPP_STRING errs;
-    
+
     std::ifstream file;
     file.open(filename.toStdString());
-    if (file.is_open() && Json::parseFromStream(rb, file, &json, &errs)) {
+    if (file.is_open() && Json::parseFromStream(rb, file, &json, &errs))
+    {
         restore(json);
     }
 }
 
 }    // namespace insitu
-

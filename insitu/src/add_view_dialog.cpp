@@ -26,7 +26,7 @@ AddViewDialog::AddViewDialog(QWidget* parent) : QDialog(parent)
     form->addRow(tr("Add to Mode"), modeBox);
     form->addRow(tr("View Topic"), topicBox);
     form->addRow(buttonHBox);
-    
+
     errMsg = new QErrorMessage(this);
 
     setLayout(form);
@@ -38,30 +38,38 @@ void AddViewDialog::AddView()
 {
     bool err = false;
     ModeContainer* container = nullptr;
-    if (!modeBox->currentText().isEmpty()) {
+    if (!modeBox->currentText().isEmpty())
+    {
         container = (ModeContainer*)getNamedWidget(
             "mode_" + modeBox->currentText().toStdString());
-    } else {
+    }
+    else
+    {
         err = true;
         errMsg->showMessage(QString::fromStdString("Mode cannot be empty!"));
     }
-    
+
     QString name = nameEdit->text();
-    if (name.isEmpty()) {
+    if (name.isEmpty())
+    {
         err = true;
         errMsg->showMessage(QString::fromStdString("Name cannot be empty!"));
     }
 
     FilteredView* view = nullptr;
-    if (!topicBox->currentText().isEmpty() && !err) {
+    if (!topicBox->currentText().isEmpty() && !err)
+    {
         view = new FilteredView(container->getNodeHandle(), name,
-                                          topicBox->currentText(), container);
-    } else if (!err) {
+                                topicBox->currentText(), container);
+    }
+    else if (!err)
+    {
         err = true;
         errMsg->showMessage(QString::fromStdString("Topic cannot be empty!"));
     }
 
-    if (!err) {
+    if (!err)
+    {
         container->addView(view);
         accept();
     }
@@ -91,4 +99,3 @@ QList<QString> AddViewDialog::getModeList()
 }
 
 }    // namespace insitu
-

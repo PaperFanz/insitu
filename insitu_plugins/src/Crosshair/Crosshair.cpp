@@ -15,7 +15,7 @@ void Crosshair::filterInit(void)
 {
     settingsDialog = new CrosshairDialog(this);
 
-    setSize(QSize(300,300));
+    setSize(QSize(300, 300));
 }
 
 void Crosshair::onDelete(void)

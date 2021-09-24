@@ -7,18 +7,20 @@ namespace insitu
 /*
     Constructor
 */
-FilterGraphicsItem::FilterGraphicsItem(boost::shared_ptr<insitu::Filter> filter, QGraphicsItem* parent)
+FilterGraphicsItem::FilterGraphicsItem(boost::shared_ptr<insitu::Filter> filter,
+                                       QGraphicsItem* parent)
     : QGraphicsItem(parent)
 {
     this->filter = filter;
-    if (filter != nullptr) {
+    if (filter != nullptr)
+    {
         setFlag(QGraphicsItem::ItemIsSelectable, true);
         setFlag(QGraphicsItem::ItemIsMovable, true);
         setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
     }
 
     img = QImage(1, 1, QImage::Format_RGBA8888);
-    
+
     // some jank shit, don't touch
     connect(this, SIGNAL(delayedUpdate()), this, SLOT(queuedUpdate()),
             Qt::QueuedConnection);

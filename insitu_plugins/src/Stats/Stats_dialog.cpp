@@ -1,9 +1,8 @@
 #include <Stats/Stats_dialog.hpp>
 
-namespace insitu_plugins {
-
-StatsDialog::StatsDialog(insitu::Filter * parent_)
-: FilterDialog(parent_)
+namespace insitu_plugins
+{
+StatsDialog::StatsDialog(insitu::Filter* parent_) : FilterDialog(parent_)
 {
     cpuCBox = new QCheckBox(tr("Show CPU Usage"), this);
     cpuCBox->setChecked(true);
@@ -12,14 +11,14 @@ StatsDialog::StatsDialog(insitu::Filter * parent_)
     diskCBox = new QCheckBox(tr("Show Disk Usage"), this);
     diskCBox->setChecked(true);
 
-    colorDiag = new QColorDialog(QColor(0,0,0), this);
+    colorDiag = new QColorDialog(QColor(0, 0, 0), this);
     colorDiag->setOption(QColorDialog::DontUseNativeDialog, true);
     colorBtn = new QPushButton(tr("Select Text Color"), this);
 
     okButton = new QPushButton(tr("OK"), this);
     okButton->setDefault(true);
     cancelButton = new QPushButton(tr("Cancel"), this);
-        
+
     layout = new QGridLayout(this);
     layout->addWidget(cpuCBox, 0, 0, 1, 2);
     layout->addWidget(memCBox, 1, 0, 1, 2);
@@ -42,8 +41,8 @@ void StatsDialog::onColor(void)
 
 void StatsDialog::onOK(void)
 {
-    Json::Value & settings = parent->getSettingsValue();
-    
+    Json::Value& settings = parent->getSettingsValue();
+
     settings["showCPU"] = cpuCBox->isChecked();
     settings["showMem"] = memCBox->isChecked();
     settings["showDisk"] = diskCBox->isChecked();
@@ -57,5 +56,4 @@ void StatsDialog::onOK(void)
     accept();
 }
 
-} // end namespace insitu_plugins
-
+}    // end namespace insitu_plugins

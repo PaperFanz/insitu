@@ -2,19 +2,19 @@
 
 namespace insitu
 {
-
 FilterFactory::FilterFactory()
 {
     nLoader = new nodelet::Loader(
         boost::bind(&FilterFactory::create_instance, this, _1));
-    pLoader = new pluginlib::ClassLoader<insitu::Filter>("insitu", "insitu::Filter");
+    pLoader =
+        new pluginlib::ClassLoader<insitu::Filter>("insitu", "insitu::Filter");
 }
 
 FilterFactory::~FilterFactory(void)
 {
     if (nLoader != nullptr) delete nLoader;
 
-    /* 
+    /*
         not freeing here is definitely a memory leak but leaving it results in a
         class_loader warning that I'm not sure how to get rid of
 
@@ -30,10 +30,11 @@ std::vector<std::string> FilterFactory::getFilterList(void)
 }
 
 boost::shared_ptr<insitu::Filter>
-FilterFactory::loadFilter(const std::string& filter, const std::string& name, const std::string& topic)
+FilterFactory::loadFilter(const std::string& filter, const std::string& name,
+                          const std::string& topic)
 {
     nodelet::M_string rmap_;
-    nodelet::V_string argv_ = {topic};
+    nodelet::V_string argv_ = { topic };
 
     instance_.reset();
 

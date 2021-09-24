@@ -12,6 +12,8 @@ filter developers.
     - text label that can be resized, positioned, and colored
 3. Transparent
     - transparent rectangle that serves as a test filter
+4. Stats
+    - displays CPU, memory, and disk usage
 
 ## TODO:
 

@@ -35,7 +35,8 @@ public:
         Type = UserType + 42
     };
 
-    FilterGraphicsItem(boost::shared_ptr<insitu::Filter> filter = nullptr, QGraphicsItem* parent = nullptr);
+    FilterGraphicsItem(boost::shared_ptr<insitu::Filter> filter = nullptr,
+                       QGraphicsItem* parent = nullptr);
 
     int type(void) const override
     {
@@ -74,7 +75,6 @@ private:
     QSize imgSize;
 
     mutable QMutex img_mutex;
-
 };
 
 }    // namespace insitu

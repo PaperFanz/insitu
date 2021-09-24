@@ -48,9 +48,8 @@ void drawtorect(cv::Mat& mat, cv::Rect target, const std::string& str,
 
 const cv::Mat Label::apply(void)
 {
-    cv::Mat ret = cv::Mat(height(),
-                          width(), CV_8UC4,
-                          cv::Scalar(255, 255, 255, 0));
+    cv::Mat ret =
+        cv::Mat(height(), width(), CV_8UC4, cv::Scalar(255, 255, 255, 0));
 
     drawtorect(ret, cv::Rect(0, 0, ret.cols, ret.rows),
                getSettingsValue().get("text", "text not set").asString());
@@ -61,4 +60,3 @@ const cv::Mat Label::apply(void)
 }    // end namespace insitu_plugins
 
 PLUGINLIB_EXPORT_CLASS(insitu_plugins::Label, insitu::Filter);
-
