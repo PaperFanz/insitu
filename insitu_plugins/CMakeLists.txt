@@ -14,6 +14,8 @@ find_package(catkin REQUIRED COMPONENTS
     pluginlib
     roscpp
     insitu
+    topic_tools
+    ros_type_introspection
 )
 find_package(OpenCV 4.2 REQUIRED)
 find_package(jsoncpp REQUIRED)
@@ -53,6 +55,9 @@ set(insitu_plugins_HDRS
 
     inc/Notify/Notify.hpp
     inc/Notify/Notify_dialog.hpp
+
+    inc/Heartbeat/Heartbeat.hpp
+    inc/Heartbeat/Heartbeat_dialog.hpp
 )
 
 qt5_wrap_cpp(insitu_plugins_MOCS ${insitu_plugins_HDRS})
@@ -70,6 +75,9 @@ add_library(${PROJECT_NAME}
 
     src/Notify/Notify.cpp
     src/Notify/Notify_dialog.cpp
+
+    src/Heartbeat/Heartbeat.cpp
+    src/Heartbeat/Heartbeat_dialog.cpp
 
     ${insitu_plugins_MOCS}
 )
