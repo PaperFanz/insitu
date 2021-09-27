@@ -20,10 +20,7 @@ AddFilterDialog::AddFilterDialog(QWidget* parent) : QDialog(parent)
 
     filterList = new QListWidget();
 
-    listScroll = new QScrollArea();
-    listScroll->setWidget(filterList);
-
-    errMsg = new QErrorMessage();
+    errMsg = new QErrorMessage(this);
 
     // callbacks
     QObject::connect(addBtn, SIGNAL(clicked()), SLOT(AddFilter()));
@@ -31,16 +28,24 @@ AddFilterDialog::AddFilterDialog(QWidget* parent) : QDialog(parent)
     QObject::connect(filterList, SIGNAL(itemSelectionChanged()),
                      SLOT(onFilterChanged()));
 
-    layout = new QGridLayout();
-    layout->addWidget(filterList, 0, 0, 1, 3);
-    layout->addWidget(nameLabel, 1, 0);
-    layout->addWidget(nameEdit, 1, 1, 1, 2);
-    layout->addWidget(addBtn, 2, 0);
-    layout->addWidget(cancelBtn, 2, 2);
+    QHBoxLayout* filterbox = new QHBoxLayout();
+    filterbox->addWidget(filterList);
 
-    setLayout(layout);
+    QHBoxLayout* namebox = new QHBoxLayout();
+    namebox->addWidget(nameLabel);
+    namebox->addWidget(nameEdit, 1);
+
+    QHBoxLayout* buttonbox = new QHBoxLayout();
+    buttonbox->addWidget(addBtn);
+    buttonbox->addWidget(cancelBtn);
+
+    QVBoxLayout* vbox = new QVBoxLayout(this);
+    vbox->addLayout(filterbox, 1);
+    vbox->addLayout(namebox);
+    vbox->addLayout(buttonbox);
 
     setWindowTitle(tr("Add Filter"));
+    resize(500, 500);
 }
 
 AddFilterDialog::~AddFilterDialog(void)

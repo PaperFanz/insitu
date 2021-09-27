@@ -1,6 +1,6 @@
 # Insitu
 
-![InSitu Logo](docs/insitu-icon-block-alt.png)
+![InSitu Logo](docs/insitu-icon-block.png)
 
 - [Insitu](#insitu)
   * [Description](#description)

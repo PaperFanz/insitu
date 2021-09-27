@@ -24,9 +24,6 @@ private:
     QPushButton* cancelBtn;
     QErrorMessage* errMsg;
 
-    // layout
-    QGridLayout* layout;
-
     // loader
     FilterFactory* filterLoader;
 
