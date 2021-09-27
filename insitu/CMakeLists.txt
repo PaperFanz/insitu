@@ -66,7 +66,7 @@ set(INSITU_SRC
     src/filtered_view.cpp
     src/filter_factory.cpp
     src/filter_card.cpp
-    src/filter_info.cpp
+    src/filter_tree_item.cpp
     src/filter_properties.cpp
     src/filter_graphics_item.cpp
     src/filter_graphics_view.cpp
@@ -82,7 +82,7 @@ set(INSITU_SRC
     inc/filtered_view.hpp
     inc/filter_factory.hpp
     inc/filter_card.hpp
-    inc/filter_info.hpp
+    inc/filter_tree_item.hpp
     inc/filter_properties.hpp
     inc/filter_graphics_item.hpp
     inc/filter_graphics_view.hpp

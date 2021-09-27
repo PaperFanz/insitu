@@ -1,4 +1,5 @@
 #include "add_filter_dialog.hpp"
+#include "filter_tree_item.hpp"
 
 namespace insitu
 {
@@ -18,18 +19,20 @@ AddFilterDialog::AddFilterDialog(QWidget* parent) : QDialog(parent)
 
     nameLabel = new QLabel(tr("Filter name: "));
 
-    filterList = new QListWidget();
+    filterTree = new QTreeWidget();
+    filterTree->setColumnCount(3);
+    filterTree->setHeaderLabels({"Package", "Type", "Description"});
 
     errMsg = new QErrorMessage(this);
 
     // callbacks
     QObject::connect(addBtn, SIGNAL(clicked()), SLOT(AddFilter()));
     QObject::connect(cancelBtn, SIGNAL(clicked()), SLOT(reject()));
-    QObject::connect(filterList, SIGNAL(itemSelectionChanged()),
+    QObject::connect(filterTree, SIGNAL(itemSelectionChanged()),
                      SLOT(onFilterChanged()));
 
     QHBoxLayout* filterbox = new QHBoxLayout();
-    filterbox->addWidget(filterList);
+    filterbox->addWidget(filterTree);
 
     QHBoxLayout* namebox = new QHBoxLayout();
     namebox->addWidget(nameLabel);
@@ -60,19 +63,18 @@ void AddFilterDialog::AddFilter()
 {
     if (activeView != nullptr)
     {
-        if (filterList->currentItem() == nullptr)
+        FilterTreeItem* item = (FilterTreeItem*)filterTree->currentItem();
+        if (item == nullptr)
         {
             errMsg->showMessage(tr("No loadable filter!"));
             reject();
         }
 
-        QListWidgetItem* item = filterList->currentItem();
-        FilterInfo* fi = (FilterInfo*)filterList->itemWidget(item);
-
         try
         {
             auto filter = filterLoader->loadFilter(
-                fi->getFilterName(), nameEdit->text().toStdString(),
+                item->getFilterName(),
+                nameEdit->text().toStdString(),
                 activeView->getViewTopic());
             activeView->addFilter(filter);
 
@@ -95,11 +97,10 @@ void AddFilterDialog::AddFilter()
 
 void AddFilterDialog::onFilterChanged(void)
 {
-    QListWidgetItem* item = filterList->currentItem();
-    FilterInfo* fi = (FilterInfo*)filterList->itemWidget(item);
-    QString name = QString::fromStdString(activeView->getViewName() + "_" +
-                                          fi->getFilterType());
-    nameEdit->setText(name);
+    QString fn = filterTree->currentItem()->text(1);
+    if (!fn.isEmpty()) {
+        nameEdit->setText(QString::fromStdString(activeView->getViewName() + "_") + fn);
+    }
 }
 
 /*
@@ -108,7 +109,6 @@ void AddFilterDialog::onFilterChanged(void)
 void AddFilterDialog::open()
 {
     refreshFilters();
-    filterList->setCurrentRow(0);
     QDialog::open();
 }
 
@@ -127,20 +127,31 @@ void AddFilterDialog::setActiveView(FilteredView* view)
 */
 void AddFilterDialog::refreshFilters(void)
 {
-    filterList->clear();
+    filterTree->clear();
 
+    std::map<std::string, QTreeWidgetItem*> packageMap;
     auto classes = filterLoader->getFilterList();
     for (auto it = classes.begin(); it != classes.end(); ++it)
     {
-        QListWidgetItem* item = new QListWidgetItem();
-        FilterInfo* fi = new FilterInfo(*it, filterLoader->getName(*it),
-                                        filterLoader->getClassPackage(*it),
-                                        filterLoader->getClassDescription(*it));
-        item->setSizeHint(fi->sizeHint());
+        std::string name = filterLoader->getName(*it);
+        std::string package = filterLoader->getClassPackage(*it);
+        std::string description = filterLoader->getClassDescription(*it);
 
-        filterList->addItem(item);
-        filterList->setItemWidget(item, fi);
-        // qDebug("%s", it->c_str());
+        auto pkg = packageMap.find(package);
+        QTreeWidgetItem * pf;
+        if (pkg == packageMap.end()) {
+            pf = new QTreeWidgetItem(filterTree);
+            pf->setText(0, QString::fromStdString(package));
+            pf->setExpanded(true);
+            packageMap.insert({package, pf});
+        } else {
+            pf = pkg->second;
+        }
+        FilterTreeItem * fi = new FilterTreeItem(*it, name, description, pf);
+    }
+
+    for (int i = 0; i < filterTree->columnCount(); ++i) {
+        filterTree->resizeColumnToContents(i);
     }
 }
 

@@ -7,7 +7,6 @@
 // plugin includes
 #include "filter_factory.hpp"
 #include "filtered_view.hpp"
-#include "filter_info.hpp"
 
 namespace insitu
 {
@@ -16,8 +15,7 @@ class AddFilterDialog : public QDialog
     Q_OBJECT
 private:
     // ui elements
-    QListWidget* filterList;
-    QScrollArea* listScroll;
+    QTreeWidget* filterTree;
     QLineEdit* nameEdit;
     QLabel* nameLabel;
     QPushButton* addBtn;
