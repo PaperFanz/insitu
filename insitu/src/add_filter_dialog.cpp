@@ -64,28 +64,28 @@ void AddFilterDialog::AddFilter()
     if (activeView != nullptr)
     {
         FilterTreeItem* item = (FilterTreeItem*)filterTree->currentItem();
-        if (item == nullptr)
+        if (item == nullptr || item->text(1).isEmpty())
         {
             errMsg->showMessage(tr("No loadable filter!"));
             reject();
-        }
+        } else {
+            try
+            {
+                auto filter = filterLoader->loadFilter(
+                    item->getFilterName(),
+                    nameEdit->text().toStdString(),
+                    activeView->getViewTopic());
+                activeView->addFilter(filter);
 
-        try
-        {
-            auto filter = filterLoader->loadFilter(
-                item->getFilterName(),
-                nameEdit->text().toStdString(),
-                activeView->getViewTopic());
-            activeView->addFilter(filter);
+                // reset so we don't segfault on a deleted view
+                activeView = nullptr;
 
-            // reset so we don't segfault on a deleted view
-            activeView = nullptr;
-
-            accept();
-        }
-        catch (std::runtime_error e)
-        {
-            errMsg->showMessage(QString::fromStdString(e.what()));
+                accept();
+            }
+            catch (std::runtime_error e)
+            {
+                errMsg->showMessage(QString::fromStdString(e.what()));
+            }
         }
     }
     else
