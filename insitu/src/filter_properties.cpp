@@ -106,10 +106,24 @@ void FilterProperties::onSelectionChanged(void)
         boost::shared_ptr<insitu::Filter> filter =
             activeFilterItem->getFilter();
         savedSize = filter->getSize();
+        widthSpinBox->blockSignals(true);
+        heightSpinBox->blockSignals(true);
+        setImageSizeCheckBox->blockSignals(true);
+        aspectRatioCheckBox->blockSignals(true);
+        lockFilterCheckBox->blockSignals(true);
         widthSpinBox->setValue(filter->width());
         heightSpinBox->setValue(filter->height());
         xSpinBox->setValue(activeFilterItem->x());
         ySpinBox->setValue(activeFilterItem->y());
+        setImageSizeCheckBox->setChecked(filter->property(insitu::setToImageSize) || filter->lockToImageSize());
+        setImageSizeCheckBox->setDisabled(filter->lockToImageSize());
+        aspectRatioCheckBox->setChecked(filter->property(insitu::keepAspectRatio));
+        lockFilterCheckBox->setChecked(filter->property(insitu::lockFilterProperties));
+        widthSpinBox->blockSignals(false);
+        heightSpinBox->blockSignals(false);
+        setImageSizeCheckBox->blockSignals(false);
+        aspectRatioCheckBox->blockSignals(false);
+        lockFilterCheckBox->blockSignals(false);
 
         connect(activeFilterItem, SIGNAL(moved(QPointF)), this,
                 SLOT(onFilterMoved(QPointF)));
@@ -175,17 +189,20 @@ void FilterProperties::onFilterMoved(QPointF pos)
 
 void FilterProperties::onAspectRatioChanged(int state)
 {
-    if (aspectRatioCheckBox->isChecked())
+    bool keepAspectRatio = aspectRatioCheckBox->isChecked();
+    if (keepAspectRatio)
     {
         aspectRatio =
             double(widthSpinBox->value()) / double(heightSpinBox->value());
     }
+    activeFilterItem->getFilter()->setProperty(insitu::keepAspectRatio, keepAspectRatio);
 }
 
 void FilterProperties::onSetImageSizeChanged(int state)
 {
     bool setImageSize = setImageSizeCheckBox->isChecked();
     boost::shared_ptr<insitu::Filter> filter = activeFilterItem->getFilter();
+    filter->setProperty(insitu::setToImageSize, setImageSize);
     if (setImageSize)
     {
         aspectRatioCheckBox->setChecked(false);
@@ -210,6 +227,7 @@ void FilterProperties::onLockFilterChanged(int state)
 {
     bool locked = lockFilterCheckBox->isChecked();
     bool setImageSize = setImageSizeCheckBox->isChecked();
+    activeFilterItem->getFilter()->setProperty(insitu::lockFilterProperties, locked);
 
     /* disable filter interaction as needed */
     activeFilterItem->setFlag(QGraphicsItem::ItemIsMovable, !locked);
@@ -229,9 +247,11 @@ void FilterProperties::onLockFilterChanged(int state)
 */
 void FilterProperties::setDisabled(bool disable)
 {
-    widthSpinBox->setDisabled(disable);
-    heightSpinBox->setDisabled(disable);
-    aspectRatioCheckBox->setDisabled(disable);
+    bool locked = lockFilterCheckBox->isChecked();
+    bool setImageSize = setImageSizeCheckBox->isChecked();
+    widthSpinBox->setDisabled(locked || setImageSize);
+    heightSpinBox->setDisabled(locked || setImageSize);
+    aspectRatioCheckBox->setDisabled(locked || setImageSize);
     setImageSizeCheckBox->setDisabled(disable);
     xSpinBox->setDisabled(disable);
     ySpinBox->setDisabled(disable);

@@ -87,19 +87,26 @@ public Q_SLOTS:
 
 };    // class FilterWatchdog
 
+typedef enum FilterProps {
+    setToImageSize = 1,
+    keepAspectRatio = 2,
+    lockFilterProperties = 4
+} FilterProps;
+
 class Filter : public nodelet::Nodelet
 {
 private:
-    cv::Mat filterBuf;
-
+    /* implement async updates */
     std::promise<void> exitObj;
-
     std::thread filterThread;
-
     FilterWatchdog filterWatchdog;
 
+    /* track filter properties */
     QSize size;
+    int props;
 
+    /* bookkeeping */
+    cv::Mat filterBuf;
     std::string type;
 
 protected:
@@ -119,13 +126,7 @@ public:
     /*
         @Filter implementors: reimplement this function to apply filter effects
     */
-    virtual const cv::Mat apply(void)
-    {
-        cv::Mat ret =
-            cv::Mat(width(), height(), CV_8UC4, cv::Scalar(255, 255, 255, 0));
-
-        return ret;
-    }
+    virtual const cv::Mat apply(void) = 0;
 
     /*
         @Filter implementors: reimplement this function to return true if your
@@ -187,11 +188,31 @@ public:
     void save(Json::Value& json)
     {
         json = settings;
+        json["setToImageSize"] = property(insitu::setToImageSize);
+        json["keepAspectRatio"] = property(insitu::keepAspectRatio);
+        json["lockFilterProperties"] = property(insitu::lockFilterProperties);
     }
 
     void restore(Json::Value& json)
     {
         settings = json;
+        setProperty(insitu::setToImageSize, json.get("setToImageSize", false).asBool());
+        setProperty(insitu::keepAspectRatio, json.get("keepAspectRatio", false).asBool());
+        setProperty(insitu::lockFilterProperties, json.get("lockFilterProperties", false).asBool());
+    }
+
+    void setProperty(insitu::FilterProps prop, bool val = true)
+    {
+        if (val) {
+            props |= prop;
+        } else {
+            props &= ~prop;
+        }
+    }
+
+    bool property(insitu::FilterProps prop) const
+    {
+        return (props & prop);
     }
 
     const std::string& name(void) const

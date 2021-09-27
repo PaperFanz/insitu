@@ -18,6 +18,11 @@ public:
         return true;
     }
 
+    bool lockToImageSize(void)
+    {
+        return true;
+    }
+
 private:
     void filterInit(void);
 
