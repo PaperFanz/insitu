@@ -12,6 +12,8 @@ filter developers.
     - text label that can be resized, positioned, and colored
 3. Transparent
     - transparent rectangle that serves as a test filter
+4. Heartbeat
+    - a circle that turns red if a topic of interest stops publishing
 
 ## TODO:
 
