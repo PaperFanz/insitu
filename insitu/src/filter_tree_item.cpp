@@ -6,8 +6,8 @@ namespace insitu
     Constructor/Destructor
 */
 FilterTreeItem::FilterTreeItem(std::string name_, std::string type_,
-                       std::string description_,
-                       QTreeWidgetItem* parent)
+                               std::string description_,
+                               QTreeWidgetItem* parent)
     : QTreeWidgetItem(parent)
 {
     name = name_;

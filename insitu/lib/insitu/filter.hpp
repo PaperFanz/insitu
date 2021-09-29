@@ -87,7 +87,8 @@ public Q_SLOTS:
 
 };    // class FilterWatchdog
 
-typedef enum FilterProps {
+typedef enum FilterProps
+{
     setToImageSize = 1,
     keepAspectRatio = 2,
     lockFilterProperties = 4
@@ -196,16 +197,22 @@ public:
     void restore(Json::Value& json)
     {
         settings = json;
-        setProperty(insitu::setToImageSize, json.get("setToImageSize", false).asBool());
-        setProperty(insitu::keepAspectRatio, json.get("keepAspectRatio", false).asBool());
-        setProperty(insitu::lockFilterProperties, json.get("lockFilterProperties", false).asBool());
+        setProperty(insitu::setToImageSize,
+                    json.get("setToImageSize", false).asBool());
+        setProperty(insitu::keepAspectRatio,
+                    json.get("keepAspectRatio", false).asBool());
+        setProperty(insitu::lockFilterProperties,
+                    json.get("lockFilterProperties", false).asBool());
     }
 
     void setProperty(insitu::FilterProps prop, bool val = true)
     {
-        if (val) {
+        if (val)
+        {
             props |= prop;
-        } else {
+        }
+        else
+        {
             props &= ~prop;
         }
     }

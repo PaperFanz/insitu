@@ -115,10 +115,14 @@ void FilterProperties::onSelectionChanged(void)
         heightSpinBox->setValue(filter->height());
         xSpinBox->setValue(activeFilterItem->x());
         ySpinBox->setValue(activeFilterItem->y());
-        setImageSizeCheckBox->setChecked(filter->property(insitu::setToImageSize) || filter->lockToImageSize());
+        setImageSizeCheckBox->setChecked(
+            filter->property(insitu::setToImageSize) ||
+            filter->lockToImageSize());
         setImageSizeCheckBox->setDisabled(filter->lockToImageSize());
-        aspectRatioCheckBox->setChecked(filter->property(insitu::keepAspectRatio));
-        lockFilterCheckBox->setChecked(filter->property(insitu::lockFilterProperties));
+        aspectRatioCheckBox->setChecked(
+            filter->property(insitu::keepAspectRatio));
+        lockFilterCheckBox->setChecked(
+            filter->property(insitu::lockFilterProperties));
         widthSpinBox->blockSignals(false);
         heightSpinBox->blockSignals(false);
         setImageSizeCheckBox->blockSignals(false);
@@ -195,7 +199,8 @@ void FilterProperties::onAspectRatioChanged(int state)
         aspectRatio =
             double(widthSpinBox->value()) / double(heightSpinBox->value());
     }
-    activeFilterItem->getFilter()->setProperty(insitu::keepAspectRatio, keepAspectRatio);
+    activeFilterItem->getFilter()->setProperty(insitu::keepAspectRatio,
+                                               keepAspectRatio);
 }
 
 void FilterProperties::onSetImageSizeChanged(int state)
@@ -227,7 +232,8 @@ void FilterProperties::onLockFilterChanged(int state)
 {
     bool locked = lockFilterCheckBox->isChecked();
     bool setImageSize = setImageSizeCheckBox->isChecked();
-    activeFilterItem->getFilter()->setProperty(insitu::lockFilterProperties, locked);
+    activeFilterItem->getFilter()->setProperty(insitu::lockFilterProperties,
+                                               locked);
 
     /* disable filter interaction as needed */
     activeFilterItem->setFlag(QGraphicsItem::ItemIsMovable, !locked);

@@ -146,7 +146,8 @@ void FilteredView::refreshTopics(void)
     topicBox->clear();
     topicBox->addItems(getTopicList());
     topicBox->blockSignals(save);
-    if (topicBox->count() > 0) {
+    if (topicBox->count() > 0)
+    {
         int idx = topicBox->findText(save_topic);
         idx = std::max(0, idx);
         topicBox->setCurrentIndex(idx);

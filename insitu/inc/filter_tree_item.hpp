@@ -15,8 +15,8 @@ private:
     std::string name;
 
 public:
-    FilterTreeItem(std::string name_, std::string type_, 
-            std::string description_, QTreeWidgetItem* parent);
+    FilterTreeItem(std::string name_, std::string type_,
+                   std::string description_, QTreeWidgetItem* parent);
 
     const std::string& getFilterName(void) const;
 };

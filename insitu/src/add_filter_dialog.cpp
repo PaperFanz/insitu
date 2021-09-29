@@ -21,7 +21,7 @@ AddFilterDialog::AddFilterDialog(QWidget* parent) : QDialog(parent)
 
     filterTree = new QTreeWidget();
     filterTree->setColumnCount(3);
-    filterTree->setHeaderLabels({"Package", "Type", "Description"});
+    filterTree->setHeaderLabels({ "Package", "Type", "Description" });
 
     errMsg = new QErrorMessage(this);
 
@@ -68,12 +68,13 @@ void AddFilterDialog::AddFilter()
         {
             errMsg->showMessage(tr("No loadable filter!"));
             reject();
-        } else {
+        }
+        else
+        {
             try
             {
                 auto filter = filterLoader->loadFilter(
-                    item->getFilterName(),
-                    nameEdit->text().toStdString(),
+                    item->getFilterName(), nameEdit->text().toStdString(),
                     activeView->getViewTopic());
                 activeView->addFilter(filter);
 
@@ -98,8 +99,10 @@ void AddFilterDialog::AddFilter()
 void AddFilterDialog::onFilterChanged(void)
 {
     QString fn = filterTree->currentItem()->text(1);
-    if (!fn.isEmpty()) {
-        nameEdit->setText(QString::fromStdString(activeView->getViewName() + "_") + fn);
+    if (!fn.isEmpty())
+    {
+        nameEdit->setText(
+            QString::fromStdString(activeView->getViewName() + "_") + fn);
     }
 }
 
@@ -138,19 +141,23 @@ void AddFilterDialog::refreshFilters(void)
         std::string description = filterLoader->getClassDescription(*it);
 
         auto pkg = packageMap.find(package);
-        QTreeWidgetItem * pf;
-        if (pkg == packageMap.end()) {
+        QTreeWidgetItem* pf;
+        if (pkg == packageMap.end())
+        {
             pf = new QTreeWidgetItem(filterTree);
             pf->setText(0, QString::fromStdString(package));
             pf->setExpanded(true);
-            packageMap.insert({package, pf});
-        } else {
+            packageMap.insert({ package, pf });
+        }
+        else
+        {
             pf = pkg->second;
         }
-        FilterTreeItem * fi = new FilterTreeItem(*it, name, description, pf);
+        FilterTreeItem* fi = new FilterTreeItem(*it, name, description, pf);
     }
 
-    for (int i = 0; i < filterTree->columnCount(); ++i) {
+    for (int i = 0; i < filterTree->columnCount(); ++i)
+    {
         filterTree->resizeColumnToContents(i);
     }
 }
