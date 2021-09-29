@@ -70,7 +70,7 @@ private:
     ros::Time lastFrameTime;
     image_transport::Subscriber sub;
     image_transport::Publisher pub;
-    bool topicChanged;
+    bool refitBaseImage;
 
     // OpenCV
     uint32_t frames;
@@ -101,6 +101,10 @@ public Q_SLOTS:
     void onFilterOrderChanged(void);
 
     void updateFilter(QGraphicsItem* item, const cv::Mat& update);
+
+signals:
+
+    void topicChanged(const QString& topic);
 
 public:
     FilteredView(const ros::NodeHandle& parent_, QString _name, QString _topic,

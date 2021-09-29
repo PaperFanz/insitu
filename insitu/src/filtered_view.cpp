@@ -1,4 +1,5 @@
 #include "filtered_view.hpp"
+#include <algorithm>
 #include <string>
 #include "add_filter_dialog.hpp"
 #include "filter_card.hpp"
@@ -87,6 +88,8 @@ FilteredView::FilteredView(const ros::NodeHandle& parent_, QString _name,
 
     connect(topicBox, SIGNAL(currentIndexChanged(const QString&)),
             SLOT(onTopicChange(const QString&)));
+    connect(this, SIGNAL(topicChanged(const QString&)),
+            SLOT(onTopicChange(const QString&)));
     connect(refreshTopicButton, SIGNAL(clicked()), SLOT(refreshTopics()));
     connect(addFilterButton, SIGNAL(clicked()), SLOT(openFilterDialog()));
     connect(rmFilterButton, SIGNAL(clicked()), SLOT(rmFilter()));
@@ -138,12 +141,17 @@ FilteredView::~FilteredView(void)
 */
 void FilteredView::refreshTopics(void)
 {
+    bool save = topicBox->blockSignals(true);
     QString save_topic = topicBox->currentText();
     topicBox->clear();
     topicBox->addItems(getTopicList());
-    int idx = topicBox->findText(save_topic);
-    idx = idx == -1 ? 0 : idx;
-    topicBox->setCurrentIndex(idx);
+    topicBox->blockSignals(save);
+    if (topicBox->count() > 0) {
+        int idx = topicBox->findText(save_topic);
+        idx = std::max(0, idx);
+        topicBox->setCurrentIndex(idx);
+        emit topicChanged(topicBox->currentText());
+    }
 }
 
 void FilteredView::openFilterDialog(void)
@@ -167,7 +175,7 @@ void FilteredView::onTopicChange(QString topic_transport)
         image_transport::ImageTransport it(*nh);
         image_transport::TransportHints hints(transport);
 
-        topicChanged = true;
+        refitBaseImage = true;
         sub = it.subscribe(topic, 1, &FilteredView::callbackImg, this, hints);
     }
     else
@@ -371,10 +379,10 @@ void FilteredView::callbackImg(const sensor_msgs::Image::ConstPtr& msg)
     }
 
     rosImg->updateFilter(cv_ptr->image);
-    if (topicChanged)
+    if (refitBaseImage)
     {
         filterView->fitToRoot();
-        topicChanged = false;
+        refitBaseImage = false;
     }
 
     // republish
