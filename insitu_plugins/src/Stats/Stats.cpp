@@ -134,13 +134,23 @@ float Stats::readMemPercent(void)
 
     if (stat.is_open())
     {
+        /* dirty dirty hardcoded /proc/meminfo parsing */
         std::getline(stat, mem);
         std::string discard;
-        float tot, free;
+        float tot, free, cached, sreclaimable, buffers;
         std::istringstream(mem) >> discard >> tot;
         std::getline(stat, mem);
         std::istringstream(mem) >> discard >> free;
-        res = 100 - (100 * free / tot);
+        std::getline(stat, mem); /* skip memAvailable line */
+        std::getline(stat, mem);
+        std::istringstream(mem) >> discard >> buffers;
+        std::getline(stat, mem);
+        std::istringstream(mem) >> discard >> cached;
+        /* skip lines between cached and sReclaimable */
+        for (int i = 0; i < 18; ++i) std::getline(stat, mem);
+        std::getline(stat, mem);
+        std::istringstream(mem) >> discard >> sreclaimable;
+        res = 100 * (tot - free - cached - sreclaimable - buffers) / tot;
     }
 
     return res;

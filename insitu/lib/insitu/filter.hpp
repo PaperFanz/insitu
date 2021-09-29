@@ -158,7 +158,7 @@ public:
         while (exitCond.wait_for(1ms) == std::future_status::timeout)
         {
             updateFilter(apply());
-            std::this_thread::sleep_for(10ms);
+            std::this_thread::sleep_for(15666us);
         }
     }
 
