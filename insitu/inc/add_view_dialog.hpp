@@ -30,7 +30,7 @@ private:
     QHBoxLayout* buttonHBox;
 
     QTabWidget* tabmanager;
-    
+
     QErrorMessage* errMsg;
 
     QList<QString> getModeList(void);
@@ -46,4 +46,3 @@ public:
 
 }    // namespace insitu
 #endif
-

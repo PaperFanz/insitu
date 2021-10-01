@@ -22,7 +22,7 @@ private:
     QLabel* widthLabel;
     QSpinBox* widthSpinBox;
     QLabel* heightLabel;
-    QSpinBox * heightSpinBox;
+    QSpinBox* heightSpinBox;
     QCheckBox* aspectRatioCheckBox;
     QCheckBox* setImageSizeCheckBox;
 
@@ -38,12 +38,12 @@ private:
     QGridLayout* layout;
 
     /* data */
-    FilterGraphicsView * filterView;
-    FilterGraphicsItem * activeFilterItem;
+    FilterGraphicsView* filterView;
+    FilterGraphicsItem* activeFilterItem;
 
     QSize savedSize;
 
-    double aspectRatio; // width/height
+    double aspectRatio;    // width/height
 
     int lastWidth;
     int lastHeight;
@@ -73,10 +73,8 @@ public:
     FilterProperties(FilterGraphicsView* filterView, QWidget* parent = nullptr);
 
     void setDisabled(bool disable = true);
-
 };
 
 }    // end namespace insitu
 
-#endif // insitu_FILTER_PROPERTIES_HPP
-
+#endif    // insitu_FILTER_PROPERTIES_HPP

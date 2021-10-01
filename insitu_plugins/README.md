@@ -14,6 +14,8 @@ filter developers.
     - transparent rectangle that serves as a test filter
 4. Heartbeat
     - a circle that turns red if a topic of interest stops publishing
+5. Stats
+    - displays CPU, memory, and disk usage
 
 ## TODO:
 

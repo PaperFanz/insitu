@@ -40,7 +40,8 @@ ModeContainer::ModeContainer(QString _name, QWidget* parent) : QWidget(parent)
 }
 
 ModeContainer::ModeContainer(const Json::Value& json, QWidget* parent)
-    : ModeContainer(QString::fromStdString(json.get("name", "").asString()), parent)
+    : ModeContainer(QString::fromStdString(json.get("name", "").asString()),
+                    parent)
 {
     restore(json);
 }
@@ -80,11 +81,13 @@ const ros::NodeHandle& ModeContainer::getNodeHandle(void)
     return *nh;
 }
 
-void ModeContainer::save(Json::Value &json) const
+void ModeContainer::save(Json::Value& json) const
 {
     json["name"] = name;
-    QList<QMdiSubWindow*> viewList = container->subWindowList(QMdiArea::StackingOrder);
-    for (int i = 0; i < viewList.size(); ++i) {
+    QList<QMdiSubWindow*> viewList =
+        container->subWindowList(QMdiArea::StackingOrder);
+    for (int i = 0; i < viewList.size(); ++i)
+    {
         FilteredView* view = static_cast<FilteredView*>(viewList[i]->widget());
         Json::Value viewJson;
         view->save(viewJson);
@@ -92,16 +95,18 @@ void ModeContainer::save(Json::Value &json) const
     }
 }
 
-void ModeContainer::restore(const Json::Value &json)
+void ModeContainer::restore(const Json::Value& json)
 {
     name = json.get("name", "").asString();
-    if (json.isMember("views")) {
-        for (int i = 0; i < json["views"].size(); ++i) {
-            // qDebug(("Adding " + json["views"].get(i, "").asString()).c_str());
+    if (json.isMember("views"))
+    {
+        for (int i = 0; i < json["views"].size(); ++i)
+        {
+            // qDebug(("Adding " + json["views"].get(i,
+            // "").asString()).c_str());
             addView(new FilteredView(getNodeHandle(), json["views"][i], this));
         }
     }
 }
 
 }    // namespace insitu
-

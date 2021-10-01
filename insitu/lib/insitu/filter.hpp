@@ -45,11 +45,10 @@ class FilterWatchdog : public QObject
     Q_OBJECT
 private:
     QGraphicsItem* graphicsItem;
-    
+
     std::string baseImageTopic;
 
 public:
-
     void notify(const cv::Mat& update)
     {
         emit filterUpdated(graphicsItem, update);
@@ -88,19 +87,27 @@ public Q_SLOTS:
 
 };    // class FilterWatchdog
 
+typedef enum FilterProps
+{
+    setToImageSize = 1,
+    keepAspectRatio = 2,
+    lockFilterProperties = 4
+} FilterProps;
+
 class Filter : public nodelet::Nodelet
 {
 private:
-    cv::Mat filterBuf;
-
+    /* implement async updates */
     std::promise<void> exitObj;
-
     std::thread filterThread;
-
     FilterWatchdog filterWatchdog;
 
+    /* track filter properties */
     QSize size;
+    int props;
 
+    /* bookkeeping */
+    cv::Mat filterBuf;
     std::string type;
 
 protected:
@@ -117,17 +124,10 @@ protected:
     }
 
 public:
-
     /*
         @Filter implementors: reimplement this function to apply filter effects
     */
-    virtual const cv::Mat apply(void)
-    {
-        cv::Mat ret = cv::Mat(width(), height(), CV_8UC4,
-                              cv::Scalar(255, 255, 255, 0));
-
-        return ret;
-    }
+    virtual const cv::Mat apply(void) = 0;
 
     /*
         @Filter implementors: reimplement this function to return true if your
@@ -159,7 +159,7 @@ public:
         while (exitCond.wait_for(1ms) == std::future_status::timeout)
         {
             updateFilter(apply());
-            std::this_thread::sleep_for(10ms);
+            std::this_thread::sleep_for(15666us);
         }
     }
 
@@ -189,11 +189,37 @@ public:
     void save(Json::Value& json)
     {
         json = settings;
+        json["setToImageSize"] = property(insitu::setToImageSize);
+        json["keepAspectRatio"] = property(insitu::keepAspectRatio);
+        json["lockFilterProperties"] = property(insitu::lockFilterProperties);
     }
 
     void restore(Json::Value& json)
     {
         settings = json;
+        setProperty(insitu::setToImageSize,
+                    json.get("setToImageSize", false).asBool());
+        setProperty(insitu::keepAspectRatio,
+                    json.get("keepAspectRatio", false).asBool());
+        setProperty(insitu::lockFilterProperties,
+                    json.get("lockFilterProperties", false).asBool());
+    }
+
+    void setProperty(insitu::FilterProps prop, bool val = true)
+    {
+        if (val)
+        {
+            props |= prop;
+        }
+        else
+        {
+            props &= ~prop;
+        }
+    }
+
+    bool property(insitu::FilterProps prop) const
+    {
+        return (props & prop);
     }
 
     const std::string& name(void) const
@@ -206,7 +232,8 @@ public:
         return type;
     }
 
-    void setType(const std::string& type) {
+    void setType(const std::string& type)
+    {
         this->type = type;
     }
 
@@ -264,16 +291,17 @@ public:
     {
         nodelet::V_string argv = getMyArgv();
         filterWatchdog.setImageTopic(argv[0]);
-        size = QSize(0,0);
+        size = QSize(0, 0);
 
         filterInit();
     }
 
 protected:
     /*
-        @Filter implementors:  must override this function with any initialization
-        required; the creating of data structures, global variables, etc. All
-        initialization of the ROS infrastructure must be put into this function.
+        @Filter implementors:  must override this function with any
+       initialization required; the creating of data structures, global
+       variables, etc. All initialization of the ROS infrastructure must be put
+       into this function.
     */
     virtual void filterInit(void) = 0;
 

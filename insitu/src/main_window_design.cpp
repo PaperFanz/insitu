@@ -65,6 +65,7 @@ void main_window_design::setupUI(QMainWindow* mainwindow)
     tabmanager->setMinimumSize(QSize(100, 0));
     tabmanager->setLocale(QLocale(QLocale::English, QLocale::UnitedStates));
     tabmanager->setMovable(true);
+    tabmanager->setTabsClosable(true);
     insitu::addNamedWidget("tabmanager", tabmanager);
     hbox->addWidget(tabmanager);
 

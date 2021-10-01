@@ -32,7 +32,7 @@ class FilteredView : public QWidget
     Q_OBJECT
 private:
     // UI elements
-    
+
     /* top bar */
     QComboBox* topicBox;
     QPushButton* refreshTopicButton;
@@ -40,16 +40,16 @@ private:
     QPushButton* rmFilterButton;
     QCheckBox* republishCheckBox;
     QCheckBox* showFilterPaneCheckBox;
-    
+
     /* side bar */
     QListWidget* filterList;
     FilterProperties* filterProps;
-    
+
     /* main view */
     FilterGraphicsView* filterView;
     QGraphicsScene* filterScene;
     FilterGraphicsItem* rosImg;
-    
+
     /* bottom bar */
     QLabel* fpsLabel;
     QErrorMessage* errMsg;
@@ -70,7 +70,7 @@ private:
     ros::Time lastFrameTime;
     image_transport::Subscriber sub;
     image_transport::Publisher pub;
-    bool topicChanged;
+    bool refitBaseImage;
 
     // OpenCV
     uint32_t frames;
@@ -102,11 +102,16 @@ public Q_SLOTS:
 
     void updateFilter(QGraphicsItem* item, const cv::Mat& update);
 
+signals:
+
+    void topicChanged(const QString& topic);
+
 public:
     FilteredView(const ros::NodeHandle& parent_, QString _name, QString _topic,
                  QWidget* parent = nullptr);
 
-    FilteredView(const ros::NodeHandle& parent_, const Json::Value& json, QWidget* parent = nullptr);
+    FilteredView(const ros::NodeHandle& parent_, const Json::Value& json,
+                 QWidget* parent = nullptr);
 
     ~FilteredView(void);
 

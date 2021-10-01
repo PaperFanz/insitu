@@ -56,6 +56,9 @@ set(insitu_plugins_HDRS
     inc/Notify/Notify.hpp
     inc/Notify/Notify_dialog.hpp
 
+    inc/Stats/Stats.hpp
+    inc/Stats/Stats_dialog.hpp
+    
     inc/Heartbeat/Heartbeat.hpp
     inc/Heartbeat/Heartbeat_dialog.hpp
 )
@@ -75,6 +78,9 @@ add_library(${PROJECT_NAME}
 
     src/Notify/Notify.cpp
     src/Notify/Notify_dialog.cpp
+
+    src/Stats/Stats.cpp
+    src/Stats/Stats_dialog.cpp
 
     src/Heartbeat/Heartbeat.cpp
     src/Heartbeat/Heartbeat_dialog.cpp

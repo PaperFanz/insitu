@@ -3,28 +3,25 @@
 
 #include <insitu/filter.hpp>
 
-namespace insitu_plugins {
-
+namespace insitu_plugins
+{
 class NotifyDialog : public insitu::FilterDialog
 {
-Q_OBJECT
+    Q_OBJECT
 private:
+    QPushButton* okButton;
+    QPushButton* cancelButton;
 
-    QPushButton * okButton;
-    QPushButton * cancelButton;
-
-    QGridLayout * layout;
+    QGridLayout* layout;
 
 public Q_SLOTS:
 
     void onOK(void);
 
 public:
-    NotifyDialog(insitu::Filter * parent_);
-
+    NotifyDialog(insitu::Filter* parent_);
 };
 
-} // end namespace insitu_plugins
+}    // end namespace insitu_plugins
 
-#endif // end insitu_plugins_Notify_DIALOG_HPP
-
+#endif    // end insitu_plugins_Notify_DIALOG_HPP

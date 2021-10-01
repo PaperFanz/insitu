@@ -1,4 +1,5 @@
 #include "add_filter_dialog.hpp"
+#include "filter_tree_item.hpp"
 
 namespace insitu
 {
@@ -18,29 +19,36 @@ AddFilterDialog::AddFilterDialog(QWidget* parent) : QDialog(parent)
 
     nameLabel = new QLabel(tr("Filter name: "));
 
-    filterList = new QListWidget();
+    filterTree = new QTreeWidget();
+    filterTree->setColumnCount(3);
+    filterTree->setHeaderLabels({ "Package", "Type", "Description" });
 
-    listScroll = new QScrollArea();
-    listScroll->setWidget(filterList);
-
-    errMsg = new QErrorMessage();
+    errMsg = new QErrorMessage(this);
 
     // callbacks
     QObject::connect(addBtn, SIGNAL(clicked()), SLOT(AddFilter()));
     QObject::connect(cancelBtn, SIGNAL(clicked()), SLOT(reject()));
-    QObject::connect(filterList, SIGNAL(itemSelectionChanged()),
+    QObject::connect(filterTree, SIGNAL(itemSelectionChanged()),
                      SLOT(onFilterChanged()));
 
-    layout = new QGridLayout();
-    layout->addWidget(filterList, 0, 0, 1, 3);
-    layout->addWidget(nameLabel, 1, 0);
-    layout->addWidget(nameEdit, 1, 1, 1, 2);
-    layout->addWidget(addBtn, 2, 0);
-    layout->addWidget(cancelBtn, 2, 2);
+    QHBoxLayout* filterbox = new QHBoxLayout();
+    filterbox->addWidget(filterTree);
 
-    setLayout(layout);
+    QHBoxLayout* namebox = new QHBoxLayout();
+    namebox->addWidget(nameLabel);
+    namebox->addWidget(nameEdit, 1);
+
+    QHBoxLayout* buttonbox = new QHBoxLayout();
+    buttonbox->addWidget(addBtn);
+    buttonbox->addWidget(cancelBtn);
+
+    QVBoxLayout* vbox = new QVBoxLayout(this);
+    vbox->addLayout(filterbox, 1);
+    vbox->addLayout(namebox);
+    vbox->addLayout(buttonbox);
 
     setWindowTitle(tr("Add Filter"));
+    resize(500, 500);
 }
 
 AddFilterDialog::~AddFilterDialog(void)
@@ -55,29 +63,30 @@ void AddFilterDialog::AddFilter()
 {
     if (activeView != nullptr)
     {
-        if (filterList->currentItem() == nullptr)
+        FilterTreeItem* item = (FilterTreeItem*)filterTree->currentItem();
+        if (item == nullptr || item->text(1).isEmpty())
         {
             errMsg->showMessage(tr("No loadable filter!"));
             reject();
         }
-
-        QListWidgetItem* item = filterList->currentItem();
-        FilterInfo* fi = (FilterInfo*)filterList->itemWidget(item);
-
-        try
+        else
         {
-            auto filter = filterLoader->loadFilter(
-                fi->getFilterName(), nameEdit->text().toStdString(), activeView->getViewTopic());
-            activeView->addFilter(filter);
+            try
+            {
+                auto filter = filterLoader->loadFilter(
+                    item->getFilterName(), nameEdit->text().toStdString(),
+                    activeView->getViewTopic());
+                activeView->addFilter(filter);
 
-            // reset so we don't segfault on a deleted view
-            activeView = nullptr;
-            
-            accept();
-        }
-        catch (std::runtime_error e)
-        {
-            errMsg->showMessage(QString::fromStdString(e.what()));
+                // reset so we don't segfault on a deleted view
+                activeView = nullptr;
+
+                accept();
+            }
+            catch (std::runtime_error e)
+            {
+                errMsg->showMessage(QString::fromStdString(e.what()));
+            }
         }
     }
     else
@@ -89,11 +98,12 @@ void AddFilterDialog::AddFilter()
 
 void AddFilterDialog::onFilterChanged(void)
 {
-    QListWidgetItem* item = filterList->currentItem();
-    FilterInfo* fi = (FilterInfo*)filterList->itemWidget(item);
-    QString name = QString::fromStdString(activeView->getViewName() + "_" +
-                                          fi->getFilterType());
-    nameEdit->setText(name);
+    QString fn = filterTree->currentItem()->text(1);
+    if (!fn.isEmpty())
+    {
+        nameEdit->setText(
+            QString::fromStdString(activeView->getViewName() + "_") + fn);
+    }
 }
 
 /*
@@ -102,7 +112,6 @@ void AddFilterDialog::onFilterChanged(void)
 void AddFilterDialog::open()
 {
     refreshFilters();
-    filterList->setCurrentRow(0);
     QDialog::open();
 }
 
@@ -121,20 +130,35 @@ void AddFilterDialog::setActiveView(FilteredView* view)
 */
 void AddFilterDialog::refreshFilters(void)
 {
-    filterList->clear();
+    filterTree->clear();
 
+    std::map<std::string, QTreeWidgetItem*> packageMap;
     auto classes = filterLoader->getFilterList();
     for (auto it = classes.begin(); it != classes.end(); ++it)
     {
-        QListWidgetItem* item = new QListWidgetItem();
-        FilterInfo* fi = new FilterInfo(*it, filterLoader->getName(*it),
-                                        filterLoader->getClassPackage(*it),
-                                        filterLoader->getClassDescription(*it));
-        item->setSizeHint(fi->sizeHint());
+        std::string name = filterLoader->getName(*it);
+        std::string package = filterLoader->getClassPackage(*it);
+        std::string description = filterLoader->getClassDescription(*it);
 
-        filterList->addItem(item);
-        filterList->setItemWidget(item, fi);
-        // qDebug("%s", it->c_str());
+        auto pkg = packageMap.find(package);
+        QTreeWidgetItem* pf;
+        if (pkg == packageMap.end())
+        {
+            pf = new QTreeWidgetItem(filterTree);
+            pf->setText(0, QString::fromStdString(package));
+            pf->setExpanded(true);
+            packageMap.insert({ package, pf });
+        }
+        else
+        {
+            pf = pkg->second;
+        }
+        FilterTreeItem* fi = new FilterTreeItem(*it, name, description, pf);
+    }
+
+    for (int i = 0; i < filterTree->columnCount(); ++i)
+    {
+        filterTree->resizeColumnToContents(i);
     }
 }
 

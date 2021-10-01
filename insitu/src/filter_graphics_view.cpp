@@ -87,4 +87,3 @@ void FilterGraphicsView::mouseMoveEvent(QMouseEvent* event)
 }
 
 }    // namespace insitu
-

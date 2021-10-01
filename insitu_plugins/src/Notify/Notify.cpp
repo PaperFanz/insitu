@@ -1,8 +1,8 @@
 #include <Notify/Notify.hpp>
 #include <Notify/Notify_dialog.hpp>
 
-namespace insitu_plugins {
-
+namespace insitu_plugins
+{
 /*
     Filter Implementation
 */
@@ -24,26 +24,20 @@ void Notify::onDelete(void)
     // TODO cleanup code
 }
 
-
-const cv::Mat Notify::apply (void)
+const cv::Mat Notify::apply(void)
 {
     /*
         Create a transparent image to construct your overlay on
     */
-    cv::Mat ret = cv::Mat(
-        height(),
-        width(),
-        CV_8UC4,
-        cv::Scalar(255, 255, 255, 0)
-    );
+    cv::Mat ret =
+        cv::Mat(height(), width(), CV_8UC4, cv::Scalar(255, 255, 255, 0));
 
-    // TODO edit your overlay from user settings 
+    // TODO edit your overlay from user settings
     // e.g. settings.get("key", defaultValue).asType()
 
     return ret;
 }
 
-} // end namespace insitu_plugins
+}    // end namespace insitu_plugins
 
 PLUGINLIB_EXPORT_CLASS(insitu_plugins::Notify, insitu::Filter);
-

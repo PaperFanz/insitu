@@ -1,4 +1,5 @@
 #include "filtered_view.hpp"
+#include <algorithm>
 #include <string>
 #include "add_filter_dialog.hpp"
 #include "filter_card.hpp"
@@ -49,7 +50,9 @@ FilteredView::FilteredView(const ros::NodeHandle& parent_, QString _name,
     filterList->setDefaultDropAction(Qt::DropAction::MoveAction);
     filterProps = new FilterProperties(filterView, this);
     filterPaneSplitter = new QSplitter(Qt::Vertical);
-    filterPaneSplitter->setStyleSheet("QSplitter::handle { color: #000 }"); // TODO get a nice image for the splitter handle
+    filterPaneSplitter->setStyleSheet(
+        "QSplitter::handle { color: #000 }");    // TODO get a nice image for
+                                                 // the splitter handle
     filterPaneSplitter->addWidget(filterList);
     filterPaneSplitter->addWidget(filterProps);
     filterPaneSplitter->setStretchFactor(0, 10);
@@ -85,6 +88,8 @@ FilteredView::FilteredView(const ros::NodeHandle& parent_, QString _name,
 
     connect(topicBox, SIGNAL(currentIndexChanged(const QString&)),
             SLOT(onTopicChange(const QString&)));
+    connect(this, SIGNAL(topicChanged(const QString&)),
+            SLOT(onTopicChange(const QString&)));
     connect(refreshTopicButton, SIGNAL(clicked()), SLOT(refreshTopics()));
     connect(addFilterButton, SIGNAL(clicked()), SLOT(openFilterDialog()));
     connect(rmFilterButton, SIGNAL(clicked()), SLOT(rmFilter()));
@@ -107,8 +112,11 @@ FilteredView::FilteredView(const ros::NodeHandle& parent_, QString _name,
     onTopicChange(topicBox->currentText());
 }
 
-FilteredView::FilteredView(const ros::NodeHandle& parent_, const Json::Value& json, QWidget* parent)
-    : FilteredView(parent_, QString::fromStdString(json.get("name", "").asString()), QString::fromStdString(json.get("topic", "").asString()), parent)
+FilteredView::FilteredView(const ros::NodeHandle& parent_,
+                           const Json::Value& json, QWidget* parent)
+    : FilteredView(
+          parent_, QString::fromStdString(json.get("name", "").asString()),
+          QString::fromStdString(json.get("topic", "").asString()), parent)
 {
     restore(json);
 }
@@ -133,12 +141,18 @@ FilteredView::~FilteredView(void)
 */
 void FilteredView::refreshTopics(void)
 {
+    bool save = topicBox->blockSignals(true);
     QString save_topic = topicBox->currentText();
     topicBox->clear();
     topicBox->addItems(getTopicList());
-    int idx = topicBox->findText(save_topic);
-    idx = idx == -1 ? 0 : idx;
-    topicBox->setCurrentIndex(idx);
+    topicBox->blockSignals(save);
+    if (topicBox->count() > 0)
+    {
+        int idx = topicBox->findText(save_topic);
+        idx = std::max(0, idx);
+        topicBox->setCurrentIndex(idx);
+        emit topicChanged(topicBox->currentText());
+    }
 }
 
 void FilteredView::openFilterDialog(void)
@@ -162,7 +176,7 @@ void FilteredView::onTopicChange(QString topic_transport)
         image_transport::ImageTransport it(*nh);
         image_transport::TransportHints hints(transport);
 
-        topicChanged = true;
+        refitBaseImage = true;
         sub = it.subscribe(topic, 1, &FilteredView::callbackImg, this, hints);
     }
     else
@@ -246,16 +260,17 @@ void FilteredView::addFilter(boost::shared_ptr<insitu::Filter> filter)
     qRegisterMetaType<cv::Mat>("cv::Mat");
 
     /* ebedded Q_OBJECT to leverage QT slots and signals */
-    FilterWatchdog * wd = filter->getFilterWatchDog();
+    FilterWatchdog* wd = filter->getFilterWatchDog();
     wd->setImageTopic(sub.getTopic());
 
     /* async filter updates independent of main ui thread */
-    connect(wd, SIGNAL(filterUpdated(QGraphicsItem*, const cv::Mat&)), 
-            this, SLOT(updateFilter(QGraphicsItem*, const cv::Mat&)));
+    connect(wd, SIGNAL(filterUpdated(QGraphicsItem*, const cv::Mat&)), this,
+            SLOT(updateFilter(QGraphicsItem*, const cv::Mat&)));
 
-    /* forward topic changes to filters that subscribe to the same base image topic */
-    connect(topicBox, SIGNAL(currentIndexChanged(const QString&)),
-            wd, SLOT(onTopicChanged(const QString&)));
+    /* forward topic changes to filters that subscribe to the same base image
+     * topic */
+    connect(topicBox, SIGNAL(currentIndexChanged(const QString&)), wd,
+            SLOT(onTopicChanged(const QString&)));
 }
 
 const std::string& FilteredView::getViewName(void) const
@@ -268,19 +283,21 @@ const ros::NodeHandle& FilteredView::getNodeHandle(void) const
     return *nh;
 }
 
-void FilteredView::save(Json::Value &json) const
+void FilteredView::save(Json::Value& json) const
 {
     json["name"] = name;
     json["topic"] = topicBox->currentText().toStdString();
     json["republish"] = republishCheckBox->isChecked();
     json["showFilterPane"] = showFilterPaneCheckBox->isChecked();
 
-    for (const auto &it : filters) {
+    for (const auto& it : filters)
+    {
         Json::Value filterjson;
         filterjson["name"] = it.first;
         boost::shared_ptr<insitu::Filter> filter = it.second;
         filterjson["type"] = filter->getType();
-        FilterGraphicsItem* fgitem = (FilterGraphicsItem*) filter->getGraphicsItem();
+        FilterGraphicsItem* fgitem =
+            (FilterGraphicsItem*)filter->getGraphicsItem();
         filterjson["properties"]["x"] = fgitem->x();
         filterjson["properties"]["y"] = fgitem->y();
         filterjson["properties"]["width"] = filter->width();
@@ -290,35 +307,47 @@ void FilteredView::save(Json::Value &json) const
     }
 }
 
-void FilteredView::restore(const Json::Value &json)
+void FilteredView::restore(const Json::Value& json)
 {
     republishCheckBox->setChecked(json.get("republish", false).asBool());
-    showFilterPaneCheckBox->setChecked(json.get("showFilterPane", false).asBool());
+    showFilterPaneCheckBox->setChecked(
+        json.get("showFilterPane", false).asBool());
 
-    for (int i = 0; i < json["filters"].size(); ++i) {
+    for (int i = 0; i < json["filters"].size(); ++i)
+    {
         Json::Value filterjson = json["filters"][i];
-        if (!filterjson.isMember("name")) {
-            errMsg->showMessage(QString::fromStdString("Filter must be named, skipping " + std::to_string(i) + " of " + std::to_string(json["filters"].size())));
+        if (!filterjson.isMember("name"))
+        {
+            errMsg->showMessage(QString::fromStdString(
+                "Filter must be named, skipping " + std::to_string(i) + " of " +
+                std::to_string(json["filters"].size())));
             continue;
         }
-        if (!filterjson.isMember("type")) {
-            errMsg->showMessage(QString::fromStdString("Filter must have type, skipping " + std::to_string(i) + " of " + std::to_string(json["filters"].size())));
+        if (!filterjson.isMember("type"))
+        {
+            errMsg->showMessage(QString::fromStdString(
+                "Filter must have type, skipping " + std::to_string(i) +
+                " of " + std::to_string(json["filters"].size())));
             continue;
         }
-        auto filter = filterFactory->loadFilter(filterjson.get("type", "").asString(), filterjson.get("name", "").asString(), sub.getTopic());
+        auto filter = filterFactory->loadFilter(
+            filterjson.get("type", "").asString(),
+            filterjson.get("name", "").asString(), sub.getTopic());
         addFilter(filter);
-        if (filterjson.isMember("properties") && !filterjson["properties"].isNull()) {
-            FilterGraphicsItem * fgitem = (FilterGraphicsItem*) filter->getGraphicsItem();
-            fgitem->setPos(QPointF(
-                filterjson["properties"].get("x", 0).asDouble(),
-                filterjson["properties"].get("y", 0).asDouble()
-            ));
-            filter->setSize(QSize(
-                filterjson["properties"].get("width", "100").asInt(),
-                filterjson["properties"].get("height", "100").asInt()
-            ));
+        if (filterjson.isMember("properties") &&
+            !filterjson["properties"].isNull())
+        {
+            FilterGraphicsItem* fgitem =
+                (FilterGraphicsItem*)filter->getGraphicsItem();
+            fgitem->setPos(
+                QPointF(filterjson["properties"].get("x", 0).asDouble(),
+                        filterjson["properties"].get("y", 0).asDouble()));
+            filter->setSize(
+                QSize(filterjson["properties"].get("width", "100").asInt(),
+                      filterjson["properties"].get("height", "100").asInt()));
         }
-        if (filterjson.isMember("settings") && !filterjson["settings"].isNull()) {
+        if (filterjson.isMember("settings") && !filterjson["settings"].isNull())
+        {
             filter->restore(filterjson["settings"]);
         }
     }
@@ -351,10 +380,10 @@ void FilteredView::callbackImg(const sensor_msgs::Image::ConstPtr& msg)
     }
 
     rosImg->updateFilter(cv_ptr->image);
-    if (topicChanged)
+    if (refitBaseImage)
     {
         filterView->fitToRoot();
-        topicChanged = false;
+        refitBaseImage = false;
     }
 
     // republish
@@ -383,9 +412,12 @@ void FilteredView::unloadFilter(QListWidgetItem* filterItem)
     f->stop();
     filters.erase(filterName);
 
-    if (!filterFactory->unloadFilter(filterName)) {
-        AddFilterDialog* afd = (AddFilterDialog*) getNamedWidget("add_filter_dialog");
-        if (!afd->unloadFilter(filterName)) {
+    if (!filterFactory->unloadFilter(filterName))
+    {
+        AddFilterDialog* afd =
+            (AddFilterDialog*)getNamedWidget("add_filter_dialog");
+        if (!afd->unloadFilter(filterName))
+        {
             throw std::runtime_error("Failed to unload " + filterName);
         }
     }

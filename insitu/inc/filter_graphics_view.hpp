@@ -62,4 +62,3 @@ private:
 }    // namespace insitu
 
 #endif    // insitu_FILTER_GRAPHICS_VIEW_HPP
-
