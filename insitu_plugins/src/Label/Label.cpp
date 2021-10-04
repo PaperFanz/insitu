@@ -30,8 +30,9 @@ const cv::Mat Label::apply(void)
     cv::Mat ret =
         cv::Mat(height(), width(), CV_8UC4, cv::Scalar(255, 255, 255, 0));
 
-    insitu_utils::Painter::drawtorect(ret, cv::Rect(0, 0, ret.cols, ret.rows),
-               getSettingsValue().get("text", "text not set").asString());
+    insitu_utils::Painter::drawtorect(
+        ret, cv::Rect(0, 0, ret.cols, ret.rows),
+        getSettingsValue().get("text", "text not set").asString());
 
     return ret;
 }

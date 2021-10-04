@@ -41,4 +41,3 @@ const cv::Mat Notify::apply(void)
 }    // end namespace insitu_plugins
 
 PLUGINLIB_EXPORT_CLASS(insitu_plugins::Notify, insitu::Filter);
-

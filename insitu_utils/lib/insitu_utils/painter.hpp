@@ -7,15 +7,15 @@
 
 namespace insitu_utils
 {
-
-class Painter {
+class Painter
+{
 public:
-    static void drawtorect(cv::Mat& mat, cv::Rect target, const std::string& str,
-                            int face = cv::FONT_HERSHEY_PLAIN, int thickness = 1,
-                            cv::Scalar color = cv::Scalar(255, 255, 255, 255));
+    static void drawtorect(cv::Mat& mat, cv::Rect target,
+                           const std::string& str,
+                           int face = cv::FONT_HERSHEY_PLAIN, int thickness = 1,
+                           cv::Scalar color = cv::Scalar(255, 255, 255, 255));
 };
 
-}
+}    // namespace insitu_utils
 
 #endif /* insitu_utils_PAINTER_HPP */
-

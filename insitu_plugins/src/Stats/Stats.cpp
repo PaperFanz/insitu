@@ -67,8 +67,9 @@ const cv::Mat Stats::apply(void)
     int h = 0, hdiv = height() / stats.size();
     for (const auto& str : stats)
     {
-        insitu_utils::Painter::drawtorect(ret, cv::Rect(0, h, ret.cols, hdiv), str,
-                   cv::FONT_HERSHEY_PLAIN, 1, textColor);
+        insitu_utils::Painter::drawtorect(ret, cv::Rect(0, h, ret.cols, hdiv),
+                                          str, cv::FONT_HERSHEY_PLAIN, 1,
+                                          textColor);
         h += hdiv;
     }
 
