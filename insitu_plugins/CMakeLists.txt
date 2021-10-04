@@ -53,9 +53,6 @@ set(insitu_plugins_HDRS
     inc/Transparent/Transparent.hpp
     inc/Transparent/Transparent_dialog.hpp
 
-    inc/Notify/Notify.hpp
-    inc/Notify/Notify_dialog.hpp
-
     inc/Stats/Stats.hpp
     inc/Stats/Stats_dialog.hpp
     
@@ -75,9 +72,6 @@ add_library(${PROJECT_NAME}
 
     src/Transparent/Transparent.cpp
     src/Transparent/Transparent_dialog.cpp
-
-    src/Notify/Notify.cpp
-    src/Notify/Notify_dialog.cpp
 
     src/Stats/Stats.cpp
     src/Stats/Stats_dialog.cpp
