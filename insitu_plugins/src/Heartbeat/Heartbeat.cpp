@@ -1,33 +1,8 @@
 #include <Heartbeat/Heartbeat.hpp>
 #include <Heartbeat/Heartbeat_dialog.hpp>
+#include <insitu_utils/painter.hpp>
 
 using namespace heartbeat_filter;
-
-namespace temp_insitu_utils
-{
-// TODO: include from Label instead of copying
-void drawtorect(cv::Mat& mat, cv::Rect target, const std::string& str,
-                int face = cv::FONT_HERSHEY_PLAIN, int thickness = 1,
-                cv::Scalar color = cv::Scalar(255, 255, 255, 255))
-{
-    cv::Size rect = cv::getTextSize(str, face, 1.0, thickness, 0);
-    double scalex = (double)target.width / (double)rect.width;
-    double scaley = (double)target.height / (double)rect.height;
-    double scale = std::min(scalex, scaley);
-    int marginx =
-        scale == scalex ?
-            0 :
-            (int)((double)target.width * (scalex - scale) / scalex * 0.5);
-    int marginy =
-        scale == scaley ?
-            0 :
-            (int)((double)target.height * (scaley - scale) / scaley * 0.5);
-    cv::putText(
-        mat, str,
-        cv::Point(target.x + marginx, target.y + target.height - marginy), face,
-        scale, color, thickness, cv::LINE_AA, false);
-}
-}    // end namespace temp_insitu_utils
 
 namespace insitu_plugins
 {
@@ -74,7 +49,7 @@ const cv::Mat Heartbeat::apply(void)
     int radius = std::min(width(), height()) / 2;
     cv::circle(ret, cv::Point(width() / 2, height() / 2), radius, cvColor, -10);
 
-    temp_insitu_utils::drawtorect(
+    insitu_utils::Painter::drawtorect(
         ret, cv::Rect(0, 0, ret.cols, ret.rows / 5),
         getSettingsValue().get("name", DEFAULT_NAME).asString());
 

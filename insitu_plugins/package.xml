@@ -54,6 +54,7 @@
   <build_depend>pluginlib</build_depend>
   <build_depend>roscpp</build_depend>
   <build_depend>insitu</build_depend>
+  <build_depend>insitu_utils</build_depend>
   <build_depend>topic_tools</build_depend>
   <build_depend>ros_type_introspection</build_depend>
 
@@ -61,6 +62,7 @@
   <build_export_depend>pluginlib</build_export_depend>
   <build_export_depend>roscpp</build_export_depend>
   <build_export_depend>insitu</build_export_depend>
+  <build_export_depend>insitu_utils</build_export_depend>
   <build_export_depend>topic_tools</build_export_depend>
   <build_export_depend>ros_type_introspection</build_export_depend>
 
@@ -68,6 +70,7 @@
   <exec_depend>pluginlib</exec_depend>
   <exec_depend>roscpp</exec_depend>
   <exec_depend>insitu</exec_depend>
+  <exec_depend>insitu_utils</exec_depend>
   <exec_depend>topic_tools</exec_depend>
   <exec_depend>ros_type_introspection</exec_depend>
 

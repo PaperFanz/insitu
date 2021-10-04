@@ -28,3 +28,4 @@ private:
 }    // end namespace insitu_plugins
 
 #endif    // end insitu_plugins_Notify_HPP
+

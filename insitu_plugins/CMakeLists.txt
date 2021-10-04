@@ -14,6 +14,7 @@ find_package(catkin REQUIRED COMPONENTS
     pluginlib
     roscpp
     insitu
+    insitu_utils
     topic_tools
     ros_type_introspection
 )
@@ -25,7 +26,7 @@ find_package(Qt5 COMPONENTS Core Gui Widgets)
 
 catkin_package(
   LIBRARIES insitu_plugins
-  CATKIN_DEPENDS nodelet pluginlib roscpp insitu 
+  CATKIN_DEPENDS nodelet pluginlib roscpp insitu insitu_utils
   DEPENDS OpenCV
 )
 

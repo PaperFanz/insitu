@@ -8,6 +8,8 @@
 #include <sys/statvfs.h>
 #include <thread>
 
+#include <insitu_utils/painter.hpp>
+
 using namespace std::chrono_literals;
 
 namespace insitu_plugins
@@ -28,27 +30,6 @@ void Stats::filterInit(void)
 
 void Stats::onDelete(void)
 {
-}
-
-void Stats::drawtorect(cv::Mat& mat, cv::Rect target, const std::string& str,
-                       int face, int thickness, cv::Scalar color)
-{
-    cv::Size rect = cv::getTextSize(str, face, 1.0, thickness, 0);
-    double scalex = (double)target.width / (double)rect.width;
-    double scaley = (double)target.height / (double)rect.height;
-    double scale = std::min(scalex, scaley);
-    int marginx =
-        scale == scalex ?
-            0 :
-            (int)((double)target.width * (scalex - scale) / scalex * 0.5);
-    int marginy =
-        scale == scaley ?
-            0 :
-            (int)((double)target.height * (scaley - scale) / scaley * 0.5);
-    cv::putText(
-        mat, str,
-        cv::Point(target.x + marginx, target.y + target.height - marginy), face,
-        scale, color, thickness, cv::LINE_AA, false);
 }
 
 const cv::Mat Stats::apply(void)
@@ -86,7 +67,7 @@ const cv::Mat Stats::apply(void)
     int h = 0, hdiv = height() / stats.size();
     for (const auto& str : stats)
     {
-        drawtorect(ret, cv::Rect(0, h, ret.cols, hdiv), str,
+        insitu_utils::Painter::drawtorect(ret, cv::Rect(0, h, ret.cols, hdiv), str,
                    cv::FONT_HERSHEY_PLAIN, 1, textColor);
         h += hdiv;
     }

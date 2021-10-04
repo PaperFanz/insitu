@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>insitu_utils</name>
+  <version>0.1.0</version>
+  <description>
+
+    insitu_utils
+
+  </description>
+  <maintainer email="sci@gmail.com">sci</maintainer>
+  <author>sci</author>
+  <license>BSD</license>
+  <!-- <url type="bugtracker">https://github.com/stonier/qt_ros/issues</url> -->
+  <!-- <url type="repository">https://github.com/stonier/qt_ros</url> -->
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>insitu</build_depend>
+  
+  <exec_depend>insitu</exec_depend>
+ 
+</package>
