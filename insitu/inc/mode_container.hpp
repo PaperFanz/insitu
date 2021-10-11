@@ -24,6 +24,7 @@ private:
     QPushButton* addViewButton;
     QPushButton* tileButton;
     QPushButton* cascadeButton;
+    QTextBrowser* tutTextBrowser;
     QMdiArea* container;
 
     // layout element

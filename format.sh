@@ -4,7 +4,7 @@ set -e
 
 function append_newline {
     if [[ -z "$(tail -c 1 "$1")" ]]; then
-        echo "$1"
+        :
     else
         echo >> "$1"
     fi
