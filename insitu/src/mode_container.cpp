@@ -16,23 +16,11 @@ ModeContainer::ModeContainer(QString _name, QWidget* parent) : QWidget(parent)
     container = new QMdiArea(this);
     container->setActivationOrder(QMdiArea::ActivationHistoryOrder);
 
-    if (_name == "Tutorial")
-    {
-        tutTextBrowser = new QTextBrowser(this);
-        tutTextBrowser->setHtml(
-            tr("<!DOCTYPE html>"
-               "<html>"
-               "<body>"
-               "<h1 style=\"color:black;\">Welcome to InSitu!</h1>"
-               "<p>Press `Edit->New Mode` or `Ctrl+Shift+m` to create a new "
-               "mode</p>"
-               "<p>Press `Edit->New View` or `Ctrl+Shift+v` to create a new "
-               "view</p>"
-               "<p></p>"
-               "<p>Create a new mode named \"Tutorial\" to view this tutorial "
-               "again at any time</p>"
-               "</body>"
-               "</html>"));
+    if (_name == "Tutorial") {
+        QTextBrowser* tutTextBrowser = new QTextBrowser(this);
+        tutTextBrowser->setOpenExternalLinks(true);
+        tutTextBrowser->setSource(QUrl("qrc:/docs/tutorial.html"));
+        tutTextBrowser->setStyleSheet("QTextBrowser { padding: 10 300; background:white}");
         container->addSubWindow(tutTextBrowser);
         tutTextBrowser->show();
         container->tileSubWindows();

@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/" >
         <file>images/insitu-icon.png</file>
+        <file>docs/tutorial.html</file>
     </qresource>
 </RCC>
 

@@ -22,14 +22,6 @@ MainWindow::MainWindow(int argc, char** argv, QWidget* parent)
                      SLOT(modeClose(int)));
     /* reads stored settings and attempts to restore last saved configuration */
     ReadSettings();
-
-    /* show tutorial page if no configuration is restored */
-    if (ui.tabmanager->count() == 0)
-    {
-        QString name = "Tutorial";
-        ModeContainer* tutorialMode = new ModeContainer(name);
-        ui.tabmanager->addTab(tutorialMode, name);
-    }
 }
 
 MainWindow::~MainWindow()
@@ -174,6 +166,14 @@ void MainWindow::restore(Json::Value& json)
         }
     }
     tabmanager->setCurrentIndex(json.get("currentMode", 0).asInt());
+
+    /* show tutorial page if no modes are restored */
+    if (ui.tabmanager->count() == 0)
+    {
+        QString name = "Tutorial";
+        ModeContainer* tutorialMode = new ModeContainer(name);
+        ui.tabmanager->addTab(tutorialMode, name);
+    }
 }
 
 void MainWindow::restore(QString filename)
