@@ -46,25 +46,33 @@ include_directories(
 
 set(insitu_plugins_HDRS
     inc/Label/Label.hpp
-    inc/Label/Label_dialog.hpp
 
     inc/Crosshair/Crosshair.hpp
-    inc/Crosshair/Crosshair_dialog.hpp
 
     inc/Transparent/Transparent.hpp
-    inc/Transparent/Transparent_dialog.hpp
 
     inc/Notify/Notify.hpp
-    inc/Notify/Notify_dialog.hpp
 
     inc/Stats/Stats.hpp
-    inc/Stats/Stats_dialog.hpp
     
     inc/Heartbeat/Heartbeat.hpp
+)
+
+set(insitu_dialogs_HDRS
+    inc/Label/Label_dialog.hpp
+
+    inc/Crosshair/Crosshair_dialog.hpp
+
+    inc/Transparent/Transparent_dialog.hpp
+
+    inc/Notify/Notify_dialog.hpp
+
+    inc/Stats/Stats_dialog.hpp
+    
     inc/Heartbeat/Heartbeat_dialog.hpp
 )
 
-qt5_wrap_cpp(insitu_plugins_MOCS ${insitu_plugins_HDRS})
+qt5_wrap_cpp(insitu_dialogs_MOCS ${insitu_dialogs_HDRS})
 
 ## Declare a C++ library
 add_library(${PROJECT_NAME}
@@ -86,7 +94,8 @@ add_library(${PROJECT_NAME}
     src/Heartbeat/Heartbeat.cpp
     src/Heartbeat/Heartbeat_dialog.cpp
 
-    ${insitu_plugins_MOCS}
+    ${insitu_dialogs_MOCS}
+    ${insitu_plugins_HDRS}
 )
 
 target_link_libraries(${PROJECT_NAME} 
