@@ -14,10 +14,16 @@ public:
 
     const cv::Mat apply (void);
 
-    bool hasSettingEditor(void)
+    bool hasSettingEditor(void) const
     {{
         return true;
     }}
+
+    /* uncomment to make your filter follow the base image size */
+//  bool lockToImageSize(void) const
+//  {{
+//      return true;
+//  }}
 
 private:
     void filterInit(void);

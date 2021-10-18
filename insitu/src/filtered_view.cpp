@@ -6,6 +6,8 @@
 #include "filter_graphics_item.hpp"
 #include "insitu_utils.hpp"
 
+#include <iostream>
+
 namespace insitu
 {
 /*
@@ -271,6 +273,13 @@ void FilteredView::addFilter(boost::shared_ptr<insitu::Filter> filter)
      * topic */
     connect(topicBox, SIGNAL(currentIndexChanged(const QString&)), wd,
             SLOT(onTopicChanged(const QString&)));
+
+    /* forward root size changes to filter watchdog */
+    if (filter->lockToImageSize()) {
+        wd->setRootSize(filterView->getRootSize());
+        connect(filterView, SIGNAL(rootSizeChanged(QSize)),
+            wd, SLOT(onRootSizeChanged(const QSize&)));
+    }
 }
 
 const std::string& FilteredView::getViewName(void) const

@@ -76,6 +76,9 @@ qt5_wrap_cpp(insitu_dialogs_MOCS ${insitu_dialogs_HDRS})
 
 ## Declare a C++ library
 add_library(${PROJECT_NAME}
+    ${insitu_dialogs_MOCS}
+    ${insitu_plugins_HDRS}
+
     src/Label/Label.cpp
     src/Label/Label_dialog.cpp
 
@@ -93,9 +96,6 @@ add_library(${PROJECT_NAME}
 
     src/Heartbeat/Heartbeat.cpp
     src/Heartbeat/Heartbeat_dialog.cpp
-
-    ${insitu_dialogs_MOCS}
-    ${insitu_plugins_HDRS}
 )
 
 target_link_libraries(${PROJECT_NAME} 

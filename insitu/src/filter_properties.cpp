@@ -111,6 +111,7 @@ void FilterProperties::onSelectionChanged(void)
         setImageSizeCheckBox->blockSignals(true);
         aspectRatioCheckBox->blockSignals(true);
         lockFilterCheckBox->blockSignals(true);
+
         widthSpinBox->setValue(filter->width());
         heightSpinBox->setValue(filter->height());
         xSpinBox->setValue(activeFilterItem->x());
@@ -123,6 +124,7 @@ void FilterProperties::onSelectionChanged(void)
             filter->property(insitu::keepAspectRatio));
         lockFilterCheckBox->setChecked(
             filter->property(insitu::lockFilterProperties));
+
         widthSpinBox->blockSignals(false);
         heightSpinBox->blockSignals(false);
         setImageSizeCheckBox->blockSignals(false);

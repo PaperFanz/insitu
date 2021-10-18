@@ -1,4 +1,5 @@
 #include "filter_graphics_view.hpp"
+#include "filter_graphics_item.hpp"
 
 namespace insitu
 {
@@ -69,6 +70,7 @@ QSize FilterGraphicsView::getRootSize(void) const
 void FilterGraphicsView::rootImgSizeChanged(QSize size)
 {
     imgBuf = QImage(root->getImgSize(), QImage::Format_RGBA8888);
+    emit rootSizeChanged(size);
 }
 
 /*
