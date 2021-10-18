@@ -58,6 +58,8 @@ protected:
 public slots:
     void queuedUpdate(void);
 
+    void onVisibilityChanged(bool visible);
+
 signals:
     void delayedUpdate(void);
 

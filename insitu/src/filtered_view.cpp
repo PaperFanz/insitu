@@ -6,8 +6,6 @@
 #include "filter_graphics_item.hpp"
 #include "insitu_utils.hpp"
 
-#include <iostream>
-
 namespace insitu
 {
 /*
@@ -50,6 +48,7 @@ FilteredView::FilteredView(const ros::NodeHandle& parent_, QString _name,
     filterList = new QListWidget(this);
     filterList->setDragDropMode(QAbstractItemView::DragDrop);
     filterList->setDefaultDropAction(Qt::DropAction::MoveAction);
+    filterList->setStyleSheet("QListWidget::item {border-bottom: 1px solid grey;}");
     filterProps = new FilterProperties(filterView, this);
     filterPaneSplitter = new QSplitter(Qt::Vertical);
     filterPaneSplitter->setStyleSheet(
@@ -68,8 +67,13 @@ FilteredView::FilteredView(const ros::NodeHandle& parent_, QString _name,
     filterPaneWidget->setLayout(filterPaneLayout);
 
     imagePane = new QHBoxLayout();
-    imagePane->addWidget(filterView, 1);
-    imagePane->addWidget(filterPaneWidget);
+    imagePaneSplitter = new QSplitter(Qt::Horizontal);
+    imagePaneSplitter->setStyleSheet(
+        "QSplitter::handle { color: #000 }");
+    imagePaneSplitter->addWidget(filterView);
+    imagePaneSplitter->addWidget(filterPaneWidget);
+    imagePaneSplitter->setStretchFactor(0, 2);
+    imagePane->addWidget(imagePaneSplitter);
 
     errMsg = new QErrorMessage(this);
 
@@ -273,6 +277,10 @@ void FilteredView::addFilter(boost::shared_ptr<insitu::Filter> filter)
      * topic */
     connect(topicBox, SIGNAL(currentIndexChanged(const QString&)), wd,
             SLOT(onTopicChanged(const QString&)));
+
+    /* forward visibility changes to filter graphics item */
+    connect(fc, SIGNAL(visibilityChanged(bool)),
+            gi, SLOT(onVisibilityChanged(bool)));
 
     /* forward root size changes to filter watchdog */
     if (filter->lockToImageSize()) {

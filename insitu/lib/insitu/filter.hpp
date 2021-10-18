@@ -219,6 +219,9 @@ public:
     void save(Json::Value& json)
     {
         json = settings;
+
+        /* save filter properties */
+        json["visible"] = filterWatchdog.getGraphicsItem()->isVisible();
         json["setToImageSize"] = property(insitu::setToImageSize);
         json["keepAspectRatio"] = property(insitu::keepAspectRatio);
         json["lockFilterProperties"] = property(insitu::lockFilterProperties);
@@ -227,6 +230,8 @@ public:
     void restore(Json::Value& json)
     {
         settings = json;
+
+        /* restore filter properties */
         setProperty(insitu::setToImageSize,
                     json.get("setToImageSize", false).asBool());
         setProperty(insitu::keepAspectRatio,
@@ -250,6 +255,11 @@ public:
     bool property(insitu::FilterProps prop) const
     {
         return (props & prop);
+    }
+
+    bool isVisible(void) const
+    {
+        return settings.get("visible", true).asBool();
     }
 
     const std::string& name(void) const
