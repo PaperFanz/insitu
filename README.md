@@ -16,7 +16,8 @@
 
 <small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
 
-<!-- TODO add GIF of InSitu in action -->
+## Intro Video
+[![InSitu ROS World 2021 Video](https://img.youtube.com/vi/vFJEeSsIdZA/maxresdefault.jpg)](https://youtu.be/vFJEeSsIdZA)
 
 ## Description
 
