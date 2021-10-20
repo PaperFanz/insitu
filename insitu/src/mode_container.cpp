@@ -16,6 +16,18 @@ ModeContainer::ModeContainer(QString _name, QWidget* parent) : QWidget(parent)
     container = new QMdiArea(this);
     container->setActivationOrder(QMdiArea::ActivationHistoryOrder);
 
+    if (_name == "Tutorial")
+    {
+        QTextBrowser* tutTextBrowser = new QTextBrowser(this);
+        tutTextBrowser->setOpenExternalLinks(true);
+        tutTextBrowser->setSource(QUrl("qrc:/docs/tutorial.html"));
+        tutTextBrowser->setStyleSheet(
+            "QTextBrowser { padding: 10 300; background:white}");
+        container->addSubWindow(tutTextBrowser);
+        tutTextBrowser->show();
+        container->tileSubWindows();
+    }
+
     // callbacks
     QObject::connect(addViewButton, SIGNAL(clicked()), SLOT(openViewDialog()));
     QObject::connect(tileButton, SIGNAL(clicked()), SLOT(tile()));

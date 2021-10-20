@@ -18,7 +18,6 @@
 #include <future>
 #include <chrono>
 #include <json/json.h>
-#include <qsize.h>
 
 using namespace std::chrono_literals;
 
@@ -48,7 +47,13 @@ private:
 
     std::string baseImageTopic;
 
+    QSize rootSize_;
+
 public:
+    FilterWatchdog() : rootSize_(0, 0)
+    {
+    }
+
     void notify(const cv::Mat& update)
     {
         emit filterUpdated(graphicsItem, update);
@@ -74,6 +79,26 @@ public:
         return graphicsItem;
     }
 
+    void setRootSize(const QSize& size)
+    {
+        rootSize_ = size;
+    }
+
+    const QSize& rootSize(void) const
+    {
+        return rootSize_;
+    }
+
+    int width(void) const
+    {
+        return rootSize_.width();
+    }
+
+    int height(void) const
+    {
+        return rootSize_.height();
+    }
+
 signals:
 
     void filterUpdated(QGraphicsItem* item, const cv::Mat& update);
@@ -83,6 +108,11 @@ public Q_SLOTS:
     void onTopicChanged(const QString& topic)
     {
         baseImageTopic = topic.toStdString();
+    }
+
+    void onRootSizeChanged(const QSize& size)
+    {
+        rootSize_ = size;
     }
 
 };    // class FilterWatchdog
@@ -133,7 +163,7 @@ public:
         @Filter implementors: reimplement this function to return true if your
         filter has a custom settings dialog
     */
-    virtual bool hasSettingEditor(void)
+    virtual bool hasSettingEditor(void) const
     {
         return false;
     }
@@ -142,7 +172,7 @@ public:
         @Filter implementors: reimplement this function to return true if your
         filter needs to match the image topic size on startup
     */
-    virtual bool lockToImageSize(void)
+    virtual bool lockToImageSize(void) const
     {
         return false;
     }
@@ -189,6 +219,9 @@ public:
     void save(Json::Value& json)
     {
         json = settings;
+
+        /* save filter properties */
+        json["visible"] = filterWatchdog.getGraphicsItem()->isVisible();
         json["setToImageSize"] = property(insitu::setToImageSize);
         json["keepAspectRatio"] = property(insitu::keepAspectRatio);
         json["lockFilterProperties"] = property(insitu::lockFilterProperties);
@@ -197,6 +230,8 @@ public:
     void restore(Json::Value& json)
     {
         settings = json;
+
+        /* restore filter properties */
         setProperty(insitu::setToImageSize,
                     json.get("setToImageSize", false).asBool());
         setProperty(insitu::keepAspectRatio,
@@ -222,6 +257,11 @@ public:
         return (props & prop);
     }
 
+    bool isVisible(void) const
+    {
+        return settings.get("visible", true).asBool();
+    }
+
     const std::string& name(void) const
     {
         return getName();
@@ -239,17 +279,38 @@ public:
 
     QSize getSize(void) const
     {
-        return size;
+        if (lockToImageSize())
+        {
+            return filterWatchdog.rootSize();
+        }
+        else
+        {
+            return size;
+        }
     }
 
     int width(void) const
     {
-        return size.width();
+        if (lockToImageSize())
+        {
+            return filterWatchdog.width();
+        }
+        else
+        {
+            return size.width();
+        }
     }
 
     int height(void) const
     {
-        return size.height();
+        if (lockToImageSize())
+        {
+            return filterWatchdog.height();
+        }
+        else
+        {
+            return size.height();
+        }
     }
 
     void setSize(QSize size)

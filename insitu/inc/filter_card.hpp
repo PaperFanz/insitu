@@ -16,8 +16,8 @@ class FilterCard : public QWidget
 private:
     // ui elements
     QLabel* nameLabel;
-
     QPushButton* editButton;
+    QCheckBox* visibilityBox;
 
     // layout element
     QGridLayout* layout;
@@ -30,6 +30,12 @@ private:
 public Q_SLOTS:
 
     void showSettingsEditor(void);
+
+    void onVisibilityChanged(int state);
+
+signals:
+
+    void visibilityChanged(bool visible);
 
 public:
     FilterCard(std::string name_, boost::shared_ptr<insitu::Filter> filter_,

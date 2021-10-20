@@ -4,14 +4,14 @@
   <version>0.1.0</version>
   <description>
 
-    insitu
+    A ROS situational awareness framework for teleoperation and supervised autonomy.
 
   </description>
-  <maintainer email="sci@gmail.com">sci</maintainer>
-  <author>sci</author>
-  <license>BSD</license>
-  <!-- <url type="bugtracker">https://github.com/stonier/qt_ros/issues</url> -->
-  <!-- <url type="repository">https://github.com/stonier/qt_ros</url> -->
+  <maintainer email="petefan.7@gmail.com">PaperFanz</maintainer>
+  <author>Pete Fan</author>
+  <license>BSD3</license>
+  <url type="bugtracker">https://github.com/PaperFanz/insitu/issues</url>
+  <url type="repository">https://github.com/PaperFanz/insitu</url>
 
   <buildtool_depend>catkin</buildtool_depend>
 

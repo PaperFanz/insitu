@@ -13,7 +13,7 @@ public:
 
     const cv::Mat apply(void);
 
-    bool hasSettingEditor(void)
+    bool hasSettingEditor(void) const
     {
         return true;
     }
@@ -28,10 +28,6 @@ private:
     float readMemPercent(void);
 
     float readDiskPercent(void);
-
-    void drawtorect(cv::Mat& mat, cv::Rect target, const std::string& str,
-                    int face = cv::FONT_HERSHEY_PLAIN, int thickness = 1,
-                    cv::Scalar color = cv::Scalar(0, 0, 0, 255));
 
     /* variables for calculating cpu percent */
     float ptot = 0;

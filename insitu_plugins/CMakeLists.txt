@@ -14,6 +14,7 @@ find_package(catkin REQUIRED COMPONENTS
     pluginlib
     roscpp
     insitu
+    insitu_utils
     topic_tools
     ros_type_introspection
 )
@@ -25,7 +26,7 @@ find_package(Qt5 COMPONENTS Core Gui Widgets)
 
 catkin_package(
   LIBRARIES insitu_plugins
-  CATKIN_DEPENDS nodelet pluginlib roscpp insitu 
+  CATKIN_DEPENDS nodelet pluginlib roscpp insitu insitu_utils
   DEPENDS OpenCV
 )
 
@@ -45,25 +46,35 @@ include_directories(
 
 set(insitu_plugins_HDRS
     inc/Label/Label.hpp
-    inc/Label/Label_dialog.hpp
 
     inc/Crosshair/Crosshair.hpp
-    inc/Crosshair/Crosshair_dialog.hpp
 
     inc/Transparent/Transparent.hpp
-    inc/Transparent/Transparent_dialog.hpp
 
     inc/Stats/Stats.hpp
-    inc/Stats/Stats_dialog.hpp
     
     inc/Heartbeat/Heartbeat.hpp
+)
+
+set(insitu_dialogs_HDRS
+    inc/Label/Label_dialog.hpp
+
+    inc/Crosshair/Crosshair_dialog.hpp
+
+    inc/Transparent/Transparent_dialog.hpp
+
+    inc/Stats/Stats_dialog.hpp
+    
     inc/Heartbeat/Heartbeat_dialog.hpp
 )
 
-qt5_wrap_cpp(insitu_plugins_MOCS ${insitu_plugins_HDRS})
+qt5_wrap_cpp(insitu_dialogs_MOCS ${insitu_dialogs_HDRS})
 
 ## Declare a C++ library
 add_library(${PROJECT_NAME}
+    ${insitu_dialogs_MOCS}
+    ${insitu_plugins_HDRS}
+
     src/Label/Label.cpp
     src/Label/Label_dialog.cpp
 
@@ -78,8 +89,6 @@ add_library(${PROJECT_NAME}
 
     src/Heartbeat/Heartbeat.cpp
     src/Heartbeat/Heartbeat_dialog.cpp
-
-    ${insitu_plugins_MOCS}
 )
 
 target_link_libraries(${PROJECT_NAME} 

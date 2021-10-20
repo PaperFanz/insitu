@@ -46,6 +46,8 @@ public slots:
 signals:
     void mouseMoved(void);
 
+    void rootSizeChanged(const QSize& size);
+
 protected:
     void resizeEvent(QResizeEvent* event) override;
 

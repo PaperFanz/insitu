@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/" >
+        <file>images/insitu-icon.png</file>
+        <file>images/edit-solid.svg</file>
+        <file>images/eye-solid.svg</file>
+        <file>images/eye-slash-solid.svg</file>
+        <file>docs/tutorial.html</file>
+    </qresource>
+</RCC>
+

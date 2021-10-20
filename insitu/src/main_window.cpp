@@ -6,6 +6,7 @@
 #include "insitu_utils.hpp"
 #include "main_window.hpp"
 #include "add_mode_dialog.hpp"
+#include "mode_container.hpp"
 
 namespace insitu
 {
@@ -19,6 +20,7 @@ MainWindow::MainWindow(int argc, char** argv, QWidget* parent)
     ui.tabmanager->setCurrentIndex(0);
     QObject::connect(ui.tabmanager, SIGNAL(tabCloseRequested(int)), this,
                      SLOT(modeClose(int)));
+    /* reads stored settings and attempts to restore last saved configuration */
     ReadSettings();
 }
 
@@ -98,6 +100,12 @@ void MainWindow::ReadSettings()
         // qDebug("restore from last loaded file");
         restore(settings.value("loadfile").toString());
     }
+    else
+    {
+        /* show tutorial if no file is restored */
+        ModeContainer* tutorialMode = new ModeContainer(tr("Tutorial"));
+        ui.tabmanager->addTab(tutorialMode, tr("Tutorial"));
+    }
     if (settings.contains("recent"))
     {
         recentFiles.append(settings.value("recent").toStringList());
@@ -164,6 +172,14 @@ void MainWindow::restore(Json::Value& json)
         }
     }
     tabmanager->setCurrentIndex(json.get("currentMode", 0).asInt());
+
+    /* show tutorial page if no modes are restored */
+    if (ui.tabmanager->count() == 0)
+    {
+        QString name = "Tutorial";
+        ModeContainer* tutorialMode = new ModeContainer(name);
+        ui.tabmanager->addTab(tutorialMode, name);
+    }
 }
 
 void MainWindow::restore(QString filename)

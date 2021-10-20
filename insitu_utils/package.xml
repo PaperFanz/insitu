@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>insitu_utils</name>
+  <version>0.1.0</version>
+  <description>
+
+    A collection of utility functions for filter creation. Create an issue to request common features.
+
+  </description>
+  <maintainer email="petefan.7@gmail.com">PaperFanz</maintainer>
+  <author>Pete Fan</author>
+  <license>BSD3</license>
+  <url type="bugtracker">https://github.com/PaperFanz/insitu/issues</url>
+  <url type="repository">https://github.com/PaperFanz/insitu</url>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>insitu</build_depend>
+  
+  <exec_depend>insitu</exec_depend>
+ 
+</package>

@@ -13,12 +13,7 @@ public:
 
     const cv::Mat apply(void);
 
-    bool hasSettingEditor(void)
-    {
-        return true;
-    }
-
-    bool lockToImageSize(void)
+    bool hasSettingEditor(void) const
     {
         return true;
     }

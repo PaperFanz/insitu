@@ -101,8 +101,12 @@ void AddFilterDialog::onFilterChanged(void)
     QString fn = filterTree->currentItem()->text(1);
     if (!fn.isEmpty())
     {
-        nameEdit->setText(
-            QString::fromStdString(activeView->getViewName() + "_") + fn);
+        std::string pre = "null";
+        if (activeView != nullptr)
+        {
+            pre = activeView->getViewName();
+        }
+        nameEdit->setText(QString::fromStdString(pre + "_") + fn);
     }
 }
 

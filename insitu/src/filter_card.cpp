@@ -17,22 +17,38 @@ FilterCard::FilterCard(std::string name_,
     // ui elements
     nameLabel = new QLabel(tr(name_.c_str()));
 
-    editButton = new QPushButton(tr("Edit"));
+    editButton = new QPushButton();
+    editButton->setIcon(QIcon(":/images/edit-solid.svg"));
+    editButton->setToolTip("Edit filter settings");
     if (!filter->hasSettingEditor())
     {
         editButton->setDisabled(true);
     }
 
+    visibilityBox = new QCheckBox();
+    visibilityBox->setStyleSheet(
+        "QCheckBox::indicator {width: 18px; height: 18px;}"
+        "QCheckBox::indicator:checked {image: url(:/images/eye-solid.svg);}"
+        "QCheckBox::indicator:unchecked {image: "
+        "url(:/images/eye-slash-solid.svg);}");
+    visibilityBox->setToolTip("Toggle visibility");
+    visibilityBox->setChecked(filter->isVisible());
+
     // layout
     layout = new QGridLayout();
     layout->addWidget(nameLabel, 0, 0);
     layout->addWidget(editButton, 0, 1);
-    layout->setSizeConstraint(QLayout::SetFixedSize);
+    layout->addWidget(visibilityBox, 0, 2);
+    layout->setColumnStretch(0, 5);
 
     setLayout(layout);
 
+    setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
+
     // callbacks
-    QObject::connect(editButton, SIGNAL(clicked()), SLOT(showSettingsEditor()));
+    connect(editButton, SIGNAL(clicked()), SLOT(showSettingsEditor()));
+    connect(visibilityBox, SIGNAL(stateChanged(int)), this,
+            SLOT(onVisibilityChanged(int)));
 }
 
 FilterCard::~FilterCard(void)
@@ -56,6 +72,11 @@ const std::string& FilterCard::getFilterName(void)
 void FilterCard::showSettingsEditor(void)
 {
     filter->openSettingEditor();
+}
+
+void FilterCard::onVisibilityChanged(int state)
+{
+    emit visibilityChanged(state == Qt::Checked);
 }
 
 }    // namespace insitu
