@@ -63,6 +63,11 @@ void FilterGraphicsItem::queuedUpdate(void)
     update(boundingRect());
 }
 
+void FilterGraphicsItem::onVisibilityChanged(bool visible)
+{
+    setVisible(visible);
+}
+
 /*
     Protected
 */

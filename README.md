@@ -114,3 +114,7 @@ description, its implementation was heavily based on RQT and RVIZ, two existing
 giants in the ROS Visualization application sphere. InSitu's plugin architecture
 is modeled after the great work that went into these related projects.
 
+## Attributions
+
+This project uses icons from Font Awesome: [LICENSE](https://fontawesome.com/license)
+

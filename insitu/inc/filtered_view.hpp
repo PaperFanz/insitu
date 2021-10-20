@@ -58,6 +58,7 @@ private:
     QSplitter* filterPaneSplitter;
     QWidget* filterPaneWidget;
     QGridLayout* filterPaneLayout;
+    QSplitter* imagePaneSplitter;
     QHBoxLayout* imagePane;
     QGridLayout* layout;
 
