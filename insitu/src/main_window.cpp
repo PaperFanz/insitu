@@ -100,6 +100,12 @@ void MainWindow::ReadSettings()
         // qDebug("restore from last loaded file");
         restore(settings.value("loadfile").toString());
     }
+    else
+    {
+        /* show tutorial if no file is restored */
+        ModeContainer* tutorialMode = new ModeContainer(tr("Tutorial"));
+        ui.tabmanager->addTab(tutorialMode, tr("Tutorial"));
+    }
     if (settings.contains("recent"))
     {
         recentFiles.append(settings.value("recent").toStringList());
