@@ -18,8 +18,6 @@
 #include <future>
 #include <chrono>
 #include <json/json.h>
-#include <qgraphicsitem.h>
-#include <qsize.h>
 
 using namespace std::chrono_literals;
 
