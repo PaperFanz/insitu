@@ -14,13 +14,12 @@ include_directories(${catkin_INCLUDE_DIRS})
 
 catkin_package(
     LIBRARIES ${PROJECT_NAME}
-    INCLUDE_DIRS inc lib
+    INCLUDE_DIRS lib
     CATKIN_DEPENDS insitu
     DEPENDS OpenCV
 )
 
 include_directories(
-    inc
     lib
 )
 

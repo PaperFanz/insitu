@@ -52,7 +52,9 @@ private:
     QSize rootSize_;
 
 public:
-    FilterWatchdog() : rootSize_(0,0) {}
+    FilterWatchdog() : rootSize_(0, 0)
+    {
+    }
 
     void notify(const cv::Mat& update)
     {
@@ -279,27 +281,36 @@ public:
 
     QSize getSize(void) const
     {
-        if (lockToImageSize()) {
+        if (lockToImageSize())
+        {
             return filterWatchdog.rootSize();
-        } else {
+        }
+        else
+        {
             return size;
         }
     }
 
     int width(void) const
     {
-        if (lockToImageSize()) {
+        if (lockToImageSize())
+        {
             return filterWatchdog.width();
-        } else {
+        }
+        else
+        {
             return size.width();
         }
     }
 
     int height(void) const
     {
-        if (lockToImageSize()) {
+        if (lockToImageSize())
+        {
             return filterWatchdog.height();
-        } else {
+        }
+        else
+        {
             return size.height();
         }
     }

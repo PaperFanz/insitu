@@ -48,7 +48,8 @@ FilteredView::FilteredView(const ros::NodeHandle& parent_, QString _name,
     filterList = new QListWidget(this);
     filterList->setDragDropMode(QAbstractItemView::DragDrop);
     filterList->setDefaultDropAction(Qt::DropAction::MoveAction);
-    filterList->setStyleSheet("QListWidget::item {border-bottom: 1px solid grey;}");
+    filterList->setStyleSheet(
+        "QListWidget::item {border-bottom: 1px solid grey;}");
     filterProps = new FilterProperties(filterView, this);
     filterPaneSplitter = new QSplitter(Qt::Vertical);
     filterPaneSplitter->setStyleSheet(
@@ -68,8 +69,7 @@ FilteredView::FilteredView(const ros::NodeHandle& parent_, QString _name,
 
     imagePane = new QHBoxLayout();
     imagePaneSplitter = new QSplitter(Qt::Horizontal);
-    imagePaneSplitter->setStyleSheet(
-        "QSplitter::handle { color: #000 }");
+    imagePaneSplitter->setStyleSheet("QSplitter::handle { color: #000 }");
     imagePaneSplitter->addWidget(filterView);
     imagePaneSplitter->addWidget(filterPaneWidget);
     imagePaneSplitter->setStretchFactor(0, 2);
@@ -279,14 +279,15 @@ void FilteredView::addFilter(boost::shared_ptr<insitu::Filter> filter)
             SLOT(onTopicChanged(const QString&)));
 
     /* forward visibility changes to filter graphics item */
-    connect(fc, SIGNAL(visibilityChanged(bool)),
-            gi, SLOT(onVisibilityChanged(bool)));
+    connect(fc, SIGNAL(visibilityChanged(bool)), gi,
+            SLOT(onVisibilityChanged(bool)));
 
     /* forward root size changes to filter watchdog */
-    if (filter->lockToImageSize()) {
+    if (filter->lockToImageSize())
+    {
         wd->setRootSize(filterView->getRootSize());
-        connect(filterView, SIGNAL(rootSizeChanged(QSize)),
-            wd, SLOT(onRootSizeChanged(const QSize&)));
+        connect(filterView, SIGNAL(rootSizeChanged(QSize)), wd,
+                SLOT(onRootSizeChanged(const QSize&)));
     }
 }
 

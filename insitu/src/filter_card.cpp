@@ -29,8 +29,8 @@ FilterCard::FilterCard(std::string name_,
     visibilityBox->setStyleSheet(
         "QCheckBox::indicator {width: 18px; height: 18px;}"
         "QCheckBox::indicator:checked {image: url(:/images/eye-solid.svg);}"
-        "QCheckBox::indicator:unchecked {image: url(:/images/eye-slash-solid.svg);}"
-    );
+        "QCheckBox::indicator:unchecked {image: "
+        "url(:/images/eye-slash-solid.svg);}");
     visibilityBox->setToolTip("Toggle visibility");
     visibilityBox->setChecked(filter->isVisible());
 
@@ -47,8 +47,8 @@ FilterCard::FilterCard(std::string name_,
 
     // callbacks
     connect(editButton, SIGNAL(clicked()), SLOT(showSettingsEditor()));
-    connect(visibilityBox, SIGNAL(stateChanged(int)),
-            this, SLOT(onVisibilityChanged(int)));
+    connect(visibilityBox, SIGNAL(stateChanged(int)), this,
+            SLOT(onVisibilityChanged(int)));
 }
 
 FilterCard::~FilterCard(void)
