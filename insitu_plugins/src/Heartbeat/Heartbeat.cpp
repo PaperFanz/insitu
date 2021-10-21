@@ -30,7 +30,7 @@ void Heartbeat::filterInit(void)
 
 void Heartbeat::onDelete(void)
 {
-    // TODO cleanup code
+    topic_subscriber_.shutdown();
 }
 
 const cv::Mat Heartbeat::apply(void)
