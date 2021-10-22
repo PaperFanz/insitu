@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # CATKIN
-find_package(catkin REQUIRED)
+find_package(catkin REQUIRED COMPONENTS roscpp)
 find_package(OpenCV 4.2 REQUIRED)
 
 include_directories(${catkin_INCLUDE_DIRS})
@@ -26,7 +26,10 @@ include_directories(
 # Sources
 set(INSITU_UTILS_SRC
     lib/insitu_utils/painter.hpp
+    lib/insitu_utils/ros.hpp
+
     src/painter.cpp
+    src/ros.cpp
 )
 
 # Binaries

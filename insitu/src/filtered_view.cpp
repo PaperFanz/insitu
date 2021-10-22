@@ -29,9 +29,9 @@ FilteredView::FilteredView(const ros::NodeHandle& parent_, QString _name,
     rmFilterButton = new QPushButton(tr("Delete Filter"));
 
     // checkboxes
+    republishCheckBox = new QCheckBox(tr("Republish"));
     showFilterPaneCheckBox = new QCheckBox(tr("Show Filter Pane"));
     showFilterPaneCheckBox->setChecked(true);
-    republishCheckBox = new QCheckBox(tr("Republish"));
 
     // display statistics in lower status bar
     fpsLabel = new QLabel(tr("FPS: "), this);

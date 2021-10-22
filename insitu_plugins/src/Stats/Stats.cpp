@@ -19,7 +19,6 @@ namespace insitu_plugins
 */
 Stats::Stats(void)
 {
-    // TODO instantiation code
 }
 
 void Stats::filterInit(void)
