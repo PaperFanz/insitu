@@ -30,7 +30,7 @@ void Heartbeat::filterInit(void)
 
 void Heartbeat::onDelete(void)
 {
-    // TODO cleanup code
+    topic_subscriber_.shutdown();
 }
 
 const cv::Mat Heartbeat::apply(void)
@@ -70,9 +70,16 @@ void Heartbeat::handleCallback(const topic_tools::ShapeShifter::ConstPtr& msg,
 
 void Heartbeat::onTopicChange(const std::string& new_topic)
 {
-    topic_name_ = new_topic;
-    topic_subscriber_ =
-        nh_.subscribe(topic_name_, 1, &Heartbeat::topicCB, this);
+    try
+    {
+        topic_name_ = new_topic;
+        topic_subscriber_ =
+            nh_.subscribe(topic_name_, 1, &Heartbeat::topicCB, this);
+    }
+    catch (ros::Exception& e)
+    {
+        ROS_ERROR("Error occured: %s ", e.what());
+    }
 }
 }    // end namespace insitu_plugins
 
