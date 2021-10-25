@@ -20,8 +20,22 @@ MainWindow::MainWindow(int argc, char** argv, QWidget* parent)
     ui.tabmanager->setCurrentIndex(0);
     QObject::connect(ui.tabmanager, SIGNAL(tabCloseRequested(int)), this,
                      SLOT(modeClose(int)));
-    /* reads stored settings and attempts to restore last saved configuration */
-    ReadSettings();
+
+    if (argc >= 3)
+    {
+        std::string flag = argv[1];
+        if (flag == "-f")
+        {
+            std::string restorepath = argv[2];
+            ReadSettings(restorepath);
+        }
+    }
+    else
+    {
+        /* reads stored settings and attempts to restore last saved
+         * configuration */
+        ReadSettings();
+    }
 }
 
 MainWindow::~MainWindow()
@@ -90,12 +104,16 @@ void MainWindow::modeClose(int index)
     ui.tabmanager->removeTab(index);
 }
 
-void MainWindow::ReadSettings()
+void MainWindow::ReadSettings(std::string restorepath)
 {
     QSettings settings("Qt-Ros Package", "insitu");
     restoreGeometry(settings.value("geometry").toByteArray());
     restoreState(settings.value("windowState").toByteArray());
-    if (settings.contains("loadfile"))
+    if (!restorepath.empty())
+    {
+        restore(QString::fromStdString(restorepath));
+    }
+    else if (settings.contains("loadfile"))
     {
         // qDebug("restore from last loaded file");
         restore(settings.value("loadfile").toString());
@@ -118,7 +136,7 @@ void MainWindow::ReadSettings()
     }
 }
 
-void MainWindow::WriteSettings()
+void MainWindow::WriteSettings(std::string restorepath)
 {
     QSettings settings("Qt-Ros Package", "insitu");
     settings.setValue("geometry", saveGeometry());

@@ -106,8 +106,8 @@ FilteredView::FilteredView(const ros::NodeHandle& parent_, QString _name,
             SLOT(onToggleRepublish()));
     connect(filterList, SIGNAL(itemSelectionChanged()),
             SLOT(onListSelectionChanged()));
-    connect(filterScene, SIGNAL(selectionChanged()),
-            this, SLOT(onSceneSelectionChanged()));
+    connect(filterScene, SIGNAL(selectionChanged()), this,
+            SLOT(onSceneSelectionChanged()));
 
     /* ROS initializations */
     filterFactory = new FilterFactory();
@@ -228,9 +228,11 @@ void FilteredView::onListSelectionChanged(void)
 {
     auto selection = filterList->selectedItems();
     filterScene->blockSignals(true);
-    if (!selection.empty()) {
+    if (!selection.empty())
+    {
         filterScene->clearSelection();
-        FilterCard* fc = static_cast<FilterCard*>(filterList->itemWidget(selection.constFirst()));
+        FilterCard* fc = static_cast<FilterCard*>(
+            filterList->itemWidget(selection.constFirst()));
         fc->filter()->getGraphicsItem()->setSelected(true);
         filterProps->onSelectionChanged();
     }
@@ -257,8 +259,10 @@ void FilteredView::onSceneSelectionChanged()
     auto selection = filterScene->selectedItems();
     filterList->blockSignals(true);
     filterList->clearSelection();
-    if (!selection.isEmpty()) {
-        FilterGraphicsItem* gi = static_cast<FilterGraphicsItem*>(selection.constFirst());
+    if (!selection.isEmpty())
+    {
+        FilterGraphicsItem* gi =
+            static_cast<FilterGraphicsItem*>(selection.constFirst());
         filterList->setCurrentItem(gi->listItem(), QItemSelectionModel::Select);
     }
     filterList->blockSignals(false);

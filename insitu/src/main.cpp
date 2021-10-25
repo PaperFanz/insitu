@@ -15,19 +15,21 @@ int main(int argc, char** argv)
 
     std::thread kill_thread([&app] {
         ros::Rate loop_rate(4);
-        while(ros::ok())
+        while (ros::ok())
         {
             loop_rate.sleep();
         }
         app.exit();
-     });
+    });
 
     insitu::MainWindow w(argc, argv);
     w.show();
 
     app.connect(&app, SIGNAL(lastWindowClosed()), &app, SLOT(quit()));
     int result = app.exec();
-    if(kill_thread.joinable()) kill_thread.join();
+    ros::shutdown();
+    ros::waitForShutdown();
+    if (kill_thread.joinable()) kill_thread.join();
 
     return result;
 }

@@ -6,10 +6,9 @@
 
 namespace insitu_utils
 {
-
-void getTopicsByType(std::vector<std::string>& ret, const std::string& type = "");
+void getTopicsByType(std::vector<std::string>& ret,
+                     const std::string& type = "");
 
 }
 
 #endif /* insitu_utils_ROS_HPP */
-
