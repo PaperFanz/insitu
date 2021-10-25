@@ -25,7 +25,7 @@ private:
     // data
     std::string name;
 
-    boost::shared_ptr<insitu::Filter> filter;
+    boost::shared_ptr<insitu::Filter> filter_;
 
 public Q_SLOTS:
 
@@ -38,12 +38,14 @@ signals:
     void visibilityChanged(bool visible);
 
 public:
-    FilterCard(std::string name_, boost::shared_ptr<insitu::Filter> filter_,
+    FilterCard(std::string name_, boost::shared_ptr<insitu::Filter> filter,
                QWidget* parent = nullptr);
 
     ~FilterCard(void);
 
-    const std::string& getFilterName(void);
+    const std::string& getFilterName(void) const;
+
+    boost::shared_ptr<insitu::Filter> filter(void) const;
 
 private:
 };

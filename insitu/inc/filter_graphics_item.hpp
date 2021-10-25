@@ -2,6 +2,7 @@
 #define insitu_FILTER_GRAPHICS_ITEM_HPP
 
 // QT includes
+#include <qlistwidget.h>
 #include <QtWidgets>
 
 // OpenCV includes
@@ -36,6 +37,7 @@ public:
     };
 
     FilterGraphicsItem(boost::shared_ptr<insitu::Filter> filter = nullptr,
+                       QListWidgetItem* listItem = nullptr,
                        QGraphicsItem* parent = nullptr);
 
     int type(void) const override
@@ -50,6 +52,8 @@ public:
     void updateFilter(const cv::Mat& filter);
 
     boost::shared_ptr<insitu::Filter> getFilter(void) const;
+
+    QListWidgetItem* listItem(void) const;
 
 protected:
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
@@ -68,7 +72,9 @@ signals:
     void moved(QPointF pos);
 
 private:
-    boost::shared_ptr<insitu::Filter> filter;
+    boost::shared_ptr<insitu::Filter> filter_;
+
+    QListWidgetItem* listItem_;
 
     QPointF itemCenter(void) const;
 
