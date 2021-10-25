@@ -6,8 +6,6 @@
 #include "filter_graphics_item.hpp"
 #include "insitu_utils.hpp"
 
-#include <iostream>
-
 namespace insitu
 {
 /*
@@ -234,6 +232,7 @@ void FilteredView::onListSelectionChanged(void)
         filterScene->clearSelection();
         FilterCard* fc = static_cast<FilterCard*>(filterList->itemWidget(selection.constFirst()));
         fc->filter()->getGraphicsItem()->setSelected(true);
+        filterProps->onSelectionChanged();
     }
     filterScene->blockSignals(false);
 
