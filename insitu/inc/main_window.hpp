@@ -19,9 +19,9 @@ public:
     MainWindow(int argc, char** argv, QWidget* parent = 0);
     ~MainWindow();
 
-    void ReadSettings(void);
+    void ReadSettings(std::string restorepath = "");
 
-    void WriteSettings(void);
+    void WriteSettings(std::string restorepath = "");
 
     void closeEvent(QCloseEvent* event);
 

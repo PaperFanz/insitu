@@ -1,5 +1,6 @@
 #include "filter_graphics_item.hpp"
 #include <qgraphicsitem.h>
+#include <qlistwidget.h>
 #include <boost/smart_ptr/shared_ptr.hpp>
 
 namespace insitu
@@ -8,11 +9,13 @@ namespace insitu
     Constructor
 */
 FilterGraphicsItem::FilterGraphicsItem(boost::shared_ptr<insitu::Filter> filter,
+                                       QListWidgetItem* listItem,
                                        QGraphicsItem* parent)
     : QGraphicsItem(parent)
 {
-    this->filter = filter;
-    if (filter != nullptr)
+    filter_ = filter;
+    listItem_ = listItem;
+    if (filter_ != nullptr)
     {
         setFlag(QGraphicsItem::ItemIsSelectable, true);
         setFlag(QGraphicsItem::ItemIsMovable, true);
@@ -36,7 +39,12 @@ QSize FilterGraphicsItem::getImgSize(void) const
 
 boost::shared_ptr<insitu::Filter> FilterGraphicsItem::getFilter(void) const
 {
-    return filter;
+    return filter_;
+}
+
+QListWidgetItem* FilterGraphicsItem::listItem(void) const
+{
+    return listItem_;
 }
 
 /*

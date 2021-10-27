@@ -3,7 +3,6 @@
 
 namespace insitu_utils
 {
-
 void Painter::drawtorect(cv::Mat& mat, cv::Rect target, const std::string& str,
                          int face, int thickness, cv::Scalar color)
 {

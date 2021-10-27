@@ -48,9 +48,10 @@ private:
     int lastWidth;
     int lastHeight;
 
-private Q_SLOTS:
+public Q_SLOTS:
     void onSelectionChanged(void);
 
+private Q_SLOTS:
     void onMouseMove(void);
 
     void onWidthChanged(int w);

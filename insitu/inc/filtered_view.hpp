@@ -99,9 +99,11 @@ public Q_SLOTS:
 
     void onToggleRepublish(void);
 
-    void onFilterOrderChanged(void);
+    void onListSelectionChanged(void);
 
     void updateFilter(QGraphicsItem* item, const cv::Mat& update);
+
+    void onSceneSelectionChanged(void);
 
 signals:
 

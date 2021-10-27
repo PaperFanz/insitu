@@ -49,7 +49,8 @@ FilteredView::FilteredView(const ros::NodeHandle& parent_, QString _name,
     filterList->setDragDropMode(QAbstractItemView::DragDrop);
     filterList->setDefaultDropAction(Qt::DropAction::MoveAction);
     filterList->setStyleSheet(
-        "QListWidget::item {border-bottom: 1px solid grey;}");
+        "QListWidget::item {border-bottom: 1px solid grey;}"
+        "QListWidget::item::selected {background: lightskyblue;}");
     filterProps = new FilterProperties(filterView, this);
     filterPaneSplitter = new QSplitter(Qt::Vertical);
     filterPaneSplitter->setStyleSheet(
@@ -104,7 +105,9 @@ FilteredView::FilteredView(const ros::NodeHandle& parent_, QString _name,
     connect(republishCheckBox, SIGNAL(stateChanged(int)),
             SLOT(onToggleRepublish()));
     connect(filterList, SIGNAL(itemSelectionChanged()),
-            SLOT(onFilterOrderChanged()));
+            SLOT(onListSelectionChanged()));
+    connect(filterScene, SIGNAL(selectionChanged()), this,
+            SLOT(onSceneSelectionChanged()));
 
     /* ROS initializations */
     filterFactory = new FilterFactory();
@@ -221,17 +224,27 @@ void FilteredView::onToggleRepublish(void)
     }
 }
 
-void FilteredView::onFilterOrderChanged(void)
+void FilteredView::onListSelectionChanged(void)
 {
+    auto selection = filterList->selectedItems();
+    filterScene->blockSignals(true);
+    if (!selection.empty())
+    {
+        filterScene->clearSelection();
+        FilterCard* fc = static_cast<FilterCard*>(
+            filterList->itemWidget(selection.constFirst()));
+        fc->filter()->getGraphicsItem()->setSelected(true);
+        filterProps->onSelectionChanged();
+    }
+    filterScene->blockSignals(false);
+
     for (int i = 0; i < filterList->count(); ++i)
     {
         QListWidgetItem* item = filterList->item(i);
         FilterCard* fc = (FilterCard*)filterList->itemWidget(item);
         if (fc != nullptr)
         {
-            std::string filterName = fc->getFilterName();
-            boost::shared_ptr<insitu::Filter> f = filters[filterName];
-            f->getGraphicsItem()->setZValue(i);
+            fc->filter()->getGraphicsItem()->setZValue(i);
         }
     }
 }
@@ -239,6 +252,20 @@ void FilteredView::onFilterOrderChanged(void)
 void FilteredView::updateFilter(QGraphicsItem* item, const cv::Mat& update)
 {
     ((FilterGraphicsItem*)item)->updateFilter(update);
+}
+
+void FilteredView::onSceneSelectionChanged()
+{
+    auto selection = filterScene->selectedItems();
+    filterList->blockSignals(true);
+    filterList->clearSelection();
+    if (!selection.isEmpty())
+    {
+        FilterGraphicsItem* gi =
+            static_cast<FilterGraphicsItem*>(selection.constFirst());
+        filterList->setCurrentItem(gi->listItem(), QItemSelectionModel::Select);
+    }
+    filterList->blockSignals(false);
 }
 
 /*
@@ -261,7 +288,7 @@ void FilteredView::addFilter(boost::shared_ptr<insitu::Filter> filter)
     filterList->addItem(item);
     filterList->setItemWidget(item, fc);
 
-    FilterGraphicsItem* gi = new FilterGraphicsItem(filter, rosImg);
+    FilterGraphicsItem* gi = new FilterGraphicsItem(filter, item, rosImg);
     filter->start(gi);
     qRegisterMetaType<cv::Mat>("cv::Mat");
 

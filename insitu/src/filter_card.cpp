@@ -6,13 +6,13 @@ namespace insitu
     Constructor/Destructor
 */
 FilterCard::FilterCard(std::string name_,
-                       boost::shared_ptr<insitu::Filter> filter_,
+                       boost::shared_ptr<insitu::Filter> filter,
                        QWidget* parent)
     : QWidget(parent)
 {
     name = name_;
 
-    filter = filter_;
+    filter_ = filter;
 
     // ui elements
     nameLabel = new QLabel(tr(name_.c_str()));
@@ -20,7 +20,7 @@ FilterCard::FilterCard(std::string name_,
     editButton = new QPushButton();
     editButton->setIcon(QIcon(":/images/edit-solid.svg"));
     editButton->setToolTip("Edit filter settings");
-    if (!filter->hasSettingEditor())
+    if (!filter_->hasSettingEditor())
     {
         editButton->setDisabled(true);
     }
@@ -32,7 +32,7 @@ FilterCard::FilterCard(std::string name_,
         "QCheckBox::indicator:unchecked {image: "
         "url(:/images/eye-slash-solid.svg);}");
     visibilityBox->setToolTip("Toggle visibility");
-    visibilityBox->setChecked(filter->isVisible());
+    visibilityBox->setChecked(filter_->isVisible());
 
     // layout
     layout = new QGridLayout();
@@ -53,16 +53,21 @@ FilterCard::FilterCard(std::string name_,
 
 FilterCard::~FilterCard(void)
 {
-    filter.reset();
+    filter_.reset();
 }
 
 /*
     Public Functions
 */
 
-const std::string& FilterCard::getFilterName(void)
+const std::string& FilterCard::getFilterName(void) const
 {
     return name;
+}
+
+boost::shared_ptr<insitu::Filter> FilterCard::filter(void) const
+{
+    return filter_;
 }
 
 /*
@@ -71,7 +76,7 @@ const std::string& FilterCard::getFilterName(void)
 
 void FilterCard::showSettingsEditor(void)
 {
-    filter->openSettingEditor();
+    filter_->openSettingEditor();
 }
 
 void FilterCard::onVisibilityChanged(int state)
