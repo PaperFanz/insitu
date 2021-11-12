@@ -12,10 +12,10 @@ HeartbeatDialog::HeartbeatDialog(insitu::Filter* parent_)
 
     error_msg = new QErrorMessage();
 
-    nameEdit = new QLineEdit(QString::fromStdString(DEFAULT_NAME));
-    nameLabel = new QLabel(tr("Name: "), nameEdit);
-    layout->addWidget(nameLabel, 0, 0);
-    layout->addWidget(nameEdit, 0, 1);
+    labelEdit = new QLineEdit(QString::fromStdString(DEFAULT_NAME));
+    labelLabel = new QLabel(tr("Label: "), labelEdit);
+    layout->addWidget(labelLabel, 0, 0);
+    layout->addWidget(labelEdit, 0, 1);
 
     topicEdit = new QLineEdit(QString::fromStdString(DEFAULT_TOPIC));
     topicLabel = new QLabel(tr("Topic: "), topicEdit);
@@ -43,7 +43,7 @@ void HeartbeatDialog::onOK(void)
 {
     Json::Value& settings = parent->getSettingsValue();
 
-    settings["name"] = nameEdit->text().toStdString();
+    settings["label"] = labelEdit->text().toStdString();
 
     static_cast<insitu_plugins::Heartbeat*>(parent)->onTopicChange(
         topicEdit->text().toStdString());

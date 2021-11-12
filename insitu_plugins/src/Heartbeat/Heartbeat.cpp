@@ -51,7 +51,7 @@ const cv::Mat Heartbeat::apply(void)
 
     insitu_utils::Painter::drawtorect(
         ret, cv::Rect(0, 0, ret.cols, ret.rows / 5),
-        getSettingsValue().get("name", DEFAULT_NAME).asString());
+        getSettingsValue().get("label", DEFAULT_NAME).asString());
 
     return ret;
 }
