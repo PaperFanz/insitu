@@ -25,7 +25,7 @@ InSitu is an extensible situational awareness platform that organizes ROS image
 streams in a grid layout and applys overlays to create complex HUD interfaces
 for robot teleoperation and supervision. These overlays are created through 
 user-created plugins called `filters`, but first time users are encouraged to
-check out the list of [Available Filters](##Available Filters) to get started 
+check out the list of [available filters](#available-filters) to get started 
 without needing to write any code themselves. InSitu was inspired by [Guy 
 Zaidner's work](https://www.youtube.com/watch?v=QCgzkMhAX68) at the 
 [Nuclear and Applied Robotics Group](https://robotics.me.utexas.edu/) at the 
