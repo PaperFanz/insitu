@@ -62,6 +62,8 @@ set(insitu_plugins_HDRS
     inc/Stats/Stats.hpp
     
     inc/Heartbeat/Heartbeat.hpp
+
+    inc/Notification/Notification.hpp
 )
 
 set(insitu_dialogs_HDRS
@@ -74,6 +76,8 @@ set(insitu_dialogs_HDRS
     inc/Stats/Stats_dialog.hpp
     
     inc/Heartbeat/Heartbeat_dialog.hpp
+
+    inc/Notification/Notification_dialog.hpp
 )
 
 qt5_wrap_cpp(insitu_dialogs_MOCS ${insitu_dialogs_HDRS})
@@ -95,6 +99,11 @@ add_library(${PROJECT_NAME}
     src/Stats/Stats.cpp
     src/Stats/Stats_dialog.cpp
 
+    src/Heartbeat/Heartbeat.cpp
+    src/Heartbeat/Heartbeat_dialog.cpp
+
+    src/Notification/Notification.cpp
+    src/Notification/Notification_dialog.cpp
 )
 
 target_link_libraries(${PROJECT_NAME} 
