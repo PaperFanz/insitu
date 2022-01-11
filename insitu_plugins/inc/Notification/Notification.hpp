@@ -30,8 +30,6 @@ private:
 
     void onDelete(void);
 
-    void topicCB(const std_msgs::String::ConstPtr& msg);
-
     void handleCallback(const std_msgs::String::ConstPtr& msg);
 
     std::string queueToString(std::queue<std::string> str_queue);
@@ -42,9 +40,7 @@ private:
 
     ros::Subscriber topic_subscriber_;
 
-    ros::Time last_msg_time_;
-
-    cv::Mat ret;
+    cv::Mat ret_;
 
     int queue_size_;
 

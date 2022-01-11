@@ -24,11 +24,11 @@ void Painter::drawtorect(cv::Mat& mat, cv::Rect target, const std::string& str,
         scale, color, thickness, cv::LINE_AA, false);
 }
 
-void Painter::drawtorect_multiline(cv::Mat& mat, cv::Rect target, const std::string& topic_name,
-                                   const std::string& str, int lines, int face, int thickness,
-                                   cv::Scalar color)
+void Painter::drawtorect_multiline(cv::Mat& mat, cv::Rect target, const std::string& str,
+                                   int num_lines, int face, int thickness, cv::Scalar color)
 {
-    cv::Size rect = cv::getTextSize(topic_name, face, 1.0, thickness, 0);
+    std::string text = str;
+    cv::Size rect = cv::getTextSize(text.substr(0, text.find_first_of('\n')), face, 1.0, thickness, 0);
     double scalex = (double)target.width / (double)rect.width;
     double scaley = (double)target.height / (double)rect.height;
     double scale = std::min(scalex, scaley);
@@ -39,32 +39,21 @@ void Painter::drawtorect_multiline(cv::Mat& mat, cv::Rect target, const std::str
     int marginy =
         scale == scaley ?
             0 :
-            (int)((double)target.height * (scaley - scale) / scaley * (0.25 * lines));
-
-    /*
-        Print topic name header
-    */
-    cv::putText(
-            mat, topic_name,
-            cv::Point(target.x + marginx, target.y + marginy), face,
-            scale, color, thickness, cv::LINE_AA, false);
-    cv::putText(
-            mat, "-----",
-            cv::Point(target.x + marginx, target.y + marginy * 2), face,
-            scale, color, thickness, cv::LINE_AA, false);
+            (int)((double)target.height * (scaley - scale) / scaley * (0.25 * num_lines));
 
     /*
         Print multiple lines of text
     */
-    std::string line, text = str;
-    int line_height = marginy * 2;
-    std::size_t found = str.find_first_of('\n');
+    text = str;
+    std::string line;
+    int line_height = marginy;
+    std::size_t found = text.find_first_of('\n');
 
     while (found != std::string::npos) {
         line = text.substr(0, found);
         cv::putText(
             mat, line,
-            cv::Point(target.x + marginx, target.y + marginy + line_height), face,
+            cv::Point(target.x + marginx, target.y + line_height), face,
             scale, color, thickness, cv::LINE_AA, false);
         
         line_height += marginy;

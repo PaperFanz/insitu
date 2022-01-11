@@ -52,12 +52,15 @@ void NotificationDialog::onOK(void)
 
     int queue_size;
     try {
-        queue_size = std::stoi(queueEdit->text().toStdString());
+        queue_size = std::stoul(queueEdit->text().toStdString());
+        if (queue_size < 1) {
+            throw std::invalid_argument("received negative value");
+        }
     }
     catch (const std::invalid_argument& e) {
-        queue_size = std::stoi(DEFAULT_QUEUE_SIZE);
+        queue_size = std::stoul(DEFAULT_QUEUE_SIZE);
         error_msg->showMessage(
-            "Unable to read Number of Messages value, using default of 8");
+            "Unable to read Number of Messages value, using default");
     }
     static_cast<insitu_plugins::Notification*>(parent)->onQueueChange(
         queue_size);

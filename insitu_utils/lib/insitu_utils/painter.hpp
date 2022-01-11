@@ -159,7 +159,7 @@ public:
                            cv::Scalar color = Color::white);
     
     static void drawtorect_multiline(cv::Mat& mat, cv::Rect target,
-                           const std::string& topic_name, const std::string& str, int lines,
+                           const std::string& str, int num_lines,
                            int face = cv::FONT_HERSHEY_PLAIN, int thickness = 1,
                            cv::Scalar color = Color::white);
 };
