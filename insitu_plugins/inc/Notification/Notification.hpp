@@ -25,6 +25,8 @@ public:
 
     void onQueueChange(const int new_queue_size);
 
+    void onDirectionChange(const bool new_msg_direction_down);
+
 private:
     void filterInit(void);
 
@@ -33,6 +35,8 @@ private:
     void handleCallback(const std_msgs::String::ConstPtr& msg);
 
     std::string queueToString(std::queue<std::string> str_queue);
+
+    std::queue<std::string> reverseQueue(std::queue<std::string> str_queue);
 
     ros::NodeHandle nh_;
 
@@ -43,6 +47,8 @@ private:
     cv::Mat ret_;
 
     int queue_size_;
+
+    bool msg_direction_down_;
 
     std::queue<std::string> msg_queue_;
 

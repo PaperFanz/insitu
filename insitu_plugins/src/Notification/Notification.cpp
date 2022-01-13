@@ -29,6 +29,8 @@ void Notification::filterInit(void)
     
     queue_size_ = getSettingsValue().get("queue_size", std::stoi(DEFAULT_QUEUE_SIZE)).asInt();
 
+    msg_direction_down_ = settings.get("msg_direction_down", true).asBool();
+
     msg_string_ = queueToString(msg_queue_);
 
     // TODO ROS initialization code
@@ -92,6 +94,13 @@ std::string Notification::queueToString(std::queue<std::string> str_queue)
     str += "\n";
 
     /*
+        Check new message direction
+    */
+    if (!msg_direction_down_) {
+        q = reverseQueue(q);
+    }
+
+    /*
         Add queue messages
     */
     while (!q.empty()) {
@@ -100,6 +109,30 @@ std::string Notification::queueToString(std::queue<std::string> str_queue)
     }
 
     return str;
+}
+
+std::queue<std::string> Notification::reverseQueue(std::queue<std::string> str_queue)
+{
+    std::queue<std::string> q = str_queue;
+    std::stack<std::string> s;
+
+    /*
+        Fill stack
+    */
+    while (!q.empty()) {
+        s.push(q.front());
+        q.pop();
+    }
+
+    /*
+        Fill queue
+    */
+    while (!s.empty()) {
+        q.push(s.top());
+        s.pop();
+    }
+
+    return q;
 }
 
 void Notification::onTopicChange(const std::string& new_topic)
@@ -117,6 +150,7 @@ void Notification::onTopicChange(const std::string& new_topic)
 
 void Notification::onQueueChange(const int new_queue_size)
 {
+    ROS_INFO("Que");
     /*
         Update queue size
     */
@@ -129,6 +163,19 @@ void Notification::onQueueChange(const int new_queue_size)
     msg_string_ = queueToString(msg_queue_);
 }
 
+void Notification::onDirectionChange(const bool new_msg_direction_down)
+{
+    ROS_INFO("Dir");
+    /*
+        Update new message direction
+    */
+    msg_direction_down_ = new_msg_direction_down;
+
+    /*
+        Update string
+    */
+    msg_string_ = queueToString(msg_queue_);
+}
 
 } // end namespace insitu_plugins
 

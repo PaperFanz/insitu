@@ -8,6 +8,7 @@ namespace notification_filter
     const std::string DEFAULT_NAME = "Notification";
     const std::string DEFAULT_TOPIC = "notification_topic";
     const std::string DEFAULT_QUEUE_SIZE = "8";
+    const unsigned int DEFAULT_QUEUE_SIZE2 = 8;
 }   // end namespace notification_filter
 
 namespace insitu_plugins
@@ -25,6 +26,11 @@ private:
     QLabel* topicLabel;
     QLineEdit* queueEdit;
     QLabel* queueLabel;
+
+    // QDoubleSpinBox* queueBox;
+    // QLabel* queueLabel2;
+
+    QCheckBox* dirBox;
 
     QPushButton * okButton;
     QPushButton * cancelButton;
