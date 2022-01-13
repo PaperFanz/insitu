@@ -29,7 +29,7 @@ void Notification::filterInit(void)
     
     queue_size_ = getSettingsValue().get("queue_size", std::stoi(DEFAULT_QUEUE_SIZE)).asInt();
 
-    msg_direction_down_ = settings.get("msg_direction_down", true).asBool();
+    msg_direction_down_ = getSettingsValue().get("msg_direction_down", true).asBool();
 
     msg_string_ = queueToString(msg_queue_);
 
@@ -71,11 +71,6 @@ void Notification::handleCallback(const std_msgs::String::ConstPtr& msg)
     }
     msg_queue_.push(msg->data);
     msg_string_ = queueToString(msg_queue_);
-    // ROS_INFO("%s", msg_string_.c_str());
-    
-    // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    // msg_queue_.push(msg->data + std::to_string(std::rand() % 5));
-    // msg_string_ = queueToString(msg_queue_);
 }
 
 std::string Notification::queueToString(std::queue<std::string> str_queue)
@@ -137,44 +132,57 @@ std::queue<std::string> Notification::reverseQueue(std::queue<std::string> str_q
 
 void Notification::onTopicChange(const std::string& new_topic)
 {
-    try
-    {
-        topic_name_ = new_topic;
-        topic_subscriber_ =     // 2nd parameter is queue size
-            nh_.subscribe(topic_name_, 1, &Notification::handleCallback, this);
-    }
-    catch (ros::Exception& e) {
-        ROS_ERROR("Error occured: %s ", e.what());
+    if (topic_name_ != new_topic) {
+        /*
+            Update topic name
+        */
+        try
+        {
+            topic_name_ = new_topic;
+            topic_subscriber_ =     // 2nd parameter is queue size
+                nh_.subscribe(topic_name_, 1, &Notification::handleCallback, this);
+        }
+        catch (ros::Exception& e) {
+            ROS_ERROR("Error occured: %s ", e.what());
+        }
+
+        /*
+            Clear queue
+        */
+        std::queue<std::string>().swap(msg_queue_);
+        msg_string_ = queueToString(msg_queue_);
     }
 }
 
 void Notification::onQueueChange(const int new_queue_size)
 {
-    ROS_INFO("Que");
-    /*
-        Update queue size
-    */
-    queue_size_ = new_queue_size;
+    if (queue_size_ != new_queue_size) {
+        /*
+            Update queue size
+        */
+        queue_size_ = new_queue_size;
 
-    /*
-        Clear queue
-    */
-    std::queue<std::string>().swap(msg_queue_);
-    msg_string_ = queueToString(msg_queue_);
+        /*
+            Clear queue
+        */
+        std::queue<std::string>().swap(msg_queue_);
+        msg_string_ = queueToString(msg_queue_);
+    }
 }
 
 void Notification::onDirectionChange(const bool new_msg_direction_down)
 {
-    ROS_INFO("Dir");
-    /*
-        Update new message direction
-    */
-    msg_direction_down_ = new_msg_direction_down;
+    if (msg_direction_down_ != new_msg_direction_down) {
+        /*
+            Update new message direction
+        */
+        msg_direction_down_ = new_msg_direction_down;
 
-    /*
-        Update string
-    */
-    msg_string_ = queueToString(msg_queue_);
+        /*
+            Update string
+        */
+        msg_string_ = queueToString(msg_queue_);
+    }
 }
 
 } // end namespace insitu_plugins

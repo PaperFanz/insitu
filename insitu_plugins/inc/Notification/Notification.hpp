@@ -46,7 +46,7 @@ private:
 
     cv::Mat ret_;
 
-    int queue_size_;
+    unsigned int queue_size_;
 
     bool msg_direction_down_;
 

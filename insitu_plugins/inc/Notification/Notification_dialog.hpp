@@ -24,12 +24,8 @@ private:
     QLabel* nameLabel;
     QLineEdit* topicEdit;
     QLabel* topicLabel;
-    QLineEdit* queueEdit;
+    QDoubleSpinBox* queueBox;
     QLabel* queueLabel;
-
-    // QDoubleSpinBox* queueBox;
-    // QLabel* queueLabel2;
-
     QCheckBox* dirBox;
 
     QPushButton * okButton;

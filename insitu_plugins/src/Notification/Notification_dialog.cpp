@@ -22,21 +22,16 @@ NotificationDialog::NotificationDialog(insitu::Filter * parent_)
     layout->addWidget(topicLabel, 1, 0);
     layout->addWidget(topicEdit, 1, 1);
 
-    queueEdit = new QLineEdit(QString::fromStdString(DEFAULT_QUEUE_SIZE));
-    queueLabel = new QLabel(tr("Number of Messages: "), queueEdit);
+    queueBox = new QDoubleSpinBox();
+    queueBox->setRange(1, 8);
+    queueBox->setSingleStep(1);
+    queueBox->setDecimals(0);
+    queueBox->setValue(DEFAULT_QUEUE_SIZE2);
+    queueLabel = new QLabel(tr("Number of Messages"));
     layout->addWidget(queueLabel, 2, 0);
-    layout->addWidget(queueEdit, 2, 1);
+    layout->addWidget(queueBox, 2, 1);
 
-    // queueBox = new QDoubleSpinBox();
-    // queueBox->setRange(1, 8);
-    // queueBox->setSingleStep(1);
-    // queueBox->setDecimals(0);
-    // queueBox->setValue(DEFAULT_QUEUE_SIZE2);
-    // queueLabel2 = new QLabel(tr("Number of Messages"));
-    // layout->addWidget(queueLabel2, 5, 0);
-    // layout->addWidget(queueBox, 5, 1);
-
-    dirBox = new QCheckBox(tr("Message Direction: Down"), this);
+    dirBox = new QCheckBox(tr("New Messages at the Bottom"), this);
     dirBox->setChecked(true);
     layout->addWidget(dirBox, 3, 0, 1, 2);
 
@@ -63,21 +58,9 @@ void NotificationDialog::onOK(void)
         topicEdit->text().toStdString());
     settings["topic"] = topicEdit->text().toStdString();
 
-    int queue_size;
-    try {
-        queue_size = std::stoul(queueEdit->text().toStdString());
-        if (queue_size < 1) {
-            throw std::invalid_argument("received negative value");
-        }
-    }
-    catch (const std::invalid_argument& e) {
-        queue_size = std::stoul(DEFAULT_QUEUE_SIZE);
-        error_msg->showMessage(
-            "Unable to read Number of Messages value, using default");
-    }
     static_cast<insitu_plugins::Notification*>(parent)->onQueueChange(
-        queue_size);
-    settings["queue_size"] = queue_size;
+        (unsigned int)queueBox->value());
+    settings["queue_size"] = (unsigned int)queueBox->value();
 
     static_cast<insitu_plugins::Notification*>(parent)->onDirectionChange(
         dirBox->isChecked());
