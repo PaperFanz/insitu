@@ -26,7 +26,7 @@ NotificationDialog::NotificationDialog(insitu::Filter * parent_)
     queueBox->setRange(1, 8);
     queueBox->setSingleStep(1);
     queueBox->setDecimals(0);
-    queueBox->setValue(DEFAULT_QUEUE_SIZE2);
+    queueBox->setValue(DEFAULT_QUEUE_SIZE);
     queueLabel = new QLabel(tr("Number of Messages"));
     layout->addWidget(queueLabel, 2, 0);
     layout->addWidget(queueBox, 2, 1);
