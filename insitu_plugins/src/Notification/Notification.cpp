@@ -27,7 +27,7 @@ void Notification::filterInit(void)
     topic_subscriber_ =     // 2nd parameter is queue size
         nh_.subscribe(topic_name_, 1, &Notification::handleCallback, this);
     
-    queue_size_ = getSettingsValue().get("queue_size", std::stoi(DEFAULT_QUEUE_SIZE)).asInt();
+    queue_size_ = getSettingsValue().get("queue_size", DEFAULT_QUEUE_SIZE).asInt();
 
     msg_direction_down_ = getSettingsValue().get("msg_direction_down", true).asBool();
 
