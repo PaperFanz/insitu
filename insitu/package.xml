@@ -14,19 +14,14 @@
   <url type="repository">https://github.com/PaperFanz/insitu</url>
 
   <buildtool_depend>catkin</buildtool_depend>
-
-  <build_depend>qt_build</build_depend>
-  <build_depend>roscpp</build_depend>
   <build_depend>qtbase5-dev</build_depend>
-  <build_depend>image_transport</build_depend>
-  
-  <exec_depend>qt_build</exec_depend>
-  <exec_depend>roscpp</exec_depend>
-  <exec_depend>image_transport</exec_depend>
 
-  <build_depend>pluginlib</build_depend>
-  <build_depend>nodelet</build_depend>
-  <exec_depend>pluginlib</exec_depend>
-  <exec_depend>nodelet</exec_depend>
- 
+  <depend>cv_bridge</depend>
+  <depend>geometry_msgs</depend>
+  <depend>image_transport</depend>
+  <depend>nodelet</depend>
+  <depend>pluginlib</depend>
+  <depend>qt_build</depend>
+  <depend>roscpp</depend>
+  <depend>sensor_msgs</depend>
 </package>
