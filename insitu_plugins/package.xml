@@ -11,30 +11,16 @@
   <url type="repository">https://github.com/PaperFanz/insitu</url>
 
   <buildtool_depend>catkin</buildtool_depend>
-  <build_depend>qt_build</build_depend>
-  <build_depend>nodelet</build_depend>
-  <build_depend>pluginlib</build_depend>
-  <build_depend>roscpp</build_depend>
-  <build_depend>insitu</build_depend>
-  <build_depend>insitu_utils</build_depend>
-  <build_depend>topic_tools</build_depend>
-  <build_depend>ros_type_introspection</build_depend>
 
-  <build_export_depend>nodelet</build_export_depend>
-  <build_export_depend>pluginlib</build_export_depend>
-  <build_export_depend>roscpp</build_export_depend>
-  <build_export_depend>insitu</build_export_depend>
-  <build_export_depend>insitu_utils</build_export_depend>
-  <build_export_depend>topic_tools</build_export_depend>
-  <build_export_depend>ros_type_introspection</build_export_depend>
-
-  <exec_depend>nodelet</exec_depend>
-  <exec_depend>pluginlib</exec_depend>
-  <exec_depend>roscpp</exec_depend>
-  <exec_depend>insitu</exec_depend>
-  <exec_depend>insitu_utils</exec_depend>
-  <exec_depend>topic_tools</exec_depend>
-  <exec_depend>ros_type_introspection</exec_depend>
+  <depend>class_loader</depend>
+  <depend>insitu</depend>
+  <depend>insitu_utils</depend>
+  <depend>nodelet</depend>
+  <depend>pluginlib</depend>
+  <depend>qt_build</depend>
+  <depend>ros_type_introspection</depend>
+  <depend>roscpp</depend>
+  <depend>topic_tools</depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>
