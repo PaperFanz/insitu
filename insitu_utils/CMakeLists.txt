@@ -7,7 +7,11 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # CATKIN
-find_package(catkin REQUIRED COMPONENTS roscpp)
+find_package(catkin REQUIRED COMPONENTS 
+    insitu    
+    roscpp 
+)
+
 find_package(OpenCV 4.2 REQUIRED)
 
 include_directories(${catkin_INCLUDE_DIRS})
@@ -15,7 +19,9 @@ include_directories(${catkin_INCLUDE_DIRS})
 catkin_package(
     LIBRARIES ${PROJECT_NAME}
     INCLUDE_DIRS lib
-    CATKIN_DEPENDS insitu
+    CATKIN_DEPENDS 
+        insitu
+        roscpp
     DEPENDS OpenCV
 )
 
@@ -35,7 +41,7 @@ set(INSITU_UTILS_SRC
 # Binaries
 add_library(${PROJECT_NAME}
     ${INSITU_UTILS_SRC}
-)
+) 
 
 target_link_libraries(${PROJECT_NAME} 
     ${OpenCV_LIBRARIES}

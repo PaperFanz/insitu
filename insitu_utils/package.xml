@@ -15,8 +15,7 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <build_depend>insitu</build_depend>
-  
-  <exec_depend>insitu</exec_depend>
+  <depend>insitu</depend>
+  <depend>roscpp</depend>
  
 </package>
