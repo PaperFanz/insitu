@@ -56,7 +56,7 @@ include_directories(
 )
 
 # Sources
-set(${PROJECT_NAME}_SRC
+set(INSITU_SRC
     src/main.cpp
     src/main_window.cpp
     src/main_window_design.cpp
@@ -113,7 +113,7 @@ install(TARGETS ${PROJECT_NAME}
     RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
 )
 
-install(DIRECTORY lib/${PROJECT_NAME}/
+install(DIRECTORY lib/insitu/
     DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
     FILES_MATCHING PATTERN "*.hpp"
 )
