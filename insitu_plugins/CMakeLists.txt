@@ -25,7 +25,7 @@ find_package(jsoncpp REQUIRED)
 find_package(Qt5 COMPONENTS Core Gui Widgets)
 
 catkin_package(
-  LIBRARIES insitu_plugins
+  LIBRARIES ${PROJECT_NAME}
 
   CATKIN_DEPENDS 
     insitu 
