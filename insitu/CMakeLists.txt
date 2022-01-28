@@ -121,4 +121,3 @@ install(DIRECTORY lib/${PROJECT_NAME}/
 catkin_install_python(PROGRAMS scripts/new_insitu_filter
     DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
-

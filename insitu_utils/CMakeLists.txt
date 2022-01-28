@@ -41,7 +41,7 @@ set(INSITU_UTILS_SRC
 # Binaries
 add_library(${PROJECT_NAME}
     ${INSITU_UTILS_SRC}
-) 
+)
 
 target_link_libraries(${PROJECT_NAME} 
     ${OpenCV_LIBRARIES}
@@ -57,4 +57,3 @@ install(DIRECTORY lib/${PROJECT_NAME}/
     DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
     FILES_MATCHING PATTERN "*.hpp"
 )
-
