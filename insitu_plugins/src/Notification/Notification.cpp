@@ -55,7 +55,7 @@ const cv::Mat Notification::apply (void)
     );
 
     insitu_utils::Painter::drawtorect_multiline(
-        ret_, cv::Rect(0, 0, ret_.cols, ret_.rows / (queue_size_ + 2)),
+        ret_, cv::Rect(0, 0, ret_.cols, ret_.rows),
         msg_string_, queue_size_ + 2);
 
     return ret_;
@@ -77,7 +77,7 @@ std::string Notification::queueToString(std::queue<std::string> str_queue)
 {
     std::queue<std::string> q = str_queue;
     std::string str;
-    int topic_name_len = topic_name_.length();
+    int topic_name_len = std::round(topic_name_.length() * 0.67);    // 0.7 makes the the widths match
 
     /*
         Add topic name and divider

@@ -23,7 +23,7 @@ NotificationDialog::NotificationDialog(insitu::Filter * parent_)
     layout->addWidget(topicEdit, 1, 1);
 
     queueBox = new QDoubleSpinBox();
-    queueBox->setRange(1, 8);
+    queueBox->setRange(2, 15);
     queueBox->setSingleStep(1);
     queueBox->setDecimals(0);
     queueBox->setValue(DEFAULT_QUEUE_SIZE);

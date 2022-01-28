@@ -7,7 +7,7 @@ namespace notification_filter
 {
     const std::string DEFAULT_NAME = "Notification";
     const std::string DEFAULT_TOPIC = "notification_topic";
-    const unsigned int DEFAULT_QUEUE_SIZE = 8;
+    const unsigned int DEFAULT_QUEUE_SIZE = 10;
 }   // end namespace notification_filter
 
 namespace insitu_plugins
