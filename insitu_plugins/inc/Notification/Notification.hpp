@@ -14,7 +14,7 @@ class Notification : public insitu::Filter
 public:
     Notification(void);
 
-    const cv::Mat apply (void);
+    const cv::Mat apply(void);
 
     bool hasSettingEditor(void) const
     {
@@ -54,8 +54,8 @@ private:
 
     std::string msg_string_;
 
-}; // end class Notification
+};    // end class Notification
 
-} // end namespace insitu_plugins
+}    // end namespace insitu_plugins
 
-#endif // end insitu_plugins_Notification_HPP
+#endif    // end insitu_plugins_Notification_HPP

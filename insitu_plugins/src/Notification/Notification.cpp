@@ -24,12 +24,14 @@ void Notification::filterInit(void)
 
     topic_name_ = getSettingsValue().get("topic", DEFAULT_TOPIC).asString();
 
-    topic_subscriber_ =     // 2nd parameter is queue size
+    topic_subscriber_ =    // 2nd parameter is queue size
         nh_.subscribe(topic_name_, 1, &Notification::handleCallback, this);
-    
-    queue_size_ = getSettingsValue().get("queue_size", DEFAULT_QUEUE_SIZE).asInt();
 
-    msg_direction_down_ = getSettingsValue().get("msg_direction_down", true).asBool();
+    queue_size_ =
+        getSettingsValue().get("queue_size", DEFAULT_QUEUE_SIZE).asInt();
+
+    msg_direction_down_ =
+        getSettingsValue().get("msg_direction_down", true).asBool();
 
     msg_string_ = queueToString(msg_queue_);
 
@@ -41,22 +43,16 @@ void Notification::onDelete(void)
     topic_subscriber_.shutdown();
 }
 
-
-const cv::Mat Notification::apply (void)
+const cv::Mat Notification::apply(void)
 {
     /*
         Create a transparent image to construct your overlay on
     */
-    ret_ = cv::Mat(
-        height(),
-        width(),
-        CV_8UC4,
-        cv::Scalar(255, 255, 255, 0)
-    );
+    ret_ = cv::Mat(height(), width(), CV_8UC4, cv::Scalar(255, 255, 255, 0));
 
     insitu_utils::Painter::drawtorect_multiline(
-        ret_, cv::Rect(0, 0, ret_.cols, ret_.rows),
-        msg_string_, queue_size_ + 2);
+        ret_, cv::Rect(0, 0, ret_.cols, ret_.rows), msg_string_,
+        queue_size_ + 2);
 
     return ret_;
 }
@@ -66,7 +62,8 @@ void Notification::handleCallback(const std_msgs::String::ConstPtr& msg)
     /*
         Update queue with the most recent messages
     */
-    if (msg_queue_.size() >= queue_size_) {
+    if (msg_queue_.size() >= queue_size_)
+    {
         msg_queue_.pop();
     }
     msg_queue_.push(msg->data);
@@ -77,13 +74,15 @@ std::string Notification::queueToString(std::queue<std::string> str_queue)
 {
     std::queue<std::string> q = str_queue;
     std::string str;
-    int topic_name_len = std::round(topic_name_.length() * 0.67);    // 0.7 makes the the widths match
+    int topic_name_len = std::round(topic_name_.length() *
+                                    0.67);    // 0.7 makes the the widths match
 
     /*
         Add topic name and divider
     */
     str += topic_name_ + "\n";
-    for (int i = 0; i < topic_name_len; i++) {
+    for (int i = 0; i < topic_name_len; i++)
+    {
         str += "-";
     }
     str += "\n";
@@ -91,14 +90,16 @@ std::string Notification::queueToString(std::queue<std::string> str_queue)
     /*
         Check new message direction
     */
-    if (!msg_direction_down_) {
+    if (!msg_direction_down_)
+    {
         q = reverseQueue(q);
     }
 
     /*
         Add queue messages
     */
-    while (!q.empty()) {
+    while (!q.empty())
+    {
         str += q.front() + "\n";
         q.pop();
     }
@@ -106,7 +107,8 @@ std::string Notification::queueToString(std::queue<std::string> str_queue)
     return str;
 }
 
-std::queue<std::string> Notification::reverseQueue(std::queue<std::string> str_queue)
+std::queue<std::string>
+Notification::reverseQueue(std::queue<std::string> str_queue)
 {
     std::queue<std::string> q = str_queue;
     std::stack<std::string> s;
@@ -114,7 +116,8 @@ std::queue<std::string> Notification::reverseQueue(std::queue<std::string> str_q
     /*
         Fill stack
     */
-    while (!q.empty()) {
+    while (!q.empty())
+    {
         s.push(q.front());
         q.pop();
     }
@@ -122,7 +125,8 @@ std::queue<std::string> Notification::reverseQueue(std::queue<std::string> str_q
     /*
         Fill queue
     */
-    while (!s.empty()) {
+    while (!s.empty())
+    {
         q.push(s.top());
         s.pop();
     }
@@ -132,17 +136,20 @@ std::queue<std::string> Notification::reverseQueue(std::queue<std::string> str_q
 
 void Notification::onTopicChange(const std::string& new_topic)
 {
-    if (topic_name_ != new_topic) {
+    if (topic_name_ != new_topic)
+    {
         /*
             Update topic name
         */
         try
         {
             topic_name_ = new_topic;
-            topic_subscriber_ =     // 2nd parameter is queue size
-                nh_.subscribe(topic_name_, 1, &Notification::handleCallback, this);
+            topic_subscriber_ =    // 2nd parameter is queue size
+                nh_.subscribe(topic_name_, 1, &Notification::handleCallback,
+                              this);
         }
-        catch (ros::Exception& e) {
+        catch (ros::Exception& e)
+        {
             ROS_ERROR("Error occured: %s ", e.what());
         }
 
@@ -156,7 +163,8 @@ void Notification::onTopicChange(const std::string& new_topic)
 
 void Notification::onQueueChange(const int new_queue_size)
 {
-    if (queue_size_ != new_queue_size) {
+    if (queue_size_ != new_queue_size)
+    {
         /*
             Update queue size
         */
@@ -172,7 +180,8 @@ void Notification::onQueueChange(const int new_queue_size)
 
 void Notification::onDirectionChange(const bool new_msg_direction_down)
 {
-    if (msg_direction_down_ != new_msg_direction_down) {
+    if (msg_direction_down_ != new_msg_direction_down)
+    {
         /*
             Update new message direction
         */
@@ -185,6 +194,6 @@ void Notification::onDirectionChange(const bool new_msg_direction_down)
     }
 }
 
-} // end namespace insitu_plugins
+}    // end namespace insitu_plugins
 
 PLUGINLIB_EXPORT_CLASS(insitu_plugins::Notification, insitu::Filter);

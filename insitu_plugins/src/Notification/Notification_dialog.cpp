@@ -5,8 +5,8 @@ using namespace notification_filter;
 
 namespace insitu_plugins
 {
-NotificationDialog::NotificationDialog(insitu::Filter * parent_)
-: FilterDialog(parent_)
+NotificationDialog::NotificationDialog(insitu::Filter* parent_)
+    : FilterDialog(parent_)
 {
     layout = new QGridLayout();
 
@@ -46,11 +46,11 @@ NotificationDialog::NotificationDialog(insitu::Filter * parent_)
 
     QObject::connect(okButton, SIGNAL(clicked()), SLOT(onOK()));
     QObject::connect(cancelButton, SIGNAL(clicked()), SLOT(reject()));
- }
+}
 
 void NotificationDialog::onOK(void)
 {
-    Json::Value & settings = parent->getSettingsValue();
+    Json::Value& settings = parent->getSettingsValue();
 
     settings["name"] = nameEdit->text().toStdString();
 
@@ -69,4 +69,4 @@ void NotificationDialog::onOK(void)
     accept();
 }
 
-} // end namespace insitu_plugins
+}    // end namespace insitu_plugins
