@@ -16,11 +16,13 @@ filter developers.
     - a circle that turns red if a topic of interest stops publishing
 5. Stats
     - displays CPU, memory, and disk usage
+6. Notification
+    - display scrolling notification messages
 
 ## TODO:
 
 1. Notifications
-    - A scrolling notification window with different alert levels
+    - Add different alert levels
 2. Compass
     - Directional indicator for robots with GPS/Magnetometer capabilites
 3. Movement Lines
