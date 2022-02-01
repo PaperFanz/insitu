@@ -7,10 +7,15 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # CATKIN
-# qt_build provides the qt cmake glue, roscpp the comms for a default talker
 find_package(catkin REQUIRED COMPONENTS 
+    cv_bridge
+    geometry_msgs
+    image_transport
+    nodelet
+    pluginlib
     qt_build 
     roscpp
+    sensor_msgs
 )
 find_package(OpenCV 4.2 REQUIRED)
 find_package(jsoncpp REQUIRED)
@@ -28,21 +33,18 @@ find_package(Qt5 COMPONENTS Core Gui Widgets)
 
 # other resources
 file(GLOB QT_RESOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} res/*.qrc)
-QT5_ADD_RESOURCES(QT_RESOURCES_CPP ${QT_RESOURCES})
+qt5_add_resources(QT_RESOURCES_CPP ${QT_RESOURCES})
 
-# ROS components
-find_package(catkin REQUIRED COMPONENTS
-    image_transport
-    sensor_msgs
-    geometry_msgs
-    cv_bridge
-    pluginlib
-    nodelet
-)
 
 catkin_package(
     INCLUDE_DIRS inc lib
     DEPENDS OpenCV
+    
+    CATKIN_DEPENDS
+        geometry_msgs
+        nodelet
+        roscpp
+        sensor_msgs
 )
 
 include_directories(
@@ -111,7 +113,7 @@ install(TARGETS ${PROJECT_NAME}
     RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
 )
 
-install(DIRECTORY lib/insitu/
+install(DIRECTORY lib/${PROJECT_NAME}/
     DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
     FILES_MATCHING PATTERN "*.hpp"
 )
@@ -119,4 +121,3 @@ install(DIRECTORY lib/insitu/
 catkin_install_python(PROGRAMS scripts/new_insitu_filter
     DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
-

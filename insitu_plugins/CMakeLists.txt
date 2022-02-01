@@ -9,14 +9,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-    qt_build 
+    insitu
+    insitu_utils    
     nodelet
     pluginlib
-    roscpp
-    insitu
-    insitu_utils
-    topic_tools
+    qt_build 
     ros_type_introspection
+    roscpp
+    topic_tools
 )
 find_package(OpenCV 4.2 REQUIRED)
 find_package(jsoncpp REQUIRED)
@@ -25,8 +25,16 @@ find_package(jsoncpp REQUIRED)
 find_package(Qt5 COMPONENTS Core Gui Widgets)
 
 catkin_package(
-  LIBRARIES insitu_plugins
-  CATKIN_DEPENDS nodelet pluginlib roscpp insitu insitu_utils
+  LIBRARIES ${PROJECT_NAME}
+
+  CATKIN_DEPENDS 
+    insitu 
+    insitu_utils
+    nodelet 
+    pluginlib 
+    roscpp 
+    topic_tools
+
   DEPENDS OpenCV
 )
 
@@ -87,8 +95,6 @@ add_library(${PROJECT_NAME}
     src/Stats/Stats.cpp
     src/Stats/Stats_dialog.cpp
 
-    src/Heartbeat/Heartbeat.cpp
-    src/Heartbeat/Heartbeat_dialog.cpp
 )
 
 target_link_libraries(${PROJECT_NAME} 
@@ -99,7 +105,7 @@ target_link_libraries(${PROJECT_NAME}
     ${catkin_LIBRARIES}
 )
 
-find_package(class_loader)
+find_package(class_loader REQUIRED)
 class_loader_hide_library_symbols(${PROJECT_NAME})
 
 ## Install plugins
@@ -110,4 +116,3 @@ install(FILES plugins.xml
 install(TARGETS ${PROJECT_NAME}
     LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 )
-
